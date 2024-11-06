@@ -1,0 +1,18 @@
+.setting {
+    margin-bottom: 20px;
+  }
+  
+  .setting-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+  }
+  
+  .setting-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 40%;
+  }
+  

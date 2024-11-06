@@ -1,0 +1,16 @@
+.newlist-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding:1rem
+  }
+  
+
+
+@media (max-width: 600px) {
+  .newlist-container {
+    padding: 0 1rem; /* Optional padding for smaller screens */
+  }
+}

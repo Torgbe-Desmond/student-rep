@@ -1,0 +1,85 @@
+.delete-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.delete-modal {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.delete-button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.folder-name {
+    font-weight: bold;
+    color: #000;
+    padding: 0 10px;
+}
+
+.selected-ids {
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.selected-ids h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.selected-ids ul {
+    list-style-type: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.selected-ids ul li {
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: #eee;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #555;
+    transition: background-color 0.3s ease;
+}
+
+.selected-ids ul li:hover {
+    background-color: #d0d0d0;
+}
+
+.move-btn {
+    min-width: 100px;
+}
+
+
+@media screen and (min-width:600px) {
+    
+.delete-modal {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+}

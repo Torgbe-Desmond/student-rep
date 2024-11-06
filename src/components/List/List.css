@@ -1,0 +1,40 @@
+.list-container {
+   width: 100vw;
+   display: flex;
+   justify-content: center;
+   align-content: center;
+}
+
+.list-table {
+   width: 100%;
+   margin: 20px;
+   border-radius: 8;
+   border-collapse: collapse;
+ }
+ 
+ .list-table th,
+ .list-table td {
+   padding: 10px;
+   text-align: left;
+   border-bottom: 1px solid #ddd;
+ }
+ 
+ .list-table th {
+   background-color: #f5f5f5;
+   font-weight: bold;
+ }
+ 
+ .folder-info {
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+ }
+ 
+ .folder-name-list {
+   margin-left: 8px;
+ }
+ 
+ .icon-size {
+   font-size: 24px;
+ }
+ 

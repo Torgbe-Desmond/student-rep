@@ -1,0 +1,265 @@
+
+.sidebar-container{
+  height: 100%;
+}
+
+.sidebar {
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  padding-left: 2%;
+  background: #ffffff;
+  /* background:linear-gradient(#800080,#ffffff); */
+  border-radius: 4px;
+  max-width: 350px;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 0px 0px 20px 0px;
+  padding-left: 20px;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: #000;
+  font-weight: 400;
+  font-size: 16px;
+
+  }
+
+.search{
+  width: 350px;
+}
+
+.icon {
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.search-item{
+  width:330px;
+  height: 45px;
+  border-radius: 2px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  outline:none;
+  padding-left: 10px;
+  
+}
+
+
+.search-item:hover{
+  background: none;
+}
+  .sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .sidebar ul li {
+    padding: 10px;
+    cursor: pointer;
+    height: 35px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: end;
+    width: 100%;
+    margin: 3px 0px;
+  }
+
+  .sidebar-item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  
+  .link{
+    cursor: pointer;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+/* 
+  .link:hover{
+    color: #FFF;
+  } */
+
+
+
+  .hamburger{
+    display: flex;
+    justify-content: flex-end;
+    padding-right:10px ;
+    padding-top:10px ;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .sidebar ul li.active {
+    background-color: #1976d2;
+    color:#FFF;
+    border-radius: 40px 0px 0px 40px;
+  }
+  
+
+
+  .sidebar ul li:nth-child(1) {
+    background: none;
+    display: none;
+  }
+
+  .sidebar ul li:nth-child(2):hover {
+    background-color: #1976d2;
+    border-radius: 40px 0px 0px 40px;
+  }
+
+
+  
+  .sidebar ul li:nth-child(3),
+  .sidebar ul li:nth-child(4),
+  .sidebar ul li:nth-child(5),
+  .sidebar ul li:nth-child(6),
+  .sidebar ul li:nth-child(7)
+
+  {
+    /* padding-left: 20px; */
+    /* color: #FFF; */
+
+  }
+
+  .sidebar ul li:hover {
+    background-color: #1976d2;
+    border-radius: 40px 0px 0px 40px;
+
+    .link{
+      color:#FFF
+    }
+  }
+
+
+  
+
+
+
+  @media screen and (max-width:1024px) {
+    .sidebar {
+      width: 70px;
+      }
+      .sidebar-name{
+        display: none;
+      }
+
+      .search{
+        display: none;
+      }
+      .search-item{
+        display: none;
+      }
+
+      .hamburger{
+        justify-content: center;
+        padding-top: 5px;
+        cursor: pointer;
+      }
+
+      .sidebar ul li:hover {
+        width: 40px;
+      }
+  }
+
+  
+
+
+  @media screen and (min-width:640px) {
+    .sidebar {
+      width: 70px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      box-sizing: border-box;
+      contain: content;
+      /* width: 100%; */
+      }
+
+
+      .link{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 0px;
+        width: 100%;
+
+      }
+
+    }
+
+  @media screen and (max-width:640px) {
+    .sidebar,.sidebar-container{
+      display: none;
+    }
+
+  }
+
+  @media screen and (min-width:640px) {
+    .sidebar {
+      width: 70px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      box-sizing: border-box;
+      contain: content;
+      /* width: 100%; */
+      }
+
+
+      .link{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 0px;
+        width: 100%;
+
+      }
+
+    }
+
+    @media screen and (min-width:1024px) {
+      .sidebar {
+        width: 300px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        box-sizing: border-box;
+        contain: content;
+        text-align: center;
+        /* width: 100%; */
+        }
+  
+  
+        .link{
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          box-sizing: border-box;
+          padding: 0px;
+          width: 100%;
+  
+        }
+  
+    }

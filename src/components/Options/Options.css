@@ -1,0 +1,65 @@
+.Options-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    box-sizing: border-box;
+    z-index: 9999;
+    contain: content;
+    background: #FFF;
+    height: 65px;
+
+    /* background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px); */
+
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: #FFF;
+    
+}
+
+.selected{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    cursor: none;
+}
+.options-item{
+    outline: none;
+    border: 1px solid transparent;
+}
+
+
+@media screen and (max-width:640px) {
+    .Options-container{
+        /* background: #000; */
+        height: 6vh;
+        box-sizing: border-box;
+        /* border: 1px solid red; */
+    }
+
+    .selected{
+        display: none;
+    }
+
+    .options-item{
+        outline: none;
+        background: transparent;
+    }
+
+
+    .drop-down{
+        box-shadow: none;
+        /* background: red; */
+    }
+}
+
+

@@ -1,0 +1,84 @@
+:root {
+  --direction: ltr;
+  --disabled-opacity: 0.3;
+  --base-height-multiplier: 8;
+  --base-horizontal-spacing-multiplier: 3;
+  --density: 0;
+  --design-unit: 4;
+  --control-corner-radius: 4;
+  --layer-corner-radius: 8;
+  --stroke-width: 1;
+  --focus-stroke-width: 2;
+  --body-font: "Segoe UI Variable", "Segoe UI", sans-serif;
+  --font-weight: 400;
+  --type-ramp-base-font-size: 14px;
+  --type-ramp-base-line-height: 20px;
+  --type-ramp-base-font-variations: "wght" 400, "opsz" 10.5;
+  --type-ramp-minus-1-font-size: 12px;
+  --type-ramp-minus-1-line-height: 16px;
+  --type-ramp-minus-1-font-variations: "wght" 400, "opsz" 8;
+  --type-ramp-minus-2-font-size: 10px;
+  --type-ramp-minus-2-line-height: 14px;
+  --type-ramp-minus-2-font-variations: "wght" 400, "opsz" 8;
+  --type-ramp-plus-1-font-size: 16px;
+  --type-ramp-plus-1-line-height: 22px;
+  --type-ramp-plus-1-font-variations: "wght" 400, "opsz" 10.5;
+  --type-ramp-plus-2-font-size: 20px;
+  --type-ramp-plus-2-line-height: 26px;
+  --type-ramp-plus-2-font-variations: "wght" 400, "opsz" 10.5;
+  --type-ramp-plus-3-font-size: 24px;
+  --type-ramp-plus-3-line-height: 32px;
+  --type-ramp-plus-3-font-variations: "wght" 400, "opsz" 10.5;
+  --type-ramp-plus-4-font-size: 28px;
+  --type-ramp-plus-4-line-height: 36px;
+  --type-ramp-plus-4-font-variations: "wght" 400, "opsz" 36;
+  --type-ramp-plus-5-font-size: 32px;
+  --type-ramp-plus-5-line-height: 40px;
+  --type-ramp-plus-5-font-variations: "wght" 400, "opsz" 36;
+  --type-ramp-plus-6-font-size: 40px;
+  --type-ramp-plus-6-line-height: 52px;
+  --type-ramp-plus-6-font-variations: "wght" 400, "opsz" 36;
+  --base-layer-luminance: 0.15;
+  --neutral-base-color: #808080;
+  --accent-base-color: #0078d4;
+  --neutral-layer-card-container: #1a1a1a;
+  --neutral-layer-floating: #333333;
+  --neutral-layer-1: #272727;
+  --neutral-layer-2: #1a1a1a;
+  --neutral-layer-3: #0b0b0b;
+  --neutral-layer-4: #000000;
+  --fill-color: #272727;
+  --accent-fill-rest: #60c9fc;
+
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  height: -webkit-fill-available;
+  height: 100vh;
+  background-color:#e8f0f3;
+
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+
+.displayContent{
+  display: none;
+}
