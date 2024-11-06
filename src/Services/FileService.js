@@ -1,7 +1,7 @@
 import axiosInstance from "./AxiosInstance";
 
 // const API_BASE_URL = 'https://file-transfer-app-backend.onrender.com/api/v1';
-const API_BASE_URL = 'http://localhost:4000/api/v1';
+const API_BASE_URL = 'https://file-transfer-app-backend.onrender.com/api/v1';
 
 // Common headers for API requests
 const headers = {
