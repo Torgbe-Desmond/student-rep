@@ -1,10 +1,9 @@
 import axios from 'axios';
-import handleStack from '../components/HandleStack/HandleStack';
 
 // Create an Axios instance
 const axiosInstance = axios.create({
-    baseURL: 'https://file-transfer-app-backend.onrender.com/api/v1', // Replace with your actual base URL
-    timeout: 10000, // Optional: request timeout in milliseconds
+    baseURL: 'https://file-transfer-app-backend.onrender.com/api/v1', 
+    timeout: 30000, // Optional: request timeout in milliseconds
     headers: {
         'Content-Type': 'application/json',
     },

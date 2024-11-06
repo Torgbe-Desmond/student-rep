@@ -12,7 +12,6 @@ const initialState = {
   moveItemsArray:[],
   downloadStatus:'idle',
   status: 'idle',
-  getFileStatus:'idle',
   moveItemStatus:'idle',
   mainFolders:[],
   selectedFolders:null,
@@ -42,9 +41,6 @@ const updateFolderName = (folders, id, newName) => {
   }
   return folders;
 }
-
-
-
 
 
 const storeIdsAndNameOfMainFoldersInStorage = (folders)=>{
@@ -224,7 +220,7 @@ const fileFolderSlice = createSlice({
       })
       .addCase(uploadFile.fulfilled, (state, action) => {
         state.fileStatus = 'succeeded'; // Change status to fileStatus
-        state.files = [...state.files, ...action.payload];
+        state.folders = [...state.folders, ...action.payload.files];
       })
       .addCase(uploadFile.rejected, (state, action) => {
         state.fileStatus = 'failed'; // Change status to fileStatus
@@ -248,6 +244,7 @@ const fileFolderSlice = createSlice({
       .addCase(deleteFolder.fulfilled, (state, action) => {
           state.folderStatus = 'succeeded'; 
           const { filesAndDirectoriesToDelete } = action.payload;
+          console.log('filesAndDirectoriesToDelete',filesAndDirectoriesToDelete)
                 const idsToDelete = new Set([
               ...filesAndDirectoriesToDelete
           ]);

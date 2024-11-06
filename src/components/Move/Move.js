@@ -12,32 +12,17 @@ function Move() {
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
     const [name, setName] = useState('');
-    const { moveItemsArray,files, moveItemStatus } = useSelector(state => state.work);
-    const selectedIs = useSelector(state => state.extra.selectedIs);
+    const { moveItemsArray,folders, moveItemStatus,selectedFolders:selectedFolderList } = useSelector(state => state.work);
     const currentDirectory = useSelector(state=>state.path.currentDirectory)
     const reference_Id = localStorage.getItem('reference_Id');
+    const [selectedFolders, setSelectedFolders] = useState([]);
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [selectedMoveFiles, setSelectedMoveFiles] = useState([]);
     const {directoryId} = useParams();
 
     useEffect(() => {
         dispatch(getAllFolders({ reference_Id }));
     }, [dispatch, reference_Id]);
-
-    const findItemById = (id, itemsArray) => itemsArray.find(item => item._id === id);
-
-    const isValidFile = item => item && item.mimetype !== 'Folder' && item.mimetype !== 'Subscription';
-
-    const isFolderOrSubscription = item => item && (item.mimetype === 'Folder' || item.mimetype === 'Subscription');
-
-    const fileIds = selectedIs.filter(itemId => {
-        const item = findItemById(itemId, files);
-        return isValidFile(item);
-    });
-
-    const folderIds = selectedIs.filter(itemId => {
-        const item = findItemById(itemId, moveItemsArray);
-        return isFolderOrSubscription(item);
-    });
-
 
     const handleMove = (e) => {
         const { value } = e.target;
@@ -49,17 +34,62 @@ function Move() {
         setSearch(value);
     };
 
+
+    const filtereOutSelectedItemsToMove = ()=>{
+        const foldersToMoveSelectedItemsTo = moveItemsArray?.filter(
+            (folder) => !selectedFolderList.includes(folder.path)
+        );
+        setSelectedMoveFiles(foldersToMoveSelectedItemsTo)
+    }
+
+    useEffect(()=>{ 
+        filtereOutSelectedItemsToMove()
+    },[selectedFolderList])
+
+
     const handleMoveFiles = (folderId) => {
-        if (fileIds.length > 0) {
-            dispatch(moveFile({ reference_Id,DirectoriesToMoveFileTo:[folderId],FileIds:fileIds, DirectoryFileIsMoveFrom:currentDirectory }));
+        if (selectedFiles.length > 0) {
+            dispatch(moveFile(
+                { 
+                    reference_Id,
+                    DirectoriesToMoveFileTo:[folderId],
+                    FileIds:selectedFiles, 
+                    DirectoryFileIsMoveFrom:currentDirectory 
+                }
+            ));
         }
     };
 
     const handleMoveFolders = (folderId) => {
-        if (folderIds.length > 0) {
-            dispatch(moveFolder({ reference_Id, directoriesToMove: folderIds, directoryToMoveTo: [folderId] }));
+        if (selectedFolders.length > 0) {
+            dispatch(moveFolder(
+                { 
+                    reference_Id, 
+                    directoriesToMove: selectedFolders, 
+                    directoryToMoveTo: [folderId] 
+                }));
         }
     };
+        
+    const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
+        const onlyFiles = folders?.filter(
+          (folder) => selectedFolderList.includes(folder._id) && folder.mimetype !== 'Folder' && folder.mimetype !== 'Subscriptions'
+        );
+        const onlyFolders = folders?.filter(
+          (folder) => selectedFolderList.includes(folder._id) && (folder.mimetype === 'Folder' || folder.mimetype === 'Subscriptions')
+        );
+    
+        return {
+          files: onlyFiles,
+          folders: onlyFolders,
+        };
+      };
+
+      useEffect(()=>{
+        const { files, folders } = filteredSelectedDataByMimetypeForOnlyFilesOrFolders();
+        setSelectedFiles(files);
+        setSelectedFolders(folders);
+      },[folders])
 
     const handleMoveAction = () => {
         if (match.length !== 1) {
@@ -67,7 +97,7 @@ function Move() {
             return;
         }
 
-        const folderId = match[0]._id;
+        const folderId = match[0].path;
         console.log('where to move', folderId);
 
         if (!folderId) {
@@ -81,11 +111,11 @@ function Move() {
     };
 
     const filteredFolders = search
-        ? moveItemsArray.filter(file => file.label.toLowerCase().includes(search.toLowerCase()))
-        : moveItemsArray;
+        ? selectedMoveFiles.filter(file => file.label.toLowerCase().includes(search.toLowerCase()))
+        : selectedMoveFiles;
 
     const match = name
-        ? moveItemsArray.filter(file => file.label.toLowerCase() === name.toLowerCase())
+        ? selectedMoveFiles.filter(file => file.label.toLowerCase() === name.toLowerCase())
         : [];
 
     return (

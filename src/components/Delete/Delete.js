@@ -4,20 +4,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
 import './Delete.css';
 import { deleteFile, deleteFolder } from '../../Features/WorkSpace';
-import { clearSelectedIds } from '../../Features/Extra';
 import axios from 'axios';
 
 function Delete() {
     const [randomName, setRandomName] = useState('');
     const [name, setName] = useState('');
     const dispatch = useDispatch();
-    const selectedIs = useSelector(state => state.extra.selectedIs);
     const [selectedFolders, setSelectedFolders] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const reduxCurrentDirectory = useSelector(state => state.path.currentDirectory);
     const [currentDirectory, setCurrentDirectory] = useState(null);    
     const [_folders,setFolders] = useState();
-    const { folders,error: workspaceError } = useSelector(state=>state.work);
+    const { folders, error: workspaceError } = useSelector(state=>state.work);
     const {selectedFolders:selectedFolderList} = useSelector(state=>state.work);
 
 
@@ -43,34 +41,20 @@ function Delete() {
         }
     }, []);
 
-    console.log('selectedFolders',selectedFolders)
-    console.log('selectedFiles',selectedFiles)
-
-
-    const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
-        let onlyFiles = [];
-        const validMimeTypes = ['Folder','Subscriptions']
-        for (const { _id, mimetype } of folders) {
-            if (selectedFolderList.includes(_id) && !mimetype.includes(validMimeTypes)) {
-                onlyFiles.push(_id);
-            }
-        }
     
-        let onlyFolders = [];
-        for (const { _id, mimetype } of folders) {
-            let value =  mimetype.includes(validMimeTypes)
-            console.log(value)
-            if (selectedFolderList.includes(_id) && mimetype.includes(validMimeTypes)) {
-                onlyFolders.push(_id);
-            }
-        }
+    const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
+        const onlyFiles = folders?.filter(
+          (folder) => selectedFolderList.includes(folder._id) && folder.mimetype !== 'Folder' && folder.mimetype !== 'Subscriptions'
+        );
+        const onlyFolders = folders?.filter(
+          (folder) => selectedFolderList.includes(folder._id) && (folder.mimetype === 'Folder' || folder.mimetype === 'Subscriptions')
+        );
     
         return {
-            files: onlyFiles,
-            folders: onlyFolders,
+          files: onlyFiles,
+          folders: onlyFolders,
         };
-    };
-    
+      };
 
       useEffect(()=>{
         const { files, folders } = filteredSelectedDataByMimetypeForOnlyFilesOrFolders();
@@ -81,15 +65,12 @@ function Delete() {
 
     const handleDelete = () => {
   
-
         if(selectedFolders.length > 0 && currentDirectory){
             dispatch(deleteFolder({ folderIds:selectedFolders, currentDirectory }));
-            dispatch(clearSelectedIds())
         }
 
         if(selectedFiles.length > 0 && currentDirectory){
             dispatch(deleteFile({directoryId:currentDirectory,fileIds:selectedFiles}))
-            dispatch(clearSelectedIds())
         }
 
         handleStackClear(dispatch)

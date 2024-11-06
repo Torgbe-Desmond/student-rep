@@ -2,25 +2,19 @@
 import Move from '../Move/Move';
 import Delete from '../Delete/Delete';
 import CreateFolder from '../CreateFolder/CreateFolder';
-import LoadingBar from '../LoadingBar/LoadingBar';
 import { clearStack, pushComponent } from '../../Features/StackSlice';
 import RenameFolder from '../RenameFolder/RenameFolder';
 import Download from '../Download/Download';
-import Failed from '../Failed/Failed';
-import UploadFileDetails from '../UploadDetailModal/UploadFileDetails';
-import NotifyOverlay from '../NotifyOverlay/NotifyOverlay';
+import UploadFileDetails from '../UploadFileDetails/UploadFileDetails';
 import { clearSelectedIds } from '../../Features/Extra';
 
 export const componentMap = {
   Move: <Move />,
   Delete: <Delete />,
-  LoadingBar: <LoadingBar />,
   CreateFolder: <CreateFolder />,
+  UploadFileDetails:<UploadFileDetails/>,
   RenameFolder: <RenameFolder />,
   Download: <Download />,
-  Failed: <Failed />,
-  UploadFileDetails: <UploadFileDetails />,
-  NotifyOverlay: <NotifyOverlay />
 };
 
 
@@ -34,13 +28,10 @@ const handleStack = (key, dispatch) => {
   const stackComponents = {
       Move: 'Move',
       Delete: 'Delete',
-      LoadingBar: 'LoadingBar',
+      UploadFileDetails:'UploadFileDetails',
       CreateFolder: 'CreateFolder',
       RenameFolder: 'RenameFolder',
       Download: 'Download',
-      Failed: 'Failed',
-      UploadFileDetails: 'UploadFileDetails',
-      NotifyOverlay: 'NotifyOverlay',
   };
 
   if (stackComponents[key]) {

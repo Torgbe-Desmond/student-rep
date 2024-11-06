@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Button, Container, Typography, Box, CircularProgress } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, CircularProgress, Snackbar } from '@mui/material';
 import { register } from '../../Features/AuthSlice';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';
@@ -12,14 +12,22 @@ const Register = () => {
     password: '',
   });
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordError, setPasswordError] = useState(false); // State for password error
+  const [passwordError, setPasswordError] = useState(false); 
   const dispatch = useDispatch();
   const registerStatus = useSelector((state) => state.auth.registerStatus);
   const error = useSelector((state) => state.auth.error);
   const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false); 
 
-  console.log('userInfo',userInfo)
+  useEffect(() => {
+    if (error) {
+      setOpenSnackbar(true); 
+    }
+  }, [error]);
 
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false); // Close snackbar
+  };
 
   if (registerStatus === 'succeeded') {
     navigate(`/login`);
@@ -108,6 +116,17 @@ const Register = () => {
           </form>
         </Box>
       </Container>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

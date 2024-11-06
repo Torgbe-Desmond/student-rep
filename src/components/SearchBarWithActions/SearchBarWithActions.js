@@ -6,6 +6,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import './SearchBarWithActions.css';
 import ButtonIcon from '../Button/Button';
 import { useParams } from 'react-router-dom';
@@ -13,6 +14,7 @@ import { deleteFile, deleteFolder, setSelectedFolders } from '../../Features/Wor
 import { useDispatch, useSelector } from 'react-redux';
 import { pushComponent } from '../../Features/StackSlice';
 import handleStack, { stateForSelectedFolders } from '../HandleStack/HandleStack';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 
 
 function SearchBarWithActions({ folderData, setFilteredData, selectedItems, selectedFilesForOptions, selectedFoldersForOptions }) {
@@ -41,6 +43,12 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
  const handleCreateFolder = useCallback(() => handleStack('CreateFolder', dispatch), [dispatch]);
  const handleUploadFileDetails = useCallback(() => handleStack('UploadFileDetails', dispatch), [dispatch]);
  
+ // Instead of pushing the component itself, push a string key
+// dispatch({
+//   type: 'stack/pushComponent',
+//   payload: { id: 'CreateFolder', componentName: 'CreateFolder' }
+// });
+
 
   // Button state conditions
   const isValidToMove = selectedItems.length === 0;
@@ -55,6 +63,8 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     { iconType: <FileDownloadIcon />, color: 'primary', disabled: isValidToDownload, action: handleDownload },
     { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: false, action: handleCreateFolder },
     { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: false, action: handleUploadFileDetails },
+    { iconType: <MoreVertOutlinedIcon />, color: 'secondary', disabled: false, action: null },
+
   ];
 
   return (

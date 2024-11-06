@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import './UploadFileDetails.css';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Snackbar, Alert } from '@mui/material';
 import { handleStackClear } from '../HandleStack/HandleStack';
 import { useDispatch, useSelector } from 'react-redux';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -9,15 +9,26 @@ import { uploadFile } from '../../Features/WorkSpace';
 const UploadFileDetails = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [open, setOpen] = useState(true);
+    const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar state
     const dispatch = useDispatch();
     const reference_Id = localStorage.getItem('reference_Id');
     const { currentDirectory } = useSelector(state => state.path);
+
 
     const handleClose = useCallback(() => {
         handleStackClear(dispatch);
     }, [dispatch]);
 
+    const handleSnackbarClose = useCallback(() => {
+        setSnackbarOpen(false);
+    }, []);
+
     const handleAddFile = useCallback(() => {
+        if (uploadedFiles.length >= 2) {
+            setSnackbarOpen(true); // Show snackbar when limit is reached
+            return;
+        }
+
         const inputElement = document.createElement('input');
         inputElement.type = 'file';
         inputElement.multiple = true;
@@ -31,7 +42,7 @@ const UploadFileDetails = () => {
             setUploadedFiles(prevFiles => {
                 const updatedFiles = [...prevFiles];
                 newFiles.forEach(file => {
-                    if (!updatedFiles.some(f => f.name === file.name)) {
+                    if (updatedFiles.length < 3 && !updatedFiles.some(f => f.name === file.name)) {
                         updatedFiles.push(file);
                     }
                 });
@@ -40,7 +51,7 @@ const UploadFileDetails = () => {
 
             document.body.removeChild(inputElement);
         });
-    }, []);
+    }, [uploadedFiles]);
 
     const handleChangeName = useCallback((index, event) => {
         setUploadedFiles(prevFiles => {
@@ -65,10 +76,8 @@ const UploadFileDetails = () => {
           formData.append('files', file);
         });
       
-        console.log('FormData entries:', formData.entries());
-      
-        if (uploadedFiles.length > 0) {
-          dispatch(uploadFile({ reference_Id, directoryId: currentDirectory, formData }));
+        if (uploadedFiles.length > 0 && currentDirectory) {
+          dispatch(uploadFile({ reference_Id, directoryId:currentDirectory, formData }));
         }
         handleClose();
       }, [dispatch, reference_Id, currentDirectory, uploadedFiles, handleClose]);
@@ -101,6 +110,18 @@ const UploadFileDetails = () => {
                         ))}
                     </div>
                 </div>
+
+                {/* Snackbar component for the file limit message */}
+                <Snackbar 
+                    open={snackbarOpen} 
+                    autoHideDuration={3000} 
+                    onClose={handleSnackbarClose} 
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                >
+                    <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                        You can add only 2 files at a time
+                    </Alert>
+                </Snackbar>
             </div>
         )
     );

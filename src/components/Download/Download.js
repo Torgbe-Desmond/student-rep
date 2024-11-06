@@ -8,13 +8,14 @@ import { downloadFile } from '../../Features/WorkSpace';
 function Download({ initialFolderName }) {
     const dispatch = useDispatch();
     const [folderName, setFolderName] = useState(initialFolderName);
-    const {downloadData } = useSelector(state => state.work);
+    const {downloadData,selectedFolders } = useSelector(state => state.work);
+    const reference_Id = localStorage.getItem('reference_Id')
 
-    // useEffect(() => {
-    //     if (fileIds.length > 0 && reference_Id) {
-    //         dispatch(downloadFile({ reference_Id, fileId: fileIds[0] }));
-    //     }
-    // }, [dispatch, fileIds, reference_Id]);
+    useEffect(() => {
+        if (selectedFolders.length > 0 && reference_Id) {
+            dispatch(downloadFile({ reference_Id, fileId: selectedFolders[0] }));
+        }
+    }, [dispatch, selectedFolders, reference_Id]);
 
     const handleDownloadFile = (url) => {
         const link = document.createElement('a');

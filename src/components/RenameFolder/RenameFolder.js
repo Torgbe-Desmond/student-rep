@@ -11,22 +11,23 @@ function RenameFolder({ initialFolderName }) {
     const dispatch = useDispatch();
     const [folderName, setFolderName] = useState('');
     const [newFolderName, setNewFolderName] = useState('');
-    const selectedIs = useSelector(state => state.extra.selectedIs);
-    const { folders } = useSelector(state => state.work);
+    const { folders,selectedFolders:selectedFolderList } = useSelector(state => state.work);
     const reference_Id = localStorage.getItem('reference_Id')
 
+    console.log('selectedFolderList',selectedFolderList)
+
     useEffect(() => {
-        if (folders.length > 0 && selectedIs.length > 0) {
-            const folder = folders.find(item => selectedIs.includes(item._id));
+        if (folders.length > 0 && selectedFolderList.length > 0) {
+            const folder = folders.find(item => selectedFolderList.includes(item._id));
             const initialName = folder ? folder.name : initialFolderName;
             setFolderName(initialName);
             setNewFolderName(initialName);
         }
-    }, [folders, selectedIs, initialFolderName]);
+    }, [folders, selectedFolderList, initialFolderName]);
 
     const handleRename = () => {
-        if (selectedIs.length > 0 && newFolderName.trim() !== '') {
-            dispatch(renameFolder({ reference_Id, _id: selectedIs[0], name: newFolderName }));
+        if (selectedFolderList.length > 0 && newFolderName.trim() !== '') {
+            dispatch(renameFolder({ reference_Id, _id: selectedFolderList[0], name: newFolderName }));
             handleStackClear(dispatch);
         }
     };
