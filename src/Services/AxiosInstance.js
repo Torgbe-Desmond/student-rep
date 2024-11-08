@@ -1,8 +1,14 @@
 import axios from 'axios';
 
+
+const url = [
+    'https://file-transfer-app-backend.onrender.com/api/v1',
+    'http://localhost:4000/api/v1'
+];
+  
 // Create an Axios instance
 const axiosInstance = axios.create({
-    baseURL: 'https://file-transfer-app-backend.onrender.com/api/v1', 
+    baseURL: url[1], 
     timeout: 30000, // Optional: request timeout in milliseconds
     headers: {
         'Content-Type': 'application/json',

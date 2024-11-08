@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Button, Container, Typography, Box, CircularProgress, Snackbar } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { register } from '../../Features/AuthSlice';
 import './Register.css';
 import { useNavigate } from 'react-router-dom';

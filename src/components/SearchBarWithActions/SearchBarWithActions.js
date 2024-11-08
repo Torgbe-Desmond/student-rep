@@ -42,13 +42,9 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
  const handleRename = useCallback(() => handleStack('RenameFolder', dispatch), [dispatch]);
  const handleCreateFolder = useCallback(() => handleStack('CreateFolder', dispatch), [dispatch]);
  const handleUploadFileDetails = useCallback(() => handleStack('UploadFileDetails', dispatch), [dispatch]);
- 
- // Instead of pushing the component itself, push a string key
-// dispatch({
-//   type: 'stack/pushComponent',
-//   payload: { id: 'CreateFolder', componentName: 'CreateFolder' }
-// });
+ const handleActionListCard = useCallback(() => handleStack('ActionListCard', dispatch), [dispatch]);
 
+ 
 
   // Button state conditions
   const isValidToMove = selectedItems.length === 0;
@@ -63,7 +59,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     { iconType: <FileDownloadIcon />, color: 'primary', disabled: isValidToDownload, action: handleDownload },
     { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: false, action: handleCreateFolder },
     { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: false, action: handleUploadFileDetails },
-    { iconType: <MoreVertOutlinedIcon />, color: 'secondary', disabled: false, action: null },
+    // { iconType: <MoreVertOutlinedIcon />, color: 'secondary', disabled: false, action: handleActionListCard },
 
   ];
 

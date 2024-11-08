@@ -1,7 +1,5 @@
 import axiosInstance from "./AxiosInstance";
 
-const API_BASE_URL = 'https://file-transfer-app-backend.onrender.com/api/v1';
-
 // Common headers for API requests
 const headers = {
     'Content-Type': 'application/json',
@@ -38,13 +36,11 @@ async function deleteFile(directoryId, fileIds) {
     }
 }
 
-// http://localhost:4000/api/v1/9de9ed0e-1e74-417d-8f14-3d0cedab8fb2/directories//stuff
-
 // Function to upload a file
 async function uploadFiles(reference_Id, directoryId, formData) {
     try {
         console.log(reference_Id, directoryId)
-        const response = await axiosInstance.post(`/${reference_Id}/directories/${directoryId}/stuff`,formData,
+        const response = await axiosInstance.post(`/${reference_Id}/directories/${directoryId}/files`,formData,
             {
                 headers: {
                     'Content-Type': 'multipart/form-data',

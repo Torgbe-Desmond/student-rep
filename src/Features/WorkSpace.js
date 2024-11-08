@@ -102,7 +102,6 @@ export const getMainDirectories = createAsyncThunk('folder/getMainDirectories', 
 
 export const deleteFolder = createAsyncThunk('folder/deleteFolder', async ({currentDirectory, folderIds }, thunkAPI) => {
   try {
-    console.log(currentDirectory,folderIds)
     const response = await FolderService.deleteDirectory(currentDirectory,folderIds);
     return response;
   } catch (error) {
@@ -183,9 +182,9 @@ const fileFolderSlice = createSlice({
         const nonDuplicate = Array.from(new Set(action.payload)); 
         state.selectedFolders = nonDuplicate;    
     },
-  //   clearSelectedIds:(state)=>{
-  //     state.selectedFolders = [];
-  //  },
+    clearSelectedIds:(state)=>{
+      state.selectedFolders = [];
+   },
 
   },
   extraReducers: (builder) => {
@@ -348,7 +347,13 @@ const fileFolderSlice = createSlice({
   
     }})
   
-  export const { clearFilesAndFolders,clearMoveItemsArray,clearStudentFilesAndFolders,setSelectedFolders} = fileFolderSlice.actions;
+  export const { 
+    clearFilesAndFolders,
+    clearMoveItemsArray,
+    clearStudentFilesAndFolders,
+    setSelectedFolders,
+    clearSelectedIds
+  } = fileFolderSlice.actions;
 
   export default fileFolderSlice.reducer;
   

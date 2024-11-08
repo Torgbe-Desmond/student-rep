@@ -52,6 +52,7 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
     }
   };
 
+
   const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
     const onlyFiles = folderData?.filter(
       (folder) => selectedFolders.includes(folder._id) && folder.mimetype !== 'Folder' && folder.mimetype !== 'Subscriptions'

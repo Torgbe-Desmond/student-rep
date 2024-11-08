@@ -6,12 +6,14 @@ import { clearStack, pushComponent } from '../../Features/StackSlice';
 import RenameFolder from '../RenameFolder/RenameFolder';
 import Download from '../Download/Download';
 import UploadFileDetails from '../UploadFileDetails/UploadFileDetails';
+import ActionListCard from '../ActionListCard/ActionListCard';
 import { clearSelectedIds } from '../../Features/Extra';
 
 export const componentMap = {
   Move: <Move />,
   Delete: <Delete />,
   CreateFolder: <CreateFolder />,
+  ActionListCard:<ActionListCard/>,
   UploadFileDetails:<UploadFileDetails/>,
   RenameFolder: <RenameFolder />,
   Download: <Download />,
@@ -29,6 +31,7 @@ const handleStack = (key, dispatch) => {
       Move: 'Move',
       Delete: 'Delete',
       UploadFileDetails:'UploadFileDetails',
+      ActionListCard:'ActionListCard',
       CreateFolder: 'CreateFolder',
       RenameFolder: 'RenameFolder',
       Download: 'Download',

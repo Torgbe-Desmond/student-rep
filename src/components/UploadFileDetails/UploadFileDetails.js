@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import './UploadFileDetails.css';
-import { Button, TextField, Snackbar, Alert } from '@mui/material';
+import { Button, TextField, Snackbar, Alert, LinearProgress, Box } from '@mui/material';
 import { handleStackClear } from '../HandleStack/HandleStack';
 import { useDispatch, useSelector } from 'react-redux';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -9,11 +9,11 @@ import { uploadFile } from '../../Features/WorkSpace';
 const UploadFileDetails = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [open, setOpen] = useState(true);
-    const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar state
+    const [snackbarOpen, setSnackbarOpen] = useState(false); 
+    const [isUploading, setIsUploading] = useState(false); // Loading state for upload
     const dispatch = useDispatch();
     const reference_Id = localStorage.getItem('reference_Id');
     const { currentDirectory } = useSelector(state => state.path);
-
 
     const handleClose = useCallback(() => {
         handleStackClear(dispatch);
@@ -25,7 +25,7 @@ const UploadFileDetails = () => {
 
     const handleAddFile = useCallback(() => {
         if (uploadedFiles.length >= 2) {
-            setSnackbarOpen(true); // Show snackbar when limit is reached
+            setSnackbarOpen(true);
             return;
         }
 
@@ -70,40 +70,54 @@ const UploadFileDetails = () => {
     }, []);
 
     const handleUpload = useCallback(() => {
+        setIsUploading(true); // Start loading
+
         const formData = new FormData();
-        
         uploadedFiles.forEach(file => {
-          formData.append('files', file);
+            formData.append('files', file);
         });
       
         if (uploadedFiles.length > 0 && currentDirectory) {
-          dispatch(uploadFile({ reference_Id, directoryId:currentDirectory, formData }));
+            dispatch(uploadFile({ reference_Id, directoryId: currentDirectory, formData }))
+                .then(() => {
+                    setIsUploading(false); // Stop loading on success
+                    handleClose();
+                })
+                .catch(() => {
+                    setIsUploading(false); // Stop loading on error
+                });
+        } else {
+            setIsUploading(false); // Stop loading if no files to upload
         }
-        handleClose();
-      }, [dispatch, reference_Id, currentDirectory, uploadedFiles, handleClose]);
+    }, [dispatch, reference_Id, currentDirectory, uploadedFiles, handleClose]);
 
     return (
         open && (
             <div className="upload-file-details-overlay">
                 <div className="upload-file-details-content">
                     <div className="button-container">
-                        <Button variant='contained' className="btn add-file-btn" onClick={handleAddFile}>Add File</Button>
-                        <Button variant='contained' className="btn close-btn" onClick={handleClose}>Close</Button>
+                        <Button variant="contained" className="btn add-file-btn" onClick={handleAddFile}>
+                            Add File
+                        </Button>
+                        <Button variant="contained" className="btn close-btn" onClick={handleClose}>
+                            Close
+                        </Button>
                         {uploadedFiles.length > 0 && (
-                            <Button variant='contained' className="btn change-name-btn" onClick={handleUpload}>Upload</Button>
+                            <Button variant="contained" className="btn change-name-btn" onClick={handleUpload} disabled={isUploading}>
+                                {isUploading ? 'Uploading...' : 'Upload'}
+                            </Button>
                         )}
                     </div>
-                    <div className='file-list'>
+                    {isUploading && <LinearProgress />} {/* Loading bar for upload */}
+                    <div className="file-list">
                         {uploadedFiles.map((file, index) => (
                             <div key={index} className="file-details">
-                                <TextField
-                                    disabled
-                                    type="text"
-                                    value={file.name}
-                                    onChange={(event) => handleChangeName(index, event)}
-                                    className="upload-name-input"
-                                    placeholder='Enter new file name'
-                                />
+                
+                                <Box
+                                className="upload-name-input"
+                                >
+                                    {file.name}
+                                </Box>
                                 <p>Size: {file.size} KB</p>
                                 <DeleteOutlineOutlinedIcon className="delete-icon" onClick={() => handleRemoveFile(index)} />
                             </div>

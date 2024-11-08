@@ -10,6 +10,7 @@ async function login(credentials) {
 
 // Function to handle user registration
 async function register(userInfo) {
+    console.log('userInfo',userInfo)
     const response = await axiosInstance.post(`/auth/register`, userInfo);
     return response.data;
 }

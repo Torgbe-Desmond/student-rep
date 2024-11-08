@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, CircularProgress, LinearProgress } from '@mui/material';
 import './RenameFolder.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearStack } from '../../Features/StackSlice';
@@ -11,10 +11,9 @@ function RenameFolder({ initialFolderName }) {
     const dispatch = useDispatch();
     const [folderName, setFolderName] = useState('');
     const [newFolderName, setNewFolderName] = useState('');
-    const { folders,selectedFolders:selectedFolderList } = useSelector(state => state.work);
-    const reference_Id = localStorage.getItem('reference_Id')
-
-    console.log('selectedFolderList',selectedFolderList)
+    const [isLoading, setIsLoading] = useState(false);
+    const { folders, selectedFolders: selectedFolderList } = useSelector(state => state.work);
+    const reference_Id = localStorage.getItem('reference_Id');
 
     useEffect(() => {
         if (folders.length > 0 && selectedFolderList.length > 0) {
@@ -27,8 +26,12 @@ function RenameFolder({ initialFolderName }) {
 
     const handleRename = () => {
         if (selectedFolderList.length > 0 && newFolderName.trim() !== '') {
-            dispatch(renameFolder({ reference_Id, _id: selectedFolderList[0], name: newFolderName }));
-            handleStackClear(dispatch);
+            setIsLoading(true);
+            dispatch(renameFolder({ reference_Id, _id: selectedFolderList[0], name: newFolderName }))
+                .finally(() => {
+                    setIsLoading(false);
+                    handleStackClear(dispatch);
+                });
         }
     };
 
@@ -36,31 +39,35 @@ function RenameFolder({ initialFolderName }) {
         <div className="rename-folder-overlay">
             <div className="rename-folder-modal">
                 <div className="rename-folder-body">
-                    <div className='button-container'>
+                    <div className="button-container">
                         <Button
-                            variant='contained'
-                            className='rename-btn'
+                            variant="contained"
+                            className="rename-btn"
                             onClick={handleRename}
+                            disabled={isLoading} // Disable button while loading
                         >
-                            Rename
-                        </Button>
-                        <span>{folderName}</span>
+                             Rename                        
+                    </Button>
+                        <span className="folder-name">{folderName}</span>
                         <Button
-                            variant='contained'
-                            className='rename-btn'
+                            variant="contained"
+                            className="cancel-btn"
                             onClick={() => handleStackClear(dispatch)}
                         >
                             Cancel
                         </Button>
                     </div>
-                    <div className='rename-input-container'>
-                        <TextField
-                            type='text'
-                            className='rename-input'
-                            placeholder='New Folder Name'
+                    <div className="rename-input-container">
+                   { isLoading ? 
+                   <LinearProgress />
+                       : <TextField
+                            type="text"
+                            className="rename-input"
+                            placeholder="New Folder Name"
                             value={newFolderName}
                             onChange={(e) => setNewFolderName(e.target.value)}
                         />
+                    }
                     </div>
                 </div>
             </div>
