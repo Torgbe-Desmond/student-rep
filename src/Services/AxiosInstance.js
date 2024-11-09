@@ -8,7 +8,7 @@ const url = [
   
 // Create an Axios instance
 const axiosInstance = axios.create({
-    baseURL: url[1], 
+    baseURL: url[0], 
     timeout: 30000, // Optional: request timeout in milliseconds
     headers: {
         'Content-Type': 'application/json',
