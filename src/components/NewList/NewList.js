@@ -10,14 +10,20 @@ import {
   Paper,
   CircularProgress,
   Typography,
+  Button,
 } from '@mui/material';
-import './NewList.css';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import './NewList.css';
 
-function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForOptions, setSelectedFoldersForOptions }) {
+const getFilteredData = (folderData, selectedFolders) => ({
+  files: folderData?.filter(folder => selectedFolders.includes(folder._id) && folder.mimetype !== 'Folder' && folder.mimetype !== 'Subscriptions'),
+  folders: folderData?.filter(folder => selectedFolders.includes(folder._id) && (folder.mimetype === 'Folder' || folder.mimetype === 'Subscriptions')),
+});
+
+function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForOptions, setSelectedFoldersForOptions, handleReload }) {
   const [folderData, setFolderData] = useState([]);
   const [selectedFolders, setSelectedFolders] = useState([]);
   const { reference_Id } = useParams();
@@ -28,49 +34,21 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
     setFolderData(initialFolderData);
   }, [initialFolderData]);
 
-  const handleSelectFolder = (id) => {
-    setSelectedFolders((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((folderId) => folderId !== id)
-        : [...prevSelected, id]
-    );
-    selectedFoldersState((prevSelected) =>
-      prevSelected.includes(id)
-        ? prevSelected.filter((folderId) => folderId !== id)
-        : [...prevSelected, id]
-    );
+  const toggleFolderSelection = (id) => {
+    setSelectedFolders(prev => prev.includes(id) ? prev.filter(folderId => folderId !== id) : [...prev, id]);
+    selectedFoldersState(prev => prev.includes(id) ? prev.filter(folderId => folderId !== id) : [...prev, id]);
   };
 
   const handleSelectAll = (event) => {
-    if (event.target.checked) {
-      const allFolderIds = folderData.map((folder) => folder._id);
-      setSelectedFolders(allFolderIds);
-      selectedFoldersState(allFolderIds);
-    } else {
-      setSelectedFolders([]);
-      selectedFoldersState([]);
-    }
-  };
-
-
-  const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
-    const onlyFiles = folderData?.filter(
-      (folder) => selectedFolders.includes(folder._id) && folder.mimetype !== 'Folder' && folder.mimetype !== 'Subscriptions'
-    );
-    const onlyFolders = folderData?.filter(
-      (folder) => selectedFolders.includes(folder._id) && (folder.mimetype === 'Folder' || folder.mimetype === 'Subscriptions')
-    );
-
-    return {
-      files: onlyFiles,
-      folders: onlyFolders,
-    };
+    const allFolderIds = event.target.checked ? folderData?.map(folder => folder._id) : [];
+    setSelectedFolders(allFolderIds);
+    selectedFoldersState(allFolderIds);
   };
 
   useEffect(() => {
-    const { files, folders } = filteredSelectedDataByMimetypeForOnlyFilesOrFolders();
-    setSelectedFoldersForOptions(folders?.length > 0 ? folders : []);
-    setSelectedFilesForOptions(files?.length > 0 ? files : []);
+    const { files, folders } = getFilteredData(folderData, selectedFolders);
+    setSelectedFoldersForOptions(folders);
+    setSelectedFilesForOptions(files);
 
     return () => {
       setSelectedFoldersForOptions([]);
@@ -79,27 +57,22 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
   }, [selectedFolders, folderData]);
 
   const handleDeleteSelected = () => {
-    setFolderData((prevData) => prevData?.filter((folder) => !selectedFolders.includes(folder._id)));
+    setFolderData(prev => prev.filter(folder => !selectedFolders.includes(folder._id)));
     setSelectedFolders([]);
   };
 
   const handleNavigate = (id, mimetype) => {
-    if (id && (mimetype === 'Folder' || mimetype === 'Subscriptions')) {
+    if (mimetype === 'Folder' || mimetype === 'Subscriptions') {
       navigate(`/${reference_Id}/directories/${id}`);
     }
   };
 
-  const renderAccordingToMimetype = (mimetype) => {
-    return mimetype === 'Folder' || mimetype === 'Subscriptions' ? (
-      <FolderOpenIcon />
-    ) : (
-      <InsertDriveFileOutlinedIcon />
-    );
-  };
+  const renderIcon = (mimetype) => 
+    mimetype === 'Folder' || mimetype === 'Subscriptions' ? <FolderOpenIcon /> : <InsertDriveFileOutlinedIcon />;
 
   return (
     <div className="newlist-container">
-      <TableContainer sx={{ width: '100vw' }} component={Paper}>
+      <TableContainer component={Paper} sx={{ width: '100%' }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -133,19 +106,16 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
               </TableRow>
             )}
             {status === 'succeeded' && folderData?.length > 0 ? (
-              folderData.map((folder) => (
-                <TableRow key={folder._id}>
+              folderData?.map(folder => (
+                <TableRow key={folder._id} selected={selectedFolders.includes(folder._id)}>
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedFolders.includes(folder._id)}
-                      onChange={() => handleSelectFolder(folder._id)}
+                      checked={selectedFolders?.includes(folder._id)}
+                      onChange={() => toggleFolderSelection(folder._id)}
                     />
                   </TableCell>
-                  <TableCell>{renderAccordingToMimetype(folder.mimetype)}</TableCell>
-                  <TableCell
-                    sx={{ cursor: 'pointer' }}
-                    onClick={() => handleNavigate(folder._id, folder.mimetype)}
-                  >
+                  <TableCell>{renderIcon(folder.mimetype)}</TableCell>
+                  <TableCell onClick={() => handleNavigate(folder._id, folder.mimetype)} sx={{ cursor: 'pointer' }}>
                     {folder.name}
                   </TableCell>
                   <TableCell>{folder.mimetype}</TableCell>
@@ -153,16 +123,23 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
                   <TableCell>{new Date(folder.lastUpdated).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))
-            ) : status === 'succeeded' && folderData?.length === 0 ? (
+            ) : status === 'succeeded' && folderData?.length === 0 && (
               <TableRow>
                 <TableCell colSpan={6} align="center">
                   <Typography>No folders available</Typography>
                 </TableCell>
               </TableRow>
-            ) : null}
+            )}
           </TableBody>
         </Table>
       </TableContainer>
+      {status === 'failed' && (
+       <div className='reload-btn-container'>
+         <Button onClick={handleReload} sx={{ mt: 2 }} variant="outlined">
+          Reload
+        </Button>
+      </div>
+      )}
     </div>
   );
 }

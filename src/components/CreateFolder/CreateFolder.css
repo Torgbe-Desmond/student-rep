@@ -92,6 +92,20 @@
 }
 
 
+.creating-folder{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: #eee;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #555;
+    transition: background-color 0.3s ease;
+    border: 0.15rem solid #ccc;
+}
+
 @media screen and (max-width:640px) {
     .create-folder-modal {
         display: flex;
@@ -106,3 +120,5 @@
         width: 80vw;
     }
 }
+
+

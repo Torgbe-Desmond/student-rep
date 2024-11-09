@@ -21,6 +21,18 @@ function Main() {
   const { breadCrumbs } = useSelector(state=>state.path);
   
 
+  const handleReload = () =>{
+    if(reference_Id && directoryId){
+      dispatch(getAdirectory({reference_Id , directoryId}))
+      dispatch(setCurrentDirectory(directoryId))
+  }
+
+   if(reference_Id && !directoryId){
+      dispatch(getMainDirectories({reference_Id}))
+      dispatch(getAllFolders({reference_Id}))
+   }
+  }
+
   
   useEffect(()=>{
 
@@ -66,6 +78,7 @@ function Main() {
       selectedFoldersState={setSelectedItems}
       setSelectedFilesForOptions={setSelectedFilesForOptions}
       setSelectedFoldersForOptions={setSelectedFoldersForOptions}
+      handleReload={handleReload}
        />
     </div>
   );

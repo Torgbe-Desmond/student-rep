@@ -6,16 +6,11 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import './SearchBarWithActions.css';
+import MoreVertIcon from '@mui/icons-material/MoreVert';import './SearchBarWithActions.css';
 import ButtonIcon from '../Button/Button';
-import { useParams } from 'react-router-dom';
-import { deleteFile, deleteFolder, setSelectedFolders } from '../../Features/WorkSpace';
 import { useDispatch, useSelector } from 'react-redux';
-import { pushComponent } from '../../Features/StackSlice';
-import handleStack, { stateForSelectedFolders } from '../HandleStack/HandleStack';
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-
+import { setSelectedFolders } from '../../Features/WorkSpace';
+import handleStack from '../HandleStack/HandleStack';
 
 function SearchBarWithActions({ folderData, setFilteredData, selectedItems, selectedFilesForOptions, selectedFoldersForOptions }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -23,44 +18,28 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
 
   useEffect(() => {
     const filteredFolderData = searchTerm
-      ? folderData.filter((folder) =>
-          folder.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ? folderData?.filter((folder) =>
+          folder?.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
       : folderData;
     setFilteredData(filteredFolderData);
-  }, [searchTerm, folderData, setFilteredData]);
-
-  useEffect(()=>{
     dispatch(setSelectedFolders(selectedItems));
-  },[selectedItems])
+  }, [searchTerm, folderData, selectedItems, setFilteredData, dispatch]);
 
+  const handleAction = useCallback(
+    (actionType) => handleStack(actionType, dispatch),
+    [dispatch]
+  );
 
- const handleDelete = useCallback(() => handleStack('Delete', dispatch), [dispatch]);
- const handleMove = useCallback(() => handleStack('Move', dispatch), [dispatch]);
- const handleDownload = useCallback(() => handleStack('Download', dispatch), [dispatch]);
- const handleNotificationOverlay = useCallback(() => handleStack('NotifyOverlay', dispatch), [dispatch]);
- const handleRename = useCallback(() => handleStack('RenameFolder', dispatch), [dispatch]);
- const handleCreateFolder = useCallback(() => handleStack('CreateFolder', dispatch), [dispatch]);
- const handleUploadFileDetails = useCallback(() => handleStack('UploadFileDetails', dispatch), [dispatch]);
- const handleActionListCard = useCallback(() => handleStack('ActionListCard', dispatch), [dispatch]);
-
- 
-
-  // Button state conditions
-  const isValidToMove = selectedItems.length === 0;
-  const isValidToDelete = selectedItems.length === 0;
-  const isValidToEdit = selectedFoldersForOptions.length !== 1;
-  const isValidToDownload = selectedFilesForOptions.length !== 1;
-
+  // Button configuration with inline disabled conditions
   const buttonConfigs = [
-    { iconType: <DeleteIcon />, color: 'primary', disabled: isValidToDelete, action:handleDelete },
-    { iconType: <EditIcon />, color: 'primary', disabled: isValidToEdit, action: handleRename },
-    { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: isValidToMove, action: handleMove },
-    { iconType: <FileDownloadIcon />, color: 'primary', disabled: isValidToDownload, action: handleDownload },
-    { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: false, action: handleCreateFolder },
-    { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: false, action: handleUploadFileDetails },
-    // { iconType: <MoreVertOutlinedIcon />, color: 'secondary', disabled: false, action: handleActionListCard },
-
+    { iconType: <DeleteIcon />, color: 'primary', disabled: selectedItems?.length === 0, action: () => handleAction('Delete') },
+    { iconType: <EditIcon />, color: 'primary', disabled: selectedFoldersForOptions?.length !== 1, action: () => handleAction('RenameFolder') },
+    { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: selectedItems?.length === 0, action: () => handleAction('Move') },
+    { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1, action: () => handleAction('Download') },
+    { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: false, action: () => handleAction('CreateFolder') },
+    { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: false, action: () => handleAction('UploadFileDetails') },
+    // { iconType: <MoreVertIcon />, color: 'secondary', disabled: false, action: ()=> handleAction('ActionListCard') },
   ];
 
   return (
@@ -73,7 +52,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <div className="button-group">
-        {buttonConfigs.map((config, index) => (
+        {buttonConfigs?.map((config, index) => (
           <ButtonIcon
             key={index}
             iconType={config.iconType}

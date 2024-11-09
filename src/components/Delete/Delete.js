@@ -105,9 +105,6 @@ function Delete() {
                     >
                         Delete
                     </Button>
-                    <span>
-                        <span className="folder-name">{randomName}</span>
-                    </span>
                     <Button
                         variant="contained"
                         onClick={() => handleStackClear(dispatch)}

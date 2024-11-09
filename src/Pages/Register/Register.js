@@ -15,23 +15,28 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState(false); 
   const dispatch = useDispatch();
   const registerStatus = useSelector((state) => state.auth.registerStatus);
-  const error = useSelector((state) => state.auth.error);
+  const message = useSelector((state) => state.auth.message);
+  const [successMessage , setSuccessMessage]= useState(null); 
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false); 
 
+
+
   useEffect(() => {
-    if (error) {
+    if (message) {
       setOpenSnackbar(true); 
     }
-  }, [error]);
+  }, [message]);
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false); // Close snackbar
   };
 
   if (registerStatus === 'succeeded') {
-    navigate(`/login`);
+      navigate(`/login`);
   }
+
+
 
   const handleChange = (e) => {
     if (e.target.name === 'confirmPassword') {
@@ -42,19 +47,18 @@ const Register = () => {
         [e.target.name]: e.target.value,
       });
     }
-    setPasswordError(false); // Reset password error state on change
+    setPasswordError(false); 
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Check if password matches confirmPassword
     if (userInfo.password !== confirmPassword) {
-      // Set password error state
       setPasswordError(true);
       return;
     }
-    // Dispatch registration action
-    dispatch(register(userInfo));
+
+    dispatch(register(userInfo))
+    
   };
 
   return (
@@ -95,20 +99,19 @@ const Register = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
-              error={passwordError} // Apply error style if passwords don't match
+              error={passwordError}
               helperText={passwordError ? "Passwords don't match" : ""}
             />
-            {error && <p style={{ color: 'red' }}>{error}</p>}
             <Button
               type="submit"
               variant="contained"
-              color={passwordError ? 'error' : 'primary'} // Change color to red if there's a password error
+              color={passwordError ? 'error' : 'primary'} 
               fullWidth
-              disabled={registerStatus === 'loading'} // Disable button when loading
-              style={{ position: 'relative' }} // Ensure position relative for loading spinner
+              disabled={registerStatus === 'loading'} 
+              style={{ position: 'relative' }} 
             >
               {registerStatus === 'loading' ? (
-                <CircularProgress size={24} color="inherit" /> // Show loading spinner inside button
+                <CircularProgress size={24} color="inherit" />
               ) : (
                 'Register'
               )}
@@ -124,7 +127,7 @@ const Register = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
-          {error}
+          {message}
         </Alert>
       </Snackbar>
     </div>

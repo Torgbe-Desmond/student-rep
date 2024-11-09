@@ -10,7 +10,6 @@ async function login(credentials) {
 
 // Function to handle user registration
 async function register(userInfo) {
-    console.log('userInfo',userInfo)
     const response = await axiosInstance.post(`/auth/register`, userInfo);
     return response.data;
 }
@@ -41,11 +40,6 @@ async function getAll() {
     return response.data;
 }
 
-async function studentLogin(credentials){
-    const response = await axiosInstance.post(`/auth/student-login`, credentials);
-    return response.data;
-}
-
 export const AuthService = {
     login,
     register,
@@ -53,5 +47,4 @@ export const AuthService = {
     sendRecoveryLink,
     forgotPassword,
     getAll,
-    studentLogin
 };

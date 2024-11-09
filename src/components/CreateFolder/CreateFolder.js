@@ -46,9 +46,15 @@ function CreateFolder() {
                         onClick={handleCreateFolder}
                         disabled={isLoading}
                         >
-                            Create
+                            {isLoading ? 'Creating..' : 'Create'}
                         </Button>
-                        <Button variant="contained" onClick={() => handleStackClear(dispatch)} className="create-btn">
+                        {/* <div className='creating-folder'>{folderData?.name}</div> */}
+                        <Button 
+                        variant="contained" 
+                        onClick={() => handleStackClear(dispatch)} 
+                        className="create-btn"
+                        disabled={isLoading}
+                        >
                             Cancel
                         </Button>
                     </div>

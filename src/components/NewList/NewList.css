@@ -5,6 +5,12 @@
     align-items: flex-start;
     padding:0rem;
     box-sizing: border-box;
+    flex-direction: column;
   }
   
-
+.reload-btn-container{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
