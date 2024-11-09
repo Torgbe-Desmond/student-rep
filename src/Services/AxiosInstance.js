@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 const url = [
     'https://file-transfer-app-backend.onrender.com/api/v1',
     'http://localhost:4000/api/v1'
@@ -9,7 +8,7 @@ const url = [
 // Create an Axios instance
 const axiosInstance = axios.create({
     baseURL: url[0], 
-    timeout: 30000, // Optional: request timeout in milliseconds
+    timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -17,15 +16,14 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token'); // Get token from localStorage
+        const token = localStorage.getItem('token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${JSON.stringify(token)}`;
         }
         return config;
     },
     (error) => {
-        console.log('somesome',error)
-        // return Promise.reject(error);
+        console.log('configuration error',error)
     }
 );
 
@@ -33,15 +31,16 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => {
         if (response && response.status === 401) {
-            console.log('yeah')
-
-         }
+            localStorage.setItem('Unauthorized', JSON.stringify({ status: true }));
+        } else {
+            localStorage.setItem('Unauthorized', JSON.stringify({ status: false }));
+        }
         return response;
     },
     (error) => {
         if (error.response && error.response.status === 401) {
+            console.log('response error',error)
         }
-        console.log(error)
     }
 );
 

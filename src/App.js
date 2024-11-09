@@ -9,7 +9,6 @@ import Register from './Pages/Register/Register';
 
 function App() {
   const stack = useSelector((state) => state.stack.components);
-  console.log('stack',stack)
   return (
     <Router>
       <div>

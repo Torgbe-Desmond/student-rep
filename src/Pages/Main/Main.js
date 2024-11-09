@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './Main.css';
 import SearchBarWithActions from '../../components/SearchBarWithActions/SearchBarWithActions';
 import NewList from '../../components/NewList/NewList';
@@ -7,79 +7,72 @@ import { useParams } from 'react-router-dom';
 import { clearFilesAndFolders, getAdirectory, getAllFolders, getMainDirectories } from '../../Features/WorkSpace';
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb';
 import { setCurrentDirectory } from '../../Features/PathSlice';
-
+import handleStack from '../../components/HandleStack/HandleStack';
 
 function Main() {
-  const [selectedItems,setSelectedItems] = useState([]);
-  const {reference_Id , directoryId} = useParams();
+  const [selectedItems, setSelectedItems] = useState([]);
+  const { reference_Id, directoryId } = useParams();
   const dispatch = useDispatch();
-  const { folders } = useSelector(state=>state.work);
-  const [_folders,setFolders] = useState()
+  const { folders } = useSelector(state => state.work);
+  const [_folders, setFolders] = useState([]);
   const [filteredData, setFilteredData] = useState(null);
   const [selectedFilesForOptions, setSelectedFilesForOptions] = useState([]);
   const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState([]);
-  const { breadCrumbs } = useSelector(state=>state.path);
-  
+  const { breadCrumbs } = useSelector(state => state.path);
+  const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
+  const [authorizeStatus,setAuthorizeStatus ] = useState(status)
 
-  const handleReload = () =>{
-    if(reference_Id && directoryId){
-      dispatch(getAdirectory({reference_Id , directoryId}))
-      dispatch(setCurrentDirectory(directoryId))
-  }
 
-   if(reference_Id && !directoryId){
-      dispatch(getMainDirectories({reference_Id}))
-      dispatch(getAllFolders({reference_Id}))
-   }
-  }
-
-  
-  useEffect(()=>{
-
-    if(reference_Id && directoryId){
-        dispatch(getAdirectory({reference_Id , directoryId}))
-        dispatch(setCurrentDirectory(directoryId))
+  const handleReload = useCallback(() => {
+    if (reference_Id && directoryId) {
+      dispatch(getAdirectory({ reference_Id, directoryId }));
+      dispatch(setCurrentDirectory(directoryId));
+    } else if (reference_Id) {
+      dispatch(getMainDirectories({ reference_Id }));
+      dispatch(getAllFolders({ reference_Id }));
     }
+  }, [dispatch, reference_Id, directoryId]);
 
-    if(reference_Id && !directoryId){
-      dispatch(getMainDirectories({reference_Id}))
-      dispatch(getAllFolders({reference_Id}))
-    }
+  const handleAction = useCallback(
+    (actionType) => handleStack(actionType, dispatch),
+    [dispatch]
+  );
 
-    return ()=>{
-        console.log('something going on here')
-        dispatch(clearFilesAndFolders())
-    }
-  },[reference_Id,directoryId,dispatch])
+  useEffect(() => {
+    if (authorizeStatus) handleAction('SessionExpiredModal');
+  }, [authorizeStatus,handleAction]);
 
+  useEffect(() => {
+    handleReload();
+    return () => {
+      dispatch(clearFilesAndFolders());
+    };
+  }, [reference_Id, directoryId, dispatch, handleReload]);
 
-  useEffect(()=>{
-    setFolders(folders)
-    setFilteredData(folders)
-  },[folders])
+  useEffect(() => {
+    setFolders(folders);
+    setFilteredData(folders);
+  }, [folders]);
 
   return (
     <div className="app-container">
-
       <SearchBarWithActions 
-      folderData={_folders} 
-      setFilteredData={setFilteredData} 
-      selectedItems={selectedItems} 
-      selectedFilesForOptions={selectedFilesForOptions}
-      selectedFoldersForOptions={selectedFoldersForOptions}
+        folderData={_folders} 
+        setFilteredData={setFilteredData} 
+        selectedItems={selectedItems} 
+        selectedFilesForOptions={selectedFilesForOptions}
+        selectedFoldersForOptions={selectedFoldersForOptions}
       />
 
-      <Breadcrumb 
-      breadcrumbs={breadCrumbs}
-      />
+      <Breadcrumb breadcrumbs={breadCrumbs} />
 
       <NewList 
-      initialFolderData={filteredData} 
-      selectedFoldersState={setSelectedItems}
-      setSelectedFilesForOptions={setSelectedFilesForOptions}
-      setSelectedFoldersForOptions={setSelectedFoldersForOptions}
-      handleReload={handleReload}
-       />
+        initialFolderData={filteredData} 
+        selectedFoldersState={setSelectedItems}
+        setSelectedFilesForOptions={setSelectedFilesForOptions}
+        setSelectedFoldersForOptions={setSelectedFoldersForOptions}
+        handleReload={handleReload}
+      />
     </div>
   );
 }

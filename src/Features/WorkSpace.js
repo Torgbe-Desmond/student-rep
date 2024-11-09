@@ -143,7 +143,6 @@ export const renameFolder = createAsyncThunk('folder/renameFolder', async ({refe
 
 export const getAllFolders = createAsyncThunk('folder/getAllFolders', async ({reference_Id}, thunkAPI) => {
   try {
-    console.log('reference_id inside get all folders',reference_Id)
     const response = await FolderService.getAllDirForMoving(reference_Id);
     return response;
   } catch (error) {
@@ -153,7 +152,6 @@ export const getAllFolders = createAsyncThunk('folder/getAllFolders', async ({re
 });
 
 export const getAdirectory = createAsyncThunk('folder/getAdirectory', async ({ reference_Id, directoryId }, thunkAPI) => {
-  console.log('inside getADirectory',reference_Id, directoryId )
   try {
     const response = await FolderService.getAdirectory(reference_Id, directoryId);
     return response;
@@ -243,7 +241,6 @@ const fileFolderSlice = createSlice({
       .addCase(deleteFolder.fulfilled, (state, action) => {
           state.folderStatus = 'succeeded'; 
           const { filesAndDirectoriesToDelete } = action.payload;
-          console.log('filesAndDirectoriesToDelete',filesAndDirectoriesToDelete)
                 const idsToDelete = new Set([
               ...filesAndDirectoriesToDelete
           ]);

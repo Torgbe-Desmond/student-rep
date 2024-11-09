@@ -33,12 +33,12 @@ const Login = () => {
   }, [moveItemStatus, reference_Id, navigate]);
 
   useEffect(() => {
-    // Clear local storage on login page load
     if (location.pathname === '/login') {
       localStorage.removeItem('reference_Id');
       localStorage.removeItem('token');
       localStorage.removeItem('role');
       localStorage.removeItem('mainFolder');
+      localStorage.removeItem('Unauthorized');
     }
   }, [location.pathname]);
 
