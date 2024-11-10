@@ -22,7 +22,6 @@ function Main() {
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
   const [authorizeStatus,setAuthorizeStatus ] = useState(status)
 
-
   const handleReload = useCallback(() => {
     if (reference_Id && directoryId) {
       dispatch(getAdirectory({ reference_Id, directoryId }));
@@ -30,6 +29,9 @@ function Main() {
     } else if (reference_Id) {
       dispatch(getMainDirectories({ reference_Id }));
       dispatch(getAllFolders({ reference_Id }));
+    }
+    if (authorizeStatus === true){
+        handleAction('SessionExpiredModal');
     }
   }, [dispatch, reference_Id, directoryId]);
 
@@ -39,8 +41,8 @@ function Main() {
   );
 
   useEffect(() => {
-    if (authorizeStatus) handleAction('SessionExpiredModal');
-  }, [authorizeStatus,handleAction]);
+    setAuthorizeStatus(status)
+  }, [status]);
 
   useEffect(() => {
     handleReload();

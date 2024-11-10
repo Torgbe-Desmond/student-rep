@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './UploadFileDetails.css';
 import { Button, TextField, Snackbar, Alert, LinearProgress, Box } from '@mui/material';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -10,7 +10,9 @@ const UploadFileDetails = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [open, setOpen] = useState(true);
     const [snackbarOpen, setSnackbarOpen] = useState(false); 
-    const [isUploading, setIsUploading] = useState(false); // Loading state for upload
+    const [isUploading, setIsUploading] = useState(false); 
+    const [snackbarMessage,setSnackbarMessage] = useState('')
+    const [totalSize, setTotalSize] = useState(0); 
     const dispatch = useDispatch();
     const reference_Id = localStorage.getItem('reference_Id');
     const { currentDirectory } = useSelector(state => state.path);
@@ -20,14 +22,17 @@ const UploadFileDetails = () => {
     }, [dispatch]);
 
     const handleSnackbarClose = useCallback(() => {
+        setSnackbarMessage('');
         setSnackbarOpen(false);
     }, []);
 
+    const calculateTotalSize = (files) => {
+        return files.reduce((acc, file) => acc + file.size, 0);
+    };
+
     const handleAddFile = useCallback(() => {
-        if (uploadedFiles.length >= 2) {
-            setSnackbarOpen(true);
-            return;
-        }
+        const totalSize = calculateTotalSize(uploadedFiles);
+        const maxTotalSize = 10 * 1024 * 1024; 
 
         const inputElement = document.createElement('input');
         inputElement.type = 'file';
@@ -39,13 +44,25 @@ const UploadFileDetails = () => {
 
         inputElement.addEventListener('change', (event) => {
             const newFiles = Array.from(event.target.files);
+            let newTotalSize = totalSize;
+            let filecount = 0;
+
+            // Filter files that are valid based on the total size
+            const validFiles = newFiles.filter(file => {
+                newTotalSize += file.size;
+                filecount += 1;
+                return newTotalSize <= maxTotalSize;
+            });
+
+            if (validFiles.length < newFiles.length) {
+                setSnackbarOpen(true);
+                setSnackbarMessage('File must be less than 10MB');
+            }
+
+            // Update uploaded files and total size
             setUploadedFiles(prevFiles => {
-                const updatedFiles = [...prevFiles];
-                newFiles.forEach(file => {
-                    if (updatedFiles.length < 3 && !updatedFiles.some(f => f.name === file.name)) {
-                        updatedFiles.push(file);
-                    }
-                });
+                const updatedFiles = [...prevFiles, ...validFiles];
+                setTotalSize(calculateTotalSize(updatedFiles)); 
                 return updatedFiles;
             });
 
@@ -65,12 +82,13 @@ const UploadFileDetails = () => {
         setUploadedFiles(prevFiles => {
             const updatedFiles = [...prevFiles];
             updatedFiles.splice(index, 1);
+            setTotalSize(calculateTotalSize(updatedFiles)); 
             return updatedFiles;
-        }); 
+        });
     }, []);
 
     const handleUpload = useCallback(() => {
-        setIsUploading(true); // Start loading
+        setIsUploading(true); 
 
         const formData = new FormData();
         uploadedFiles.forEach(file => {
@@ -80,14 +98,14 @@ const UploadFileDetails = () => {
         if (uploadedFiles.length > 0 && currentDirectory) {
             dispatch(uploadFile({ reference_Id, directoryId: currentDirectory, formData }))
                 .then(() => {
-                    setIsUploading(false); // Stop loading on success
+                    setIsUploading(false); 
                     handleClose();
                 })
                 .catch(() => {
-                    setIsUploading(false); // Stop loading on error
+                    setIsUploading(false); 
                 });
         } else {
-            setIsUploading(false); // Stop loading if no files to upload
+            setIsUploading(false); 
         }
     }, [dispatch, reference_Id, currentDirectory, uploadedFiles, handleClose]);
 
@@ -108,24 +126,28 @@ const UploadFileDetails = () => {
                             </Button>
                         )}
                     </div>
-                    {isUploading && <LinearProgress />} {/* Loading bar for upload */}
+                    {isUploading && <LinearProgress />}
                     <div className="file-list">
-                        {uploadedFiles.map((file, index) => (
-                            <div key={index} className="file-details">
-                
-                                <Box
-                                className="upload-name-input"
-                                >
-                                    {file.name}
-                                </Box>
-                                <p>Size: {file.size} KB</p>
-                                <DeleteOutlineOutlinedIcon className="delete-icon" onClick={() => handleRemoveFile(index)} />
-                            </div>
-                        ))}
+                        {uploadedFiles.map((file, index) => {
+                            const fileSizeKB = (file.size / 1024).toFixed(2);
+                            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                            
+                            return (
+                                <div key={index} className="file-details">
+                                    <Box className="upload-name-input">
+                                        {file.name}
+                                    </Box>
+                                    <p className='upload-size'>Size: {fileSizeKB > 1000 ? `${fileSizeMB} MB` : `${fileSizeKB} KB`}</p>
+                                    <div>
+                                       <DeleteOutlineOutlinedIcon className="delete-icon" onClick={() => handleRemoveFile(index)} />
+                                    </div>
+                                </div>
+                            );
+                        })} 
                     </div>
+                    <p> Total selected size: {totalSize > 1000 ? `${(totalSize / (1024 * 1024)).toFixed(2)} MB` : `${(totalSize / 1024).toFixed(2)} KB`}</p>
                 </div>
 
-                {/* Snackbar component for the file limit message */}
                 <Snackbar 
                     open={snackbarOpen} 
                     autoHideDuration={3000} 
@@ -133,7 +155,7 @@ const UploadFileDetails = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 >
                     <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
-                        You can add only 2 files at a time
+                        {snackbarMessage}
                     </Alert>
                 </Snackbar>
             </div>

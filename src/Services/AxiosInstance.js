@@ -7,7 +7,7 @@ const url = [
   
 // Create an Axios instance
 const axiosInstance = axios.create({
-    baseURL: url[0], 
+    baseURL: url[1], 
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
@@ -31,6 +31,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => {
         if (response && response.status === 401) {
+            console.log('response in here')
             localStorage.setItem('Unauthorized', JSON.stringify({ status: true }));
         } else {
             localStorage.setItem('Unauthorized', JSON.stringify({ status: false }));
@@ -39,7 +40,9 @@ axiosInstance.interceptors.response.use(
     },
     (error) => {
         if (error.response && error.response.status === 401) {
-            console.log('response error',error)
+            localStorage.setItem('Unauthorized', JSON.stringify({ status: true }));
+        } else {
+            localStorage.setItem('Unauthorized', JSON.stringify({ status: false }));
         }
     }
 );
