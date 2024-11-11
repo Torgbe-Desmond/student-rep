@@ -67,6 +67,24 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
     }
   };
 
+
+  const handleFileSize = ({mimetype,size})=>{
+    let totalSize
+    const fileSizeKB = (size / 1024).toFixed(2);
+    const fileSizeMB = (size / (1024 * 1024)).toFixed(2)
+    if(mimetype === 'Folder' || mimetype === 'Subscriptions'){
+        return size;
+    } 
+
+    if(size > 1024){
+      totalSize = `${fileSizeMB} mb`;
+    } else {
+      totalSize = `${fileSizeKB} kb`;
+    }
+
+    return totalSize;
+  }
+
   const renderIcon = (mimetype) => 
     mimetype === 'Folder' || mimetype === 'Subscriptions' ? <FolderOpenIcon /> : <InsertDriveFileOutlinedIcon />;
 
@@ -119,7 +137,7 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
                     {folder.name}
                   </TableCell>
                   <TableCell>{folder.mimetype}</TableCell>
-                  <TableCell>{folder.size}</TableCell>
+                  <TableCell>{handleFileSize(folder)}</TableCell>
                   <TableCell>{new Date(folder.lastUpdated).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))

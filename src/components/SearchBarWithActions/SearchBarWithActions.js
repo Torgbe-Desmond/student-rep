@@ -6,15 +6,24 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
-import MoreVertIcon from '@mui/icons-material/MoreVert';import './SearchBarWithActions.css';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import './SearchBarWithActions.css';
 import ButtonIcon from '../Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedFolders } from '../../Features/WorkSpace';
 import handleStack from '../HandleStack/HandleStack';
+import { useParams } from 'react-router-dom';
 
 function SearchBarWithActions({ folderData, setFilteredData, selectedItems, selectedFilesForOptions, selectedFoldersForOptions }) {
   const [searchTerm, setSearchTerm] = useState('');
+  const { directoryId } = useParams()
   const dispatch = useDispatch();
+  const [isValid, setIsValid] = useState(true);
+
+
+  useEffect(() => {
+    setIsValid(!directoryId);
+  }, [directoryId]);
 
   useEffect(() => {
     const filteredFolderData = searchTerm
@@ -31,15 +40,14 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     [dispatch]
   );
 
-  // Button configuration with inline disabled conditions
   const buttonConfigs = [
-    { iconType: <DeleteIcon />, color: 'primary', disabled: selectedItems?.length === 0, action: () => handleAction('Delete') },
-    { iconType: <EditIcon />, color: 'primary', disabled: selectedFoldersForOptions?.length !== 1, action: () => handleAction('RenameFolder') },
-    { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: selectedItems?.length === 0, action: () => handleAction('Move') },
-    { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1, action: () => handleAction('Download') },
-    { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: false, action: () => handleAction('CreateFolder') },
-    { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: false, action: () => handleAction('UploadFileDetails') },
-    // { iconType: <MoreVertIcon />, color: 'secondary', disabled: false, action: ()=> handleAction('ActionListCard') },
+    { iconType: <DeleteIcon />, color: 'primary', disabled: selectedItems?.length === 0, action: () => handleAction('Delete'), label: 'Delete' },
+    { iconType: <EditIcon />, color: 'primary', disabled: selectedFoldersForOptions?.length !== 1, action: () => handleAction('RenameFolder'), label: 'Rename' },
+    { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: selectedItems?.length === 0, action: () => handleAction('Move'), label: 'Move' },
+    { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1, action: () => handleAction('Download'), label: 'Download' },
+    { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('CreateFolder'), label: 'Create Folder' },
+    { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('UploadFileDetails'), label: 'Upload File' },
+    // { iconType: <MoreVertIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('ActionListCard'), label: 'More Actions' },
   ];
 
   return (
@@ -52,13 +60,14 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <div className="button-group">
-        {buttonConfigs?.map((config, index) => (
+        {buttonConfigs.map((config, index) => (
           <ButtonIcon
             key={index}
             iconType={config.iconType}
             color={config.color}
             disabled={config.disabled}
             onClick={config.action}
+            aria-label={config.label}
           />
         ))}
       </div>

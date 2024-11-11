@@ -114,16 +114,33 @@ const UploadFileDetails = () => {
             <div className="upload-file-details-overlay">
                 <div className="upload-file-details-content">
                     <div className="button-container">
-                        <Button variant="contained" className="btn add-file-btn" onClick={handleAddFile}>
+
+                        <Button 
+                        variant="contained" 
+                        className="btn add-file-btn" 
+                        onClick={handleAddFile} 
+                        disabled={isUploading}>
                             Add File
                         </Button>
-                        <Button variant="contained" className="btn close-btn" onClick={handleClose}>
+
+                        <Button 
+                        variant="contained" 
+                        className="btn close-btn" 
+                        onClick={handleClose} 
+                        disabled={isUploading}>
                             Close
                         </Button>
+
                         {uploadedFiles.length > 0 && (
-                            <Button variant="contained" className="btn change-name-btn" onClick={handleUpload} disabled={isUploading}>
+                            <Button 
+                            variant="contained" 
+                            className="btn change-name-btn" 
+                            onClick={handleUpload} 
+                            disabled={isUploading}>
+
                                 {isUploading ? 'Uploading...' : 'Upload'}
                             </Button>
+
                         )}
                     </div>
                     {isUploading && <LinearProgress />}
@@ -139,7 +156,10 @@ const UploadFileDetails = () => {
                                     </Box>
                                     <p className='upload-size'>Size: {fileSizeKB > 1000 ? `${fileSizeMB} MB` : `${fileSizeKB} KB`}</p>
                                     <div>
-                                       <DeleteOutlineOutlinedIcon className="delete-icon" onClick={() => handleRemoveFile(index)} />
+                                       <DeleteOutlineOutlinedIcon 
+                                       disabled={isUploading}
+                                       className="delete-icon" 
+                                       onClick={() => handleRemoveFile(index)} />
                                     </div>
                                 </div>
                             );
@@ -154,7 +174,10 @@ const UploadFileDetails = () => {
                     onClose={handleSnackbarClose} 
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 >
-                    <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: '100%' }}>
+                    <Alert 
+                    onClose={handleSnackbarClose} 
+                    severity="warning" 
+                    sx={{ width: '100%' }}>
                         {snackbarMessage}
                     </Alert>
                 </Snackbar>

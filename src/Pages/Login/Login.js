@@ -14,6 +14,7 @@ const Login = () => {
   const moveItemStatus = useSelector((state) => state.work.moveItemStatus);
   const status = useSelector((state) => state.auth.status);
   const error = useSelector((state) => state.auth.error);
+  const [snackbarMessage,setSnackbarMessage] = useState('')
   const reference_Id = localStorage.getItem('reference_Id');
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,6 +45,7 @@ const Login = () => {
 
   useEffect(() => {
     if (error) {
+      setSnackbarMessage('Error Loggin in please try again.');
       setOpenSnackbar(true); // Show snackbar on error
     }
   }, [error]);
@@ -111,7 +113,7 @@ const Login = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
-          {error}
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </div>
