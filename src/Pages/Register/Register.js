@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Button, Container, Typography, Box, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { register } from '../../Features/AuthSlice';
 import './Register.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [userInfo, setUserInfo] = useState({
@@ -64,6 +64,9 @@ const Register = () => {
   return (
     <div className='register-container'>
       <Container maxWidth="sm">
+      <Typography variant="h4" align="center" gutterBottom>
+            Student File Sharing App
+      </Typography>
         <Box mt={4} p={4} boxShadow={3}  sx={{background:'#FFF'}}>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -118,6 +121,12 @@ const Register = () => {
             </Button>
           </form>
         </Box>
+        <Typography align="center" mt={5}>
+          Don’t have an account?{' '}
+          <Link  to="/" variant="body2">
+            Login here
+          </Link>
+        </Typography>
       </Container>
 
       <Snackbar

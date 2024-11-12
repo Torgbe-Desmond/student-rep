@@ -6,20 +6,21 @@ import Login from './Pages/Login/Login';
 import { useSelector } from 'react-redux';
 import { componentMap } from './components/HandleStack/HandleStack';
 import Register from './Pages/Register/Register';
+import ParticlesComponent from './components/particles/Particles';
 
 function App() {
   const stack = useSelector((state) => state.stack.components);
   return (
     <Router>
+     <ParticlesComponent/>
       <div>
         <Routes>
           <Route path="/:reference_Id/directories" element={<Main />} />
           <Route path="/:reference_Id/directories/:directoryId" element={<Main />} />
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Login />} />  
           <Route path="/register" element={<Register />} />
         </Routes>
         
-        {/* Render components from the stack */}
         <div>
         {stack.map((item) => (
                 <div key={item.id}>

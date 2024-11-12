@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../Features/AuthSlice'; // Assuming login and getAllFolders are from AuthSlice
-import { TextField, Button, Container, Box, CircularProgress, Snackbar, Alert } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { TextField, Button, Container, Box, CircularProgress, Snackbar, Alert, Typography } from '@mui/material';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { getAllFolders } from '../../Features/WorkSpace';
 import ParticlesComponent from '../../components/particles/Particles';
+
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -69,6 +70,9 @@ const Login = () => {
   return (
     <div className='login-container'>
       <Container maxWidth="sm">
+         <Typography variant="h4" align="center" gutterBottom>
+            Student File Sharing App
+          </Typography>
         <Box mt={4} p={4} boxShadow={3} sx={{ background: '#FFF' }}>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -104,6 +108,13 @@ const Login = () => {
             </Button>
           </form>
         </Box>
+
+        <Typography align="center" mt={5}>
+          Don’t have an account?{' '}
+          <Link  to="/register" variant="body2">
+            Register here
+          </Link>
+        </Typography>
       </Container>
 
       <Snackbar
