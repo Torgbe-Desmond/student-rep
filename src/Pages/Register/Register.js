@@ -12,31 +12,24 @@ const Register = () => {
     password: '',
   });
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordError, setPasswordError] = useState(false); 
+  const [passwordError, setPasswordError] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // Snackbar message state
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar visibility state
   const dispatch = useDispatch();
   const registerStatus = useSelector((state) => state.auth.registerStatus);
-  const message = useSelector((state) => state.auth.message);
-  const [successMessage , setSuccessMessage]= useState(null); 
   const navigate = useNavigate();
-  const [openSnackbar, setOpenSnackbar] = useState(false); 
-
+  const reference_Id = localStorage.getItem('reference_Id');
 
 
   useEffect(() => {
-    if (message) {
-      setOpenSnackbar(true); 
+    if (registerStatus === 'succeeded' && reference_Id) {
+      navigate(`/${reference_Id}/directories`);
     }
-  }, [message]);
+  }, [registerStatus,reference_Id, navigate]);
 
   const handleSnackbarClose = () => {
-    setOpenSnackbar(false); // Close snackbar
+    setOpenSnackbar(false);
   };
-
-  if (registerStatus === 'succeeded') {
-      navigate(`/`);
-  }
-
-
 
   const handleChange = (e) => {
     if (e.target.name === 'confirmPassword') {
@@ -47,27 +40,36 @@ const Register = () => {
         [e.target.name]: e.target.value,
       });
     }
-    setPasswordError(false); 
+    setPasswordError(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (userInfo.password !== confirmPassword) {
-      setPasswordError(true);
+
+    // Check for empty fields
+    if (!userInfo.username || !userInfo.email || !userInfo.password || !confirmPassword) {
+      setSnackbarMessage('Please fill in all fields.');
+      setOpenSnackbar(true);
       return;
     }
 
-    dispatch(register(userInfo))
-    
+    if (userInfo.password !== confirmPassword) {
+      setPasswordError(true);
+      setSnackbarMessage("Passwords don't match.");
+      setOpenSnackbar(true);
+      return;
+    }
+
+    dispatch(register(userInfo));
   };
 
   return (
     <div className='register-container'>
       <Container maxWidth="sm">
-      <Typography variant="h4" align="center" gutterBottom>
-            Student File Sharing App
-      </Typography>
-        <Box mt={4} p={4} boxShadow={3}  sx={{background:'#FFF'}}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Student File Sharing App
+        </Typography>
+        <Box mt={4} p={4} boxShadow={3} sx={{ background: '#FFF' }}>
           <form onSubmit={handleSubmit}>
             <TextField
               label="Username"
@@ -108,10 +110,10 @@ const Register = () => {
             <Button
               type="submit"
               variant="contained"
-              color={passwordError ? 'error' : 'primary'} 
+              color={passwordError ? 'error' : 'primary'}
               fullWidth
-              disabled={registerStatus === 'loading'} 
-              style={{ position: 'relative' }} 
+              disabled={registerStatus === 'loading'}
+              style={{ position: 'relative' }}
             >
               {registerStatus === 'loading' ? (
                 <CircularProgress size={24} color="inherit" />
@@ -122,8 +124,8 @@ const Register = () => {
           </form>
         </Box>
         <Typography align="center" mt={5}>
-          Don’t have an account?{' '}
-          <Link  to="/" variant="body2">
+          Already have an account?{' '}
+          <Link to="/" variant="body2">
             Login here
           </Link>
         </Typography>
@@ -136,7 +138,7 @@ const Register = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
         <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
-          {message}
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </div>

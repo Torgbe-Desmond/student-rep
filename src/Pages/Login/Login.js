@@ -1,34 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../Features/AuthSlice'; // Assuming login and getAllFolders are from AuthSlice
+import { login } from '../../Features/AuthSlice';
 import { TextField, Button, Container, Box, CircularProgress, Snackbar, Alert, Typography } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { getAllFolders } from '../../Features/WorkSpace';
 import ParticlesComponent from '../../components/particles/Particles';
 
-
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [openSnackbar, setOpenSnackbar] = useState(false); // State for snackbar visibility
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // Message to show in snackbar
   const dispatch = useDispatch();
   const moveItemStatus = useSelector((state) => state.work.moveItemStatus);
   const status = useSelector((state) => state.auth.status);
   const error = useSelector((state) => state.auth.error);
-  const [snackbarMessage,setSnackbarMessage] = useState('')
   const reference_Id = localStorage.getItem('reference_Id');
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // Fetch all folders if login is successful
     if (reference_Id) {
       dispatch(getAllFolders({ reference_Id }));
     }
   }, [status, reference_Id, dispatch]);
 
   useEffect(() => {
-    // Navigate to directories if moving item succeeded
     if (moveItemStatus === 'succeeded' && reference_Id) {
       navigate(`/${reference_Id}/directories`);
     }
@@ -46,8 +43,8 @@ const Login = () => {
 
   useEffect(() => {
     if (error) {
-      setSnackbarMessage('Error Loggin in please try again.');
-      setOpenSnackbar(true); // Show snackbar on error
+      setSnackbarMessage('Error logging in. Please try again.');
+      setOpenSnackbar(true);
     }
   }, [error]);
 
@@ -60,19 +57,42 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Simple validation checks
+    if (!credentials.email) {
+      setSnackbarMessage('Email is required');
+      setOpenSnackbar(true);
+      return;
+    } else if (!/\S+@\S+\.\S+/.test(credentials.email)) {
+      setSnackbarMessage('Please enter a valid email');
+      setOpenSnackbar(true);
+      return;
+    }
+    
+    if (!credentials.password) {
+      setSnackbarMessage('Password is required');
+      setOpenSnackbar(true);
+      return;
+    } else if (credentials.password.length < 6) {
+      setSnackbarMessage('Password must be at least 6 characters');
+      setOpenSnackbar(true);
+      return;
+    }
+
+    // Dispatch login action if inputs are valid
     dispatch(login(credentials));
   };
 
   const handleSnackbarClose = () => {
-    setOpenSnackbar(false); // Close snackbar
+    setOpenSnackbar(false);
   };
 
   return (
     <div className='login-container'>
       <Container maxWidth="sm">
-         <Typography variant="h4" align="center" gutterBottom>
-            Student File Sharing App
-          </Typography>
+        <Typography variant="h4" align="center" gutterBottom>
+          Student File Sharing App
+        </Typography>
         <Box mt={4} p={4} boxShadow={3} sx={{ background: '#FFF' }}>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -111,7 +131,7 @@ const Login = () => {
 
         <Typography align="center" mt={5}>
           Don’t have an account?{' '}
-          <Link  to="/register" variant="body2">
+          <Link to="/register" variant="body2">
             Register here
           </Link>
         </Typography>
