@@ -15,7 +15,7 @@ function App() {
         <Routes>
           <Route path="/:reference_Id/directories" element={<Main />} />
           <Route path="/:reference_Id/directories/:directoryId" element={<Main />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
         
