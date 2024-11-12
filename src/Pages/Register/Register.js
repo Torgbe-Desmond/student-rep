@@ -20,7 +20,7 @@ const Register = () => {
   const navigate = useNavigate();
   const reference_Id = localStorage.getItem('reference_Id');
 
-
+  
   useEffect(() => {
     if (registerStatus === 'succeeded' && reference_Id) {
       navigate(`/${reference_Id}/directories`);
