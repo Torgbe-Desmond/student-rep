@@ -33,7 +33,7 @@ const Register = () => {
   };
 
   if (registerStatus === 'succeeded') {
-      navigate(`/login`);
+      navigate(`/`);
   }
 
 

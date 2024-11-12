@@ -13,7 +13,7 @@ const SessionExpiredModal = () => {
   const dispatch = useDispatch();
 
   const moveToLogin = () => {
-    navigate(`/login`);
+    navigate(`/`);
     handleStackClear(dispatch)
   };
 
