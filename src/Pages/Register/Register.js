@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Button, Container, Typography, Box, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { register } from '../../Features/AuthSlice';
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import './Register.css';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -20,7 +22,7 @@ const Register = () => {
   const navigate = useNavigate();
   const reference_Id = localStorage.getItem('reference_Id');
 
-  
+
   useEffect(() => {
     if (registerStatus === 'succeeded' && reference_Id) {
       navigate(`/${reference_Id}/directories`);
@@ -66,11 +68,12 @@ const Register = () => {
   return (
     <div className='register-container'>
       <Container maxWidth="sm">
-        <Typography variant="h4" align="center" gutterBottom>
-          Student File Sharing App
-        </Typography>
-        <Box mt={4} p={4} boxShadow={3} sx={{ background: '#FFF' }}>
-          <form onSubmit={handleSubmit}>
+        <Typography variant="h4" align="center">
+          <ShareOutlinedIcon sx={{ fontSize: 50 }} />
+          <FileCopyOutlinedIcon sx={{ fontSize: 50 }} />
+       </Typography>        
+       <Box  mt={2} p={4} sx={{}}>
+       <form onSubmit={handleSubmit}>
             <TextField
               label="Username"
               name="username"
@@ -78,6 +81,7 @@ const Register = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              disabled={registerStatus === 'loading'}
             />
             <TextField
               label="Email"
@@ -86,6 +90,7 @@ const Register = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              disabled={registerStatus === 'loading'}
             />
             <TextField
               label="Password"
@@ -95,6 +100,7 @@ const Register = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              disabled={registerStatus === 'loading'}
             />
             <TextField
               label="Confirm Password"
@@ -105,6 +111,7 @@ const Register = () => {
               fullWidth
               margin="normal"
               error={passwordError}
+              disabled={registerStatus === 'loading'}
               helperText={passwordError ? "Passwords don't match" : ""}
             />
             <Button
@@ -113,7 +120,7 @@ const Register = () => {
               color={passwordError ? 'error' : 'primary'}
               fullWidth
               disabled={registerStatus === 'loading'}
-              style={{ position: 'relative' }}
+              style={{ position: 'relative', marginTop:5 }}
             >
               {registerStatus === 'loading' ? (
                 <CircularProgress size={24} color="inherit" />

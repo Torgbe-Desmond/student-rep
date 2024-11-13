@@ -5,7 +5,8 @@ import { TextField, Button, Container, Box, CircularProgress, Snackbar, Alert, T
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { getAllFolders } from '../../Features/WorkSpace';
-import ParticlesComponent from '../../components/particles/Particles';
+import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -25,7 +26,7 @@ const Login = () => {
     }
   }, [status, reference_Id, dispatch]);
 
-  
+
   useEffect(() => {
     if (moveItemStatus === 'succeeded' && reference_Id) {
       navigate(`/${reference_Id}/directories`);
@@ -91,10 +92,11 @@ const Login = () => {
   return (
     <div className='login-container'>
       <Container maxWidth="sm">
-        <Typography variant="h4" align="center" gutterBottom>
-          Student File Sharing App
-        </Typography>
-        <Box mt={4} p={4} boxShadow={3} sx={{ background: '#FFF' }}>
+      <Typography variant="h4" align="center">
+        <ShareOutlinedIcon sx={{ fontSize: 50 }} />
+        <FileCopyOutlinedIcon sx={{ fontSize: 50 }} />
+     </Typography>
+        <Box  mt={2} p={4} sx={{}}>
           <form onSubmit={handleSubmit}>
             <TextField
               label="Email"
@@ -103,6 +105,7 @@ const Login = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              disabled={status === 'loading' || moveItemStatus === 'succeeded'}
             />
             <TextField
               label="Password"
@@ -112,14 +115,15 @@ const Login = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              disabled={status === 'loading' || moveItemStatus === 'succeeded'}
             />
             <Button
               type="submit"
               variant="contained"
               color="primary"
               fullWidth
-              disabled={status === 'loading'}
-              style={{ position: 'relative' }}
+              disabled={status === 'loading' || moveItemStatus === 'succeeded'}
+              style={{ position: 'relative',  marginTop:5  }}
             >
               {status === 'loading' ? (
                 <CircularProgress size={24} color="inherit" />

@@ -47,7 +47,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1, action: () => handleAction('Download'), label: 'Download' },
     { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('CreateFolder'), label: 'Create Folder' },
     { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('UploadFileDetails'), label: 'Upload File' },
-    // { iconType: <MoreVertIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('ActionListCard'), label: 'More Actions' },
+    { iconType: <MoreVertIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('ActionListCard'), label: 'More Actions' },
   ];
 
   return (
