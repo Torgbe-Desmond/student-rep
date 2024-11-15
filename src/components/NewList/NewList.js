@@ -28,6 +28,7 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
   const [selectedFolders, setSelectedFolders] = useState([]);
   const { reference_Id } = useParams();
   const { status, error } = useSelector(state => state.work);
+  const stackState = useSelector((state) => state.stack.stackState);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,12 +40,20 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
     selectedFoldersState(prev => prev.includes(id) ? prev.filter(folderId => folderId !== id) : [...prev, id]);
   };
 
+  useEffect(()=>{
+    if(stackState === 'dropped'){
+      setSelectedFolders([]);
+      selectedFoldersState([]);
+    }
+  },[stackState])
+
   const handleSelectAll = (event) => {
     const allFolderIds = event.target.checked ? folderData?.map(folder => folder._id) : [];
     setSelectedFolders(allFolderIds);
     selectedFoldersState(allFolderIds);
   };
 
+  
   useEffect(() => {
     const { files, folders } = getFilteredData(folderData, selectedFolders);
     setSelectedFoldersForOptions(folders);

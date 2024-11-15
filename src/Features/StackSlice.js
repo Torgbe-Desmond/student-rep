@@ -1,22 +1,23 @@
-// src/features/stack/stackSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const stackSlice = createSlice({
   name: 'stack',
   initialState: {
-    components: []
+    components: [],
+    stackState:''
   },
   reducers: {
     pushComponent: (state, action) => {
         state.components.shift();
-        // console.log('inside stack',action)
         state.components.push(action.payload);
+        state.stackState = 'mounted'
     },
     popComponent: (state) => {
       state.components.pop();
     },
     clearStack: (state) => {
       state.components = [];
+      state.stackState = 'dropped'
     }
   }
 });
