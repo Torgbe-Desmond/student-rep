@@ -2,7 +2,7 @@ import { Breadcrumbs, Typography } from "@mui/material";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import './BreadCrumb.css';
 import { useDispatch, useSelector } from "react-redux";
-import { addBreadCrumb } from "../../Features/PathSlice";
+import { addBreadCrumb, clearBreadCrumb } from "../../Features/PathSlice";
 import { useEffect } from "react";
 
 const Breadcrumb = ({ breadcrumbs }) => {
@@ -10,8 +10,6 @@ const Breadcrumb = ({ breadcrumbs }) => {
   const { moveItemsArray = [] } = useSelector(state => state.work);
   const navigate = useNavigate();
   const dispatch = useDispatch()
-
-
 
   useEffect(()=>{
     const historyData = moveItemsArray.filter(history => history?.path.includes(directoryId));
@@ -23,6 +21,7 @@ const Breadcrumb = ({ breadcrumbs }) => {
     if(path){
       navigate(`/${reference_Id}/directories/${path}`)
     } else {
+      dispatch(clearBreadCrumb())
       navigate(`/${reference_Id}/directories/`)
     }
   };
@@ -31,9 +30,9 @@ const Breadcrumb = ({ breadcrumbs }) => {
     <div className="breadCrumb">
       <RouterLink
       onClick={(e) => handleClick(e)}
-      style={{ textDecoration: 'none', color: 'inherit', fontSize:'18px',paddingBottom:5 }}
-      >Home</RouterLink>
-      <Breadcrumbs aria-label="breadcrumb">
+      style={{ textDecoration: 'none', color: 'inherit', fontSize:'18px',paddingBottom:5, paddingRight:4 }}
+      >{"Home / "}</RouterLink> 
+      <Breadcrumbs aria-label="breadcrumb"> 
         {breadcrumbs?.map((breadcrumb, index) => (
           breadcrumb?.path ? (
             <RouterLink

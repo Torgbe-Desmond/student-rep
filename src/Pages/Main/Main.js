@@ -18,9 +18,16 @@ function Main() {
   const [filteredData, setFilteredData] = useState(null);
   const [selectedFilesForOptions, setSelectedFilesForOptions] = useState([]);
   const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState([]);
-  const { breadCrumbs } = useSelector(state => state.path);
+  // const { breadCrumbs } = useSelector(state => state.path);
+  const [breadCrumbs,setBreadCrumbs] = useState([])
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
   const [authorizeStatus,setAuthorizeStatus ] = useState(status)
+
+  useEffect(()=>{
+    const savedBreadCrumbs = JSON.parse(localStorage.getItem('breadCrumbs'));
+    setBreadCrumbs(savedBreadCrumbs)
+  },[localStorage.getItem('breadCrumbs')])
+
 
   const handleReload = useCallback(() => {
     if (reference_Id && directoryId) {

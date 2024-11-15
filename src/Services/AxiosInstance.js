@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+localStorage.setItem('breadCrumbs', JSON.stringify([]))
 const url = [
     'https://file-transfer-app-backend.onrender.com/api/v1',
     'http://localhost:4000/api/v1'
@@ -7,7 +7,7 @@ const url = [
   
 // Create an Axios instance
 const axiosInstance = axios.create({
-    baseURL: url[0], 
+    baseURL: url[1], 
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
@@ -29,6 +29,7 @@ axiosInstance.interceptors.request.use(
 
 
 axiosInstance.interceptors.response.use(
+
     (response) => {
         if (response && response.status === 401) {
             console.log('response in here')

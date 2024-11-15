@@ -11,10 +11,13 @@ const initialState = {
   sidebarItems: [],
   moveItemsArray:[],
   downloadStatus:'idle',
+  receiveFileStatus:'idle',
   status: 'idle',
   moveItemStatus:'idle',
+  generateSecretCodeStatus:'idle',
   mainFolders:[],
   selectedFolders:null,
+  secreteCode:'',  
   error: null,
   message: '',
 };
@@ -78,6 +81,26 @@ export const uploadFile = createAsyncThunk('file/uploadFile', async ({ reference
 export const downloadFile = createAsyncThunk('file/downloadFile', async ({reference_Id,fileId}, thunkAPI) => {
   try {
     const response = await FileService.downloadFile(reference_Id,fileId);
+    return response;
+  } catch (error) {
+    let message = error?.response?.message?.data;
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const receiveFile = createAsyncThunk('file/receiveFile', async ({reference_Id,secreteCode}, thunkAPI) => {
+  try {
+    const response = await FileService.receiveFile(reference_Id,secreteCode);
+    return response;
+  } catch (error) {
+    let message = error?.response?.message?.data;
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const generateSecretCode = createAsyncThunk('file/generateSecretCode', async ({reference_Id,fileIds}, thunkAPI) => {
+  try {
+    const response = await FileService.generateSecretCode(reference_Id,fileIds);
     return response;
   } catch (error) {
     let message = error?.response?.message?.data;
@@ -328,6 +351,33 @@ const fileFolderSlice = createSlice({
         state.status = 'failed'; // Ensure status for getAdirectory
         state.error = action.payload;
       })
+
+      
+      .addCase(receiveFile.pending, (state) => {
+        state.receiveFileStatus = 'loading'; // Ensure receiveFileStatus for receiveFile
+      })
+      .addCase(receiveFile.fulfilled, (state, action) => {
+        state.receiveFileStatus = 'succeeded'; // Ensure receiveFileStatus for receiveFile
+        // state.folders = [...state.folders, ...action.payload.createSharedFiles];
+      })
+      .addCase(receiveFile.rejected, (state, action) => {
+        state.receiveFileStatus = 'failed'; // Ensure status for receiveFile
+        state.error = action.payload;
+      })
+
+      .addCase(generateSecretCode.pending, (state) => {
+        state.generateSecretCodeStatus = 'loading'; // Ensure status for generateSecretCode
+      })
+      .addCase(generateSecretCode.fulfilled, (state, action) => {
+        state.status = 'succeeded'; // Ensure status for generateSecretCode
+        state.generateSecretCodeStatus = action.payload.secreteCode;
+      })
+      .addCase(generateSecretCode.rejected, (state, action) => {
+        state.generateSecretCodeStatus = 'failed'; // Ensure status for generateSecretCode
+        state.error = action.payload;
+      })
+
+
      
       // .addCase(downloadFile.pending, (state) => {
       //   state.downloadStatus = 'loading'; // Ensure status for getFilesInFolder

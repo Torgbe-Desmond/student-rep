@@ -1,144 +1,116 @@
 import React, { useState } from 'react';
-import { Card, CardContent, List, ListItem, ListItemIcon, ListItemText, IconButton, Button, TextField, Typography, CircularProgress } from '@mui/material';
-import FolderIcon from '@mui/icons-material/Folder';
-import ShareIcon from '@mui/icons-material/Share';
-import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
-import { Box, styled } from '@mui/system';
-import './ActionListCard.css';
-import { handleStackClear } from '../HandleStack/HandleStack';
+import { Card, CardContent, TextField, Button, Slider, Typography, Box, Grid } from '@mui/material';
 import { useDispatch } from 'react-redux';
-
-// Styled Card component to make it look interactive and compact
-const ClickableCard = styled(Card)({
-  cursor: 'pointer',
-  transition: 'transform 0.2s',
-  '&:hover': {
-    transform: 'scale(1.02)',
-    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-  },
-});
-
-const CompactCardContent = styled(CardContent)({
-  paddingLeft: '16px',
-  paddingRight: '16px',
-  paddingTop: '0px',
-  height: '55px',
-  '&:last-child': {
-    paddingBottom: '8px',
-  },
-});
-
-const PopUpContainer = styled('div')({
-  padding: '16px',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  backgroundColor: '#f9f9f9',
-  border: '1px solid #ccc',
-  width: '400px',
-  borderRadius: '8px',
-  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-});
+import './ActionListCard.css';
 
 const ActionListCard = () => {
-  const [showSharePopup, setShowSharePopup] = useState(false);
-  const [showReceivePopup, setShowReceivePopup] = useState(false);
-  const [loading,setLoading] = useState(false);
+  const [receiveCode, setReceiveCode] = useState(''); // For receiving file secret code
+  const [generatedCode, setGeneratedCode] = useState(''); // For storing the generated secret code
+  const [sliderValue, setSliderValue] = useState(0); // For controlling the slider
   const dispatch = useDispatch();
-  const shareCode = "ABC123dsfsfsdasdfadf"; // Example share code
 
-  const handleShareClick = () => {
-    setShowSharePopup(true);
-    setShowReceivePopup(false);
+  // Handle slider value change
+  const handleSliderChange = (event, newValue) => {
+    setSliderValue(newValue);
   };
 
-  const handleReceiveClick = () => {
-    setShowReceivePopup(true);
-    setShowSharePopup(false);
+  // Handle code generation
+  const generateSecretCode = () => {
+    const code = Math.random().toString(36).substr(2, 8); // Simple random code generator
+    setGeneratedCode(code);
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(shareCode)
-      .then(() => alert('Code copied to clipboard!'))
-      .catch(err => console.error('Failed to copy: ', err));
+  // Handle receiving files using the secret code
+  const handleReceiveFiles = () => {
+    if (receiveCode === '') {
+      alert('Please enter a secret code.');
+    } else {
+      // Handle file receiving logic here (e.g., request to server with the secret code)
+      alert(`Files will be loaded with secret code: ${receiveCode}`);
+    }
   };
 
   return (
     <div className="actions-list-card-overlay">
-      <div className="actions-list-card-modal">
-        <ClickableCard onClick={handleShareClick} variant="outlined">
-          <CompactCardContent>
-            <List>
-              <ListItem>
-                <ListItemIcon>
-                  <FolderIcon color="primary" />
-                </ListItemIcon>
-                <ListItemText primary="Share Files" />
-                <IconButton edge="end" aria-label="share">
-                  <ShareIcon color="secondary" />
-                </IconButton>
-              </ListItem>
-            </List>
-          </CompactCardContent>
-        </ClickableCard>
+      {/* <div className="actions-list-card-modal"> */}
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              File Sharing Options
+            </Typography>
+            <Grid container spacing={3}>
+              {/* Slider for receiving files */}
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Receive Files
+                </Typography>
+                <Slider
+                  value={sliderValue}
+                  onChange={handleSliderChange}
+                  valueLabelDisplay="auto"
+                  step={1}
+                  min={0}
+                  max={1}
+                  aria-labelledby="slider-receive"
+                />
+                {sliderValue === 1 && (
+                  <Box marginTop={2}>
+                    <TextField
+                      label="Enter Secret Code"
+                      variant="outlined"
+                      fullWidth
+                      value={receiveCode}
+                      onChange={(e) => setReceiveCode(e.target.value)}
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={handleReceiveFiles}
+                      sx={{ marginTop: 2 }}
+                    >
+                      Load Files
+                    </Button>
+                  </Box>
+                )}
+              </Grid>
 
-        <ClickableCard onClick={handleReceiveClick} variant="outlined">
-          <CompactCardContent>
-            <List>
-              <ListItem>
-                <ListItemIcon>
-                  <FolderIcon color="primary" />
-                </ListItemIcon>
-                <ListItemText primary="Receive Files" />
-                <IconButton edge="end" aria-label="receive">
-                  <CloudDownloadOutlinedIcon color="secondary" />
-                </IconButton>
-              </ListItem>
-            </List>
-          </CompactCardContent>
-        </ClickableCard>
-      </div>
-
-      {showSharePopup && (
-        <PopUpContainer>
-          <Box sx={{ backgroundColor: 'lightblue', width: '100%', margin: 0.5, padding: 1, borderRadius:2 }}>
-            <Typography variant="body1">{shareCode}</Typography>
-          </Box>
-          <Button variant="contained" color="primary" onClick={copyToClipboard}>
-            Copy
-          </Button>
-          <Button variant="text" onClick={() => {
-            setShowSharePopup(false)
-            handleStackClear(dispatch)
-
-            }}>
-            Close
-          </Button>
-        </PopUpContainer>
-      )}
-
-      {showReceivePopup && (
-        <PopUpContainer>
-          <TextField label="Enter Code" variant="outlined" size="small" />
-          {loading ? (
-                <Button variant="contained" color="primary" style={{ marginLeft: '8px' }}>
-                    <CircularProgress size={24} color="inherit" /> 
-                </Button>
-
-              ) : (
-                 <Button variant="contained" color="primary" style={{ marginLeft: '8px' }}>
-                     Receive
-                 </Button>
-              )}
-          
-          <Button variant="text" onClick={() =>{
-             setShowReceivePopup(false)
-             handleStackClear(dispatch)
-             }}>
-            Close
-          </Button>
-        </PopUpContainer>
-      )}
+              {/* Slider for generating secret code */}
+              <Grid item xs={12} sm={6}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Generate Secret
+                </Typography>
+                <Slider
+                  value={sliderValue}
+                  onChange={handleSliderChange}
+                  valueLabelDisplay="auto"
+                  step={1}
+                  min={0}
+                  max={1}
+                  aria-labelledby="slider-generate"
+                />
+                {sliderValue === 0 && (
+                  <Box marginTop={2}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      fullWidth
+                      onClick={generateSecretCode}
+                    >
+                      Generate Secrete
+                    </Button>
+                    {generatedCode && (
+                      <Typography variant="h6" align="center" marginTop={2}>
+                        Secret Code: {generatedCode}
+                      </Typography>
+                    )}
+                  </Box>
+                )}
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      {/* </div> */}
     </div>
   );
 };

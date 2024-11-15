@@ -7,8 +7,10 @@ import RenameFolder from '../RenameFolder/RenameFolder';
 import Download from '../Download/Download';
 import UploadFileDetails from '../UploadFileDetails/UploadFileDetails';
 import ActionListCard from '../ActionListCard/ActionListCard';
+import ReceiveFiles from '../ReceiveFiles/ReceiveFiles'
 import { clearSelectedIds } from '../../Features/Extra';
 import SessionExpiredModal from '../SessionExpiredModal/SessionExpiredModal';
+import GenerateSecretCode from '../GenerateSecreteCode/GenerateSecreteCode';
 
 
 export const componentMap = {
@@ -19,7 +21,9 @@ export const componentMap = {
   UploadFileDetails:<UploadFileDetails/>,
   RenameFolder: <RenameFolder />,
   Download: <Download />,
-  SessionExpiredModal:<SessionExpiredModal/>
+  SessionExpiredModal:<SessionExpiredModal/>,
+  ReceiveFiles:<ReceiveFiles/>,
+  GenerateSecretCode:<GenerateSecretCode/>
 };
 
 
@@ -38,7 +42,9 @@ const handleStack = (key, dispatch) => {
       CreateFolder: 'CreateFolder',
       RenameFolder: 'RenameFolder',
       Download: 'Download',
-      SessionExpiredModal:'SessionExpiredModal'
+      SessionExpiredModal:'SessionExpiredModal',
+      ReceiveFiles:'ReceiveFiles',
+      GenerateSecretCode:'GenerateSecretCode'
   };
 
   if (stackComponents[key]) {

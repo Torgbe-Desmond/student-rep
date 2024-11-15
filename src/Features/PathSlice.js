@@ -18,17 +18,38 @@ const pathsSlice = createSlice({
   reducers: {
     addBreadCrumb: (state, action) => {
       const historyData = action.payload;
-      const index = state.breadCrumbs.findIndex(crumb => crumb?.path === historyData?.path);
+      console.log('testing path', action.payload);
+    
+      let breadCrumbs = [
+      ];
+    
+      const savedBreadCrumbs = JSON.parse(localStorage.getItem('breadCrumbs')) || [];
+      breadCrumbs.push(...savedBreadCrumbs);
+    
+      const pathSet = new Set();
+    
+      const updatedBreadCrumbs = [];
+      breadCrumbs.forEach(crumb => {
+        if (!pathSet.has(crumb?.path)) {
+          pathSet.add(crumb?.path);
+          updatedBreadCrumbs.push(crumb);
+        }
+      });
+    
+      const index = updatedBreadCrumbs.findIndex(crumb => crumb?.path === historyData?.path);
       if (index === -1) {
-        // Path not in the array, add the new breadcrumb object
-        state.breadCrumbs.push(historyData);
+        updatedBreadCrumbs.push(historyData);
       } else {
-        // Path found, remove everything after the index
-        state.breadCrumbs = state.breadCrumbs.slice(0, index + 1);
+        updatedBreadCrumbs.splice(index + 1);
       }
+    
+      const finalBreadCrumbs = updatedBreadCrumbs.filter(breadcrumb => breadcrumb != null && breadcrumb !== '');
+    
+      localStorage.setItem('breadCrumbs', JSON.stringify(finalBreadCrumbs));
     },
+    
     clearBreadCrumb: (state) => {
-      state.breadCrumbs = [];
+      localStorage.setItem('breadCrumbs', JSON.stringify([]));    
     },
     setCurrentDirectory: (state, action) => {
       state.currentDirectory = action.payload;

@@ -16,7 +16,7 @@ function App() {
       <div>
         <Routes>
           <Route path="/:reference_Id/directories" element={<Main />} />
-          <Route path="/:reference_Id/directories/:directoryId" element={<Main />} />
+          <Route path={`/:reference_Id/directories/:directoryId`} element={<Main />} />
           <Route path="/" element={<Login />} />  
           <Route path="/register" element={<Register />} />
         </Routes>

@@ -4,6 +4,7 @@ import axiosInstance from "./AxiosInstance";
 
 // Function to handle user login
 async function login(credentials) {
+    console.log(credentials)
     const response = await axiosInstance.post(`/auth/login`, credentials);
     return response.data;
 }

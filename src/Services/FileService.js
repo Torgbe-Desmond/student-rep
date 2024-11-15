@@ -70,6 +70,7 @@ async function downloadFile(reference_Id, fileId) {
 async function getFilesInDirectory(referenceId, directoryId) {
     try {
         const response = await axiosInstance.get(`/${referenceId}/directories/${directoryId}/stuff`, {
+         
             headers,
         });
         return response.data;
@@ -77,6 +78,37 @@ async function getFilesInDirectory(referenceId, directoryId) {
         throw error; // Optional: handle or rethrow the error
     }
 }
+
+// Function to receive share files
+async function receiveFile(referenceId,secreteCode) {
+    console.log(referenceId,secreteCode)
+    try {
+        const response = await axiosInstance.post(`/${referenceId}/share`, 
+            { secreteCode},
+            {  headers  },
+        );
+        return response.data;
+    } catch (error) {
+        throw error; // Optional: handle or rethrow the error
+    }
+}
+
+// Function to generate secret code
+async function generateSecretCode(referenceId, fileIds) {
+    try {
+        const response = await axiosInstance.post(
+            `/${referenceId}/share/files`,
+            { fileIds },
+            { headers }  
+        );
+        return response.data;
+    } catch (error) {
+        console.log('error', error);
+        throw error; 
+    }
+}
+
+
 
 // Function to move files from Subscriptions to downloads
 async function moveFilesFromSubscriptionsToDownload(referenceId, directoryId) {
@@ -93,6 +125,8 @@ async function moveFilesFromSubscriptionsToDownload(referenceId, directoryId) {
 export const FileService = {
     moveFile,
     deleteFile,
+    receiveFile,
+    generateSecretCode,
     uploadFiles,
     downloadFile,
     getFilesInDirectory,
