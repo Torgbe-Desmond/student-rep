@@ -73,10 +73,16 @@ function Move() {
         
     const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
         const onlyFiles = folders?.filter(
-          (folder) => selectedFolderList.includes(folder._id) && folder.mimetype !== 'Folder' && folder.mimetype !== 'Subscriptions'
+          (folder) => selectedFolderList.includes(folder._id) && 
+          folder.mimetype !== 'Folder' && 
+          folder.mimetype !== 'Subscriptions' &&
+          folder.mimetype !== 'Shared'
         );
         const onlyFolders = folders?.filter(
-          (folder) => selectedFolderList.includes(folder._id) && (folder.mimetype === 'Folder' || folder.mimetype === 'Subscriptions')
+          (folder) => selectedFolderList.includes(folder._id) && (
+            folder.mimetype === 'Folder' || 
+            folder.mimetype === 'Subscriptions' || 
+            folder.mimetype === 'Shared')
         );
     
         return {

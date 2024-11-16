@@ -18,7 +18,6 @@ const pathsSlice = createSlice({
   reducers: {
     addBreadCrumb: (state, action) => {
       const historyData = action.payload;
-      console.log('testing path', action.payload);
     
       let breadCrumbs = [
       ];

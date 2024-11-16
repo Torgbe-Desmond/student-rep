@@ -8,6 +8,7 @@ import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
 import './SearchBarWithActions.css';
 import ButtonIcon from '../Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,6 +42,10 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     [dispatch]
   );
 
+  const logout = [
+    { iconType: <LogoutIcon />, color: 'secondary', disabled: null , action: () => handleAction('Logout'), label: 'Logout' },
+  ]
+
   const buttonConfigs = [
     { iconType: <DeleteIcon />, color: 'primary', disabled: selectedItems?.length === 0 || isValid , action: () => handleAction('Delete'), label: 'Delete' },
     { iconType: <EditIcon />, color: 'primary', disabled: selectedFoldersForOptions?.length !== 1 || isValid, action: () => handleAction('RenameFolder'), label: 'Rename' },
@@ -50,7 +55,6 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     { iconType: <FileDownloadOutlinedIcon />, color: 'primary', disabled: isValid, action: () => handleAction('ReceiveFiles'), label: 'Received Shared Files' },
     { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('CreateFolder'), label: 'Create Folder' },
     { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('UploadFileDetails'), label: 'Upload File' },
-
   ];
 
   return (
@@ -64,6 +68,18 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
       />
       <div className="button-group">
         {buttonConfigs.map((config, index) => (
+          <ButtonIcon
+            key={index}
+            iconType={config.iconType}
+            color={config.color}
+            disabled={config.disabled}
+            onClick={config.action}
+            ariaLabel={config.label}
+          />
+        ))}
+      </div>
+      <div className="logout">
+        {logout.map((config, index) => (
           <ButtonIcon
             key={index}
             iconType={config.iconType}

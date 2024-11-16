@@ -11,9 +11,13 @@ import {
   CircularProgress,
   Typography,
   Button,
+  Snackbar,
+  IconButton,
 } from '@mui/material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import KeyIcon from '@mui/icons-material/Key';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './NewList.css';
@@ -30,6 +34,7 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
   const { status, error } = useSelector(state => state.work);
   const stackState = useSelector((state) => state.stack.stackState);
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setFolderData(initialFolderData);
@@ -53,7 +58,6 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
     selectedFoldersState(allFolderIds);
   };
 
-  
   useEffect(() => {
     const { files, folders } = getFilteredData(folderData, selectedFolders);
     setSelectedFoldersForOptions(folders);
@@ -71,31 +75,55 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
   };
 
   const handleNavigate = (id, mimetype) => {
-    if (mimetype === 'Folder' || mimetype === 'Subscriptions') {
+    if (mimetype === 'Folder' || mimetype === 'Subscriptions' || mimetype === 'Shared') {
       navigate(`/${reference_Id}/directories/${id}`);
     }
   };
 
-
-  const handleFileSize = ({mimetype,size})=>{
-    let totalSize
+  const handleFileSize = ({ mimetype, size }) => {
+    let totalSize;
     const fileSizeKB = (size / 1024).toFixed(2);
-    const fileSizeMB = (size / (1024 * 1024)).toFixed(2)
-    if(mimetype === 'Folder' || mimetype === 'Subscriptions'){
-        return size;
-    } 
+    const fileSizeMB = (size / (1024 * 1024)).toFixed(2);
+    if (mimetype === 'Folder' || mimetype === 'Subscriptions' || mimetype === 'Shared') {
+      return size;
+    }
 
-    if(size > 1024){
+    if (size > 1024) {
       totalSize = `${fileSizeMB} mb`;
     } else {
       totalSize = `${fileSizeKB} kb`;
     }
 
     return totalSize;
-  }
+  };
 
-  const renderIcon = (mimetype) => 
-    mimetype === 'Folder' || mimetype === 'Subscriptions' ? <FolderOpenIcon /> : <InsertDriveFileOutlinedIcon />;
+  const renderIcon = (mimetype) => {
+    switch (mimetype) {
+      case 'Folder':
+      case 'Subscriptions':
+        return <FolderOpenIcon />;
+      case 'Shared':
+        return <KeyIcon />;
+      default:
+        return <InsertDriveFileOutlinedIcon />;
+    }
+  };
+
+  const handleCopyToClipboard = (folder) => {
+    if (folder.mimetype === 'Shared') {
+      navigator.clipboard.writeText(folder.name)
+        .then(() => {
+          setCopied(true);  // Show snackbar
+        })
+        .catch((error) => {
+          console.error('Failed to copy text: ', error);
+        });
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setCopied(false);  
+  };
 
   return (
     <div className="newlist-container">
@@ -141,7 +169,9 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
                       onChange={() => toggleFolderSelection(folder._id)}
                     />
                   </TableCell>
-                  <TableCell>{renderIcon(folder.mimetype)}</TableCell>
+                  <TableCell onClick={() => handleCopyToClipboard(folder)} sx={{ cursor: folder.mimetype === 'Shared' ? 'pointer' : 'default' }}>
+                    {renderIcon(folder.mimetype)}
+                  </TableCell>
                   <TableCell onClick={() => handleNavigate(folder._id, folder.mimetype)} sx={{ cursor: 'pointer' }}>
                     {folder.name}
                   </TableCell>
@@ -161,12 +191,23 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
         </Table>
       </TableContainer>
       {status === 'failed' && (
-       <div className='reload-btn-container'>
-         <Button onClick={handleReload} sx={{ mt: 2 }} variant="outlined">
-          Reload
-        </Button>
-      </div>
+        <div className='reload-btn-container'>
+          <Button onClick={handleReload} sx={{ mt: 2 }} variant="outlined">
+            Reload
+          </Button>
+        </div>
       )}
+      <Snackbar
+        open={copied}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message="Secrete copied to clipboard"
+        action={
+          <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      />
     </div>
   );
 }

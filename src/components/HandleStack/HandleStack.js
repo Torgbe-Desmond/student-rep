@@ -11,6 +11,7 @@ import ReceiveFiles from '../ReceiveFiles/ReceiveFiles'
 import { clearSelectedIds } from '../../Features/Extra';
 import SessionExpiredModal from '../SessionExpiredModal/SessionExpiredModal';
 import GenerateSecretCode from '../GenerateSecreteCode/GenerateSecreteCode';
+import Logout from '../Logout/Logout';
 
 
 export const componentMap = {
@@ -23,7 +24,8 @@ export const componentMap = {
   Download: <Download />,
   SessionExpiredModal:<SessionExpiredModal/>,
   ReceiveFiles:<ReceiveFiles/>,
-  GenerateSecretCode:<GenerateSecretCode/>
+  GenerateSecretCode:<GenerateSecretCode/>,
+  Logout:<Logout/>
 };
 
 
@@ -44,7 +46,8 @@ const handleStack = (key, dispatch) => {
       Download: 'Download',
       SessionExpiredModal:'SessionExpiredModal',
       ReceiveFiles:'ReceiveFiles',
-      GenerateSecretCode:'GenerateSecretCode'
+      GenerateSecretCode:'GenerateSecretCode',
+      Logout:'Logout'
   };
 
   if (stackComponents[key]) {

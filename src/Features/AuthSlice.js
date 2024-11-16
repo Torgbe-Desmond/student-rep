@@ -4,6 +4,7 @@ import { AuthService } from '../Services/AuthService';
 const initialState = {
   reference_Id: null,
   status: 'idle', 
+  logoutStatus:'idle',
   registerStatus:'idle',
   role:'',
   error: null,
@@ -14,7 +15,6 @@ const initialState = {
 export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
       const response =  await AuthService.login(credentials);
-      console.log('is there data',response)
       return response;
   } catch (error) {
       let message = error?.response?.data?.message || error.message;
@@ -35,6 +35,16 @@ export const register = createAsyncThunk('auth/register', async (userInfo, thunk
 export const deleteUser = createAsyncThunk('auth/deleteUser', async ({ token, userId }, thunkAPI) => {
   try {
       const response = await AuthService.deleteUser(token, userId);
+      return response;
+  } catch (error) {
+      let message = error?.response?.data?.message || error.message;
+      return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+  try {
+      const response = await AuthService.logout();
       return response;
   } catch (error) {
       let message = error?.response?.data?.message || error.message;
@@ -118,6 +128,18 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => {
         state.registerStatus = 'failed';
+        state.error = action.payload; 
+        state.message = action.payload?.message; 
+      })      
+      .addCase(logout.pending, (state) => {
+        state.logoutStatus = 'loading';
+      })
+      .addCase(logout.fulfilled, (state, action) => {
+        state.logoutStatus = 'succeeded';
+        state.message = action.payload;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.logoutStatus = 'failed';
         state.error = action.payload; 
         state.message = action.payload?.message; 
       })      

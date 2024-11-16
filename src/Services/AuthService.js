@@ -1,10 +1,7 @@
 import axiosInstance from "./AxiosInstance";
 
-// const API_BASE_URL = 'http://localhost:3000/api/v1/auth'
-
 // Function to handle user login
 async function login(credentials) {
-    console.log(credentials)
     const response = await axiosInstance.post(`/auth/login`, credentials);
     return response.data;
 }
@@ -29,6 +26,13 @@ async function sendRecoveryLink(email) {
     return response.data;
 }
 
+// Function to send logout link
+async function logout() {
+    const response = await axiosInstance.post(`/auth/logout`)
+    return response.data;
+}
+
+
 // Function to handle forgot password
 async function forgotPassword(token, email) {
     const response = await axiosInstance.post(`/auth/forgot-password`, { email });
@@ -43,6 +47,7 @@ async function getAll() {
 
 export const AuthService = {
     login,
+    logout,
     register,
     deleteUser,
     sendRecoveryLink,

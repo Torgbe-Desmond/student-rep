@@ -34,8 +34,9 @@ const Login = () => {
   }, [moveItemStatus, reference_Id, navigate]);
 
   useEffect(() => {
-    if (location.pathname === '/login') {
+    if (location.pathname === '/') {
       localStorage.removeItem('reference_Id');
+      localStorage.removeItem('breadCrumbs');
       localStorage.removeItem('token');
       localStorage.removeItem('role');
       localStorage.removeItem('mainFolder');
@@ -105,7 +106,7 @@ const Login = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
-              disabled={status === 'loading' || moveItemStatus === 'succeeded'}
+              disabled={status === 'loading'}
             />
             <TextField
               label="Password"
@@ -115,14 +116,14 @@ const Login = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
-              disabled={status === 'loading' || moveItemStatus === 'succeeded'}
+              disabled={status === 'loading'}
             />
             <Button
               type="submit"
               variant="contained"
               color="primary"
               fullWidth
-              disabled={status === 'loading' || moveItemStatus === 'succeeded'}
+              disabled={status === 'loading'}
               style={{ position: 'relative',  marginTop:5  }}
             >
               {status === 'loading' ? (

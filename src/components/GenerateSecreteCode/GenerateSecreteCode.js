@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, LinearProgress, TextField } from '@mui/material';
+import { Button, LinearProgress, TextField, Snackbar, Alert } from '@mui/material';
 import './GenerateSecretCode.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -9,19 +9,21 @@ function GenerateSecretCode() {
     const dispatch = useDispatch();
     const secreteCode = useSelector(state => state.work.secreteCode);
     const [isLoading, setIsLoading] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const directoryId = useSelector(state => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id'); 
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const { selectedFolders: selectedFolderList,folders, error: workspaceError } = useSelector(state => state.work);
+    const { selectedFolders: selectedFolderList, folders, error: workspaceError } = useSelector(state => state.work);
 
-    console.log('selectedFiles',selectedFiles)
- 
+    console.log('selectedFiles', selectedFiles);
+
     const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
         const onlyFileIds = folders
             ?.filter((file) =>
                 selectedFolderList.includes(file._id) &&
                 file.mimetype !== 'Folder' &&
-                file.mimetype !== 'Subscriptions'
+                file.mimetype !== 'Subscriptions' &&
+                file.mimetype !== 'Shared'
             )
             .map((file) => file._id);
 
@@ -35,11 +37,13 @@ function GenerateSecretCode() {
         setSelectedFiles(files);
     }, [folders]);
 
-
     const handleGenerateSecretCode = () => {
-        if (reference_Id &&  selectedFiles.length > 0) {
+        if (reference_Id && selectedFiles.length > 0) {
             setIsLoading(true);
-            dispatch(generateSecretCode({ reference_Id, fileIds:selectedFiles }))
+            dispatch(generateSecretCode({ reference_Id, fileIds: selectedFiles }))
+                .then(() => {
+                    setSnackbarOpen(true);
+                })
                 .finally(() => {
                     setIsLoading(false);
                     handleStackClear(dispatch);
@@ -47,43 +51,61 @@ function GenerateSecretCode() {
         }
     };
 
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
     const getFileNameById = (id) => {
         const fileOrFolder = folders.find(item => item._id === id);
         return fileOrFolder ? fileOrFolder.name : id;
     };
 
-
     return (
         <div className="generate-secret-code-overlay">
             <div className="generate-secret-code-modal">
-                    <div className="button-container">
-                        <Button 
+                <div className="button-container">
+                    <Button 
                         variant="contained" 
                         className="generate-btn" 
                         onClick={handleGenerateSecretCode}
                         disabled={isLoading}
-                        >
-                            {isLoading ? 'Generating..' : 'Generate'}
-                        </Button>
-                        <Button 
+                    >
+                        {isLoading ? 'Generating..' : 'Generate'}
+                    </Button>
+                    <Button 
                         variant="contained" 
                         onClick={() => handleStackClear(dispatch)} 
                         className="generate-btn"
                         disabled={isLoading}
-                        >
-                            Cancel
-                        </Button>
-                    </div>
-                       <div className="generate-secrete-selected-ids">
-                        <h4>{isLoading? 'Generating Secrete Code':'Files to be shared:'}</h4>
-                        { isLoading ? <LinearProgress />
-                        : <ul>
+                    >
+                        Cancel
+                    </Button>
+                </div>
+                <div className="generate-secrete-selected-ids">
+                    <h4>{isLoading ? 'Generating Secret Code' : 'Files to be shared:'}</h4>
+                    {isLoading ? (
+                        <LinearProgress />
+                    ) : (
+                        <ul>
                             {selectedFolderList.map((id) => (
                                 <li key={id}>{getFileNameById(id)}</li>
                             ))}
-                        </ul>}
-                       </div>
+                        </ul>
+                    )}
+                </div>
             </div>
+            
+            {/* Snackbar for success message */}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+                    Secret code generated successfully!
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

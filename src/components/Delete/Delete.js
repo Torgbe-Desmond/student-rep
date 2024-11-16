@@ -44,14 +44,15 @@ function Delete() {
             ?.filter((file) =>
                 selectedFolderList.includes(file._id) &&
                 file.mimetype !== 'Folder' &&
-                file.mimetype !== 'Subscriptions'
+                file.mimetype !== 'Subscriptions' &&
+                file.mimetype !== 'Shared'
             )
             .map((file) => file._id);
 
         const onlyFolderIds = folders
             ?.filter((folder) =>
                 selectedFolderList.includes(folder._id) &&
-                (folder.mimetype === 'Folder' || folder.mimetype === 'Subscriptions')
+                (folder.mimetype === 'Folder' || folder.mimetype === 'Subscriptions' || folder.mimetype === 'Shared')
             )
             .map((folder) => folder._id);
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, LinearProgress, TextField } from '@mui/material';
+import { Button, LinearProgress, TextField, Snackbar, Alert } from '@mui/material';
 import './ReceiveFiles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -9,6 +9,7 @@ function ReceiveFiles() {
     const dispatch = useDispatch();
     const [fileData, setFileData] = useState({ secreteCode: '' });
     const [isLoading, setIsLoading] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);  // Snackbar state
     const currentDirectory = useSelector(state => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id');  
 
@@ -16,6 +17,9 @@ function ReceiveFiles() {
         if (fileData.secreteCode && currentDirectory && reference_Id) {
             setIsLoading(true);
             dispatch(receiveFile({reference_Id, secreteCode : fileData.secreteCode }))
+                .then(() => {
+                    setOpenSnackbar(true);  // Show success Snackbar
+                })
                 .finally(() => {
                     setIsLoading(false);
                     handleStackClear(dispatch);
@@ -34,27 +38,29 @@ function ReceiveFiles() {
         setFileData(prevData => ({ ...prevData, [name]: value }));
     };
 
+    // Close Snackbar function
+    const handleCloseSnackbar = () => {
+        setOpenSnackbar(false);
+    };
+
     return (
         <div className="receive-files-overlay">
             <div className="receive-files-modal">
                 <div className="receive-files-body">
                     <div className="button-container">
                         <Button 
-                        variant="contained" 
-                        className="receive-btn" 
-                        onClick={handleReceiveFile}
-                        disabled={isLoading}
+                            variant="contained" 
+                            className="receive-btn" 
+                            onClick={handleReceiveFile}
+                            disabled={isLoading}
                         >
                             {isLoading ? 'Receiving..' : 'Receive'}
                         </Button>
-                        <div className='info'>
-                            Files will be stored in this directory
-                        </div>
                         <Button 
-                        variant="contained" 
-                        onClick={() => handleStackClear(dispatch)} 
-                        className="receive-btn"
-                        disabled={isLoading}
+                            variant="contained" 
+                            onClick={() => handleStackClear(dispatch)} 
+                            className="receive-btn"
+                            disabled={isLoading}
                         >
                             Cancel
                         </Button>
@@ -75,6 +81,16 @@ function ReceiveFiles() {
                     </div>
                 </div>
             </div>
+
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+            >
+                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                    Secret is added to SharedFiles!
+                </Alert>
+            </Snackbar>
         </div>
     );
 }
