@@ -40,11 +40,19 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
+
+
         if (error.response && error.response.status === 401) {
             localStorage.setItem('Unauthorized', JSON.stringify({ status: true }));
         } else {
             localStorage.setItem('Unauthorized', JSON.stringify({ status: false }));
         }
+
+        if (error) {
+            throw error;
+        }   
+
+   
     }
 );
 

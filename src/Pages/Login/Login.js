@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../Features/AuthSlice';
+import { clearError, login } from '../../Features/AuthSlice';
 import { TextField, Button, Container, Box, CircularProgress, Snackbar, Alert, Typography } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Login.css';
@@ -10,8 +10,8 @@ import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
-  const [openSnackbar, setOpenSnackbar] = useState(false); // State for snackbar visibility
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // Message to show in snackbar
+  const [openSnackbar, setOpenSnackbar] = useState(false); 
+  const [snackbarMessage, setSnackbarMessage] = useState(''); 
   const dispatch = useDispatch();
   const moveItemStatus = useSelector((state) => state.work.moveItemStatus);
   const status = useSelector((state) => state.auth.status);
@@ -26,7 +26,6 @@ const Login = () => {
     }
   }, [status, reference_Id, dispatch]);
 
-
   useEffect(() => {
     if (moveItemStatus === 'succeeded' && reference_Id) {
       navigate(`/${reference_Id}/directories`);
@@ -35,21 +34,21 @@ const Login = () => {
 
   useEffect(() => {
     if (location.pathname === '/') {
-      localStorage.removeItem('reference_Id');
-      localStorage.removeItem('breadCrumbs');
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
-      localStorage.removeItem('mainFolder');
-      localStorage.removeItem('Unauthorized');
+      localStorage.clear();
     }
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (error) {
-      setSnackbarMessage('Error logging in. Please try again.');
-      setOpenSnackbar(true);
-    }
-  }, [error]);
+useEffect(() => {
+  if (error) {
+    setSnackbarMessage(error);
+    setOpenSnackbar(true);
+  }
+
+  return () => {
+    dispatch(clearError());
+  };
+}, [error, dispatch]);
+
 
   const handleChange = (e) => {
     setCredentials({
@@ -61,7 +60,6 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Simple validation checks
     if (!credentials.email) {
       setSnackbarMessage('Email is required');
       setOpenSnackbar(true);
@@ -82,7 +80,6 @@ const Login = () => {
       return;
     }
 
-    // Dispatch login action if inputs are valid
     dispatch(login(credentials));
   };
 
@@ -93,11 +90,11 @@ const Login = () => {
   return (
     <div className='login-container'>
       <Container maxWidth="sm">
-      <Typography variant="h4" align="center">
-        <ShareOutlinedIcon sx={{ fontSize: 50 }} />
-        <FileCopyOutlinedIcon sx={{ fontSize: 50 }} />
-     </Typography>
-        <Box  mt={2} p={4} sx={{}}>
+        <Typography variant="h4" align="center">
+          <ShareOutlinedIcon sx={{ fontSize: 50 }} />
+          <FileCopyOutlinedIcon sx={{ fontSize: 50 }} />
+       </Typography>
+        <Box mt={2} p={4}>
           <form onSubmit={handleSubmit}>
             <TextField
               label="Email"
@@ -124,7 +121,7 @@ const Login = () => {
               color="primary"
               fullWidth
               disabled={status === 'loading'}
-              style={{ position: 'relative',  marginTop:5  }}
+              style={{ position: 'relative', marginTop: 5 }}
             >
               {status === 'loading' ? (
                 <CircularProgress size={24} color="inherit" />

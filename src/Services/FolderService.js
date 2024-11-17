@@ -2,7 +2,6 @@ import axiosInstance from "./AxiosInstance";
 
 // Function to create a directory
 async function createDirectory(reference_Id, directoryId, folderData) {
-    console.log(directoryId)
     const response = await axiosInstance.post(`/${reference_Id}/directories/${directoryId}`, folderData);
     return response.data;
 }

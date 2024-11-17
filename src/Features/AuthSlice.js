@@ -4,9 +4,9 @@ import { AuthService } from '../Services/AuthService';
 const initialState = {
   reference_Id: null,
   status: 'idle', 
-  logoutStatus:'idle',
-  registerStatus:'idle',
-  role:'',
+  logoutStatus: 'idle',
+  registerStatus: 'idle',
+  role: '',
   error: null,
   message: null, 
   data: [],
@@ -14,10 +14,10 @@ const initialState = {
 
 export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
-      const response =  await AuthService.login(credentials);
+      const response = await AuthService.login(credentials);
       return response;
   } catch (error) {
-      let message = error?.response?.data?.message || error.message;
+      const message = error?.response?.data?.message || error.message;
       return thunkAPI.rejectWithValue(message);
   }
 });
@@ -27,7 +27,7 @@ export const register = createAsyncThunk('auth/register', async (userInfo, thunk
       const response = await AuthService.register(userInfo);
       return response;
   } catch (error) {
-      let message = error?.response?.data?.message || error.message;
+      const message = error?.response?.data?.message || error.message;
       return thunkAPI.rejectWithValue(message);
   }
 });
@@ -37,7 +37,7 @@ export const deleteUser = createAsyncThunk('auth/deleteUser', async ({ token, us
       const response = await AuthService.deleteUser(token, userId);
       return response;
   } catch (error) {
-      let message = error?.response?.data?.message || error.message;
+      const message = error?.response?.data?.message || error.message;
       return thunkAPI.rejectWithValue(message);
   }
 });
@@ -47,7 +47,7 @@ export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
       const response = await AuthService.logout();
       return response;
   } catch (error) {
-      let message = error?.response?.data?.message || error.message;
+      const message = error?.response?.data?.message || error.message;
       return thunkAPI.rejectWithValue(message);
   }
 });
@@ -57,7 +57,7 @@ export const sendRecoveryLink = createAsyncThunk('auth/sendRecoveryLink', async 
       const response = await AuthService.sendRecoveryLink(email);
       return response;
   } catch (error) {
-      let message = error?.response?.data?.message || error.message;
+      const message = error?.response?.data?.message || error.message;
       return thunkAPI.rejectWithValue(message);
   }
 });
@@ -67,7 +67,7 @@ export const forgotPassword = createAsyncThunk('auth/forgotPassword', async ({ t
       const response = await AuthService.forgotPassword(token, email);
       return response;
   } catch (error) {
-      let message = error?.response?.data?.message || error.message;
+      const message = error?.response?.data?.message || error.message;
       return thunkAPI.rejectWithValue(message);
   }
 });
@@ -77,7 +77,7 @@ export const getAll = createAsyncThunk('auth/getAll', async (_, thunkAPI) => {
       const response = await AuthService.getAll();
       return response;
   } catch (error) {
-      let message = error?.response?.data?.message || error.message;
+      const message = error?.response?.data?.message || error.message;
       return thunkAPI.rejectWithValue(message);
   }
 });
@@ -95,8 +95,15 @@ const authSlice = createSlice({
       state.token = null;
       state.reference_Id = null;
       state.message = null; 
-      localStorage.removeItem('token')
+      state.status = 'idle';
+      state.logoutStatus = 'idle';
+      state.registerStatus = 'idle';
+      localStorage.removeItem('token');
+      localStorage.removeItem('reference_Id');
     },
+    clearError:(state)=>{
+      state.error = null
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -107,45 +114,45 @@ const authSlice = createSlice({
         state.status = 'succeeded';
         localStorage.setItem('token', action.payload.token);
         state.reference_Id = action.payload.reference_Id;
-        localStorage.setItem('reference_Id',action.payload?.reference_Id)
-        state.message = action.payload.message; 
+        localStorage.setItem('reference_Id', action.payload.reference_Id);
+        state.message = action.payload.message;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload; 
-        state.message = action.payload; 
-
+        state.error = action.payload;
+        state.message = action.payload;
       })
       .addCase(register.pending, (state) => {
         state.registerStatus = 'loading';
       })
       .addCase(register.fulfilled, (state, action) => {
         state.registerStatus = 'succeeded';
-        state.reference_Id = action.payload?.reference_Id;
-        localStorage.setItem('token', action.payload?.token);
-        localStorage.setItem('reference_Id',action.payload?.reference_Id)
-        state.message = action.payload;
+        state.reference_Id = action.payload.reference_Id;
+        localStorage.setItem('token', action.payload.token);
+        localStorage.setItem('reference_Id', action.payload.reference_Id);
+        state.message = action.payload.message;
       })
       .addCase(register.rejected, (state, action) => {
         state.registerStatus = 'failed';
-        state.error = action.payload; 
-        state.message = action.payload?.message; 
-      })      
+        state.error = action.payload;
+        state.message = action.payload;
+      })
       .addCase(logout.pending, (state) => {
         state.logoutStatus = 'loading';
       })
-      .addCase(logout.fulfilled, (state, action) => {
+      .addCase(logout.fulfilled, (state) => {
         state.logoutStatus = 'succeeded';
-        state.message = action.payload;
+        state.message = 'Successfully logged out';
+        localStorage.removeItem('token');
+        localStorage.removeItem('reference_Id');
       })
       .addCase(logout.rejected, (state, action) => {
         state.logoutStatus = 'failed';
-        state.error = action.payload; 
-        state.message = action.payload?.message; 
-      })      
+        state.error = action.payload;
+        state.message = action.payload;
+      });
   },
 });
 
-export const { setAuthData, clearAuthData } = authSlice.actions;
-
+export const { setAuthData, clearAuthData,clearError } = authSlice.actions;
 export default authSlice.reducer;

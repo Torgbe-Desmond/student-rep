@@ -122,7 +122,6 @@ export const getMainDirectories = createAsyncThunk('folder/getMainDirectories', 
   }
 });
 
-
 export const deleteFolder = createAsyncThunk('folder/deleteFolder', async ({currentDirectory, folderIds }, thunkAPI) => {
   try {
     const response = await FolderService.deleteDirectory(currentDirectory,folderIds);
@@ -152,7 +151,6 @@ export const moveFolder = createAsyncThunk('folder/moveFolder', async ({referenc
     return thunkAPI.rejectWithValue(message);
   }
 });
-
 
 export const renameFolder = createAsyncThunk('folder/renameFolder', async ({reference_Id,_id,name}, thunkAPI) => {
   try {
@@ -185,7 +183,6 @@ export const getAdirectory = createAsyncThunk('folder/getAdirectory', async ({ r
 });
 
 
-  
 const fileFolderSlice = createSlice({
   name: 'fileFolder',
   initialState,
@@ -211,55 +208,54 @@ const fileFolderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(deleteFile.pending, (state) => {
-        state.fileStatus = 'loading'; // Change status to fileStatus
+        state.fileStatus = 'loading'; 
       })
       .addCase(deleteFile.fulfilled, (state, action) => {
-        state.fileStatus = 'succeeded'; // Change status to fileStatus
+        state.fileStatus = 'succeeded'; 
          const idsToDelete = new Set([
           ...action.payload
          ]);
         state.folders = state.folders.filter(item => !idsToDelete.has(item._id));
       })
       .addCase(deleteFile.rejected, (state, action) => {
-        state.fileStatus = 'failed'; // Change status to fileStatus
+        state.fileStatus = 'failed'; 
         state.error = action.payload;
       })
       .addCase(moveFile.pending, (state) => {
-        state.fileStatus = 'loading'; // Change status to fileStatus
+        state.fileStatus = 'loading'; 
       })
       .addCase(moveFile.fulfilled, (state, action) => {
-        state.fileStatus = 'succeeded'; // Change status to fileStatus
-        state.files = state.files.filter(file => !action.payload.includes(file._id));
+        state.fileStatus = 'succeeded'; 
+        state.folders = state.folders.filter(file => !action.payload.includes(file._id));
       })
       .addCase(moveFile.rejected, (state, action) => {
-        state.fileStatus = 'failed'; // Change status to fileStatus
+        state.fileStatus = 'failed'; 
         state.error = action.payload;
       })
       .addCase(uploadFile.pending, (state) => {
-        state.fileStatus = 'loading'; // Change status to fileStatus
+        state.fileStatus = 'loading'; 
       })
       .addCase(uploadFile.fulfilled, (state, action) => {
-        state.fileStatus = 'succeeded'; // Change status to fileStatus
+        state.fileStatus = 'succeeded';
         state.folders = [...state.folders, ...action.payload.files];
       })
       .addCase(uploadFile.rejected, (state, action) => {
-        state.fileStatus = 'failed'; // Change status to fileStatus
+        state.fileStatus = 'failed'; 
         state.error = action.payload;
       })
       .addCase(downloadFile.pending, (state) => {
-        state.downloadStatus = 'loading'; // Change status to downloadStatus
+        state.downloadStatus = 'loading'; 
       })
       .addCase(downloadFile.fulfilled, (state, action) => {
-        state.downloadStatus = 'succeeded'; // Change status to downloadStatus
+        state.downloadStatus = 'succeeded'; 
         state.downloadData = action.payload;
-        // Handle download file success
       })
       .addCase(downloadFile.rejected, (state, action) => {
-        state.downloadStatus = 'failed'; // Change status to downloadStatus
+        state.downloadStatus = 'failed'; 
         state.error = action.payload;
       })
       .addCase(deleteFolder.pending, (state) => {
-        state.folderStatus = 'loading'; // Change status to folderStatus
+        state.folderStatus = 'loading'; 
       })
       .addCase(deleteFolder.fulfilled, (state, action) => {
           state.folderStatus = 'succeeded'; 
@@ -271,122 +267,119 @@ const fileFolderSlice = createSlice({
        })
     
       .addCase(deleteFolder.rejected, (state, action) => {
-        state.folderStatus = 'failed'; // Change status to folderStatus
+        state.folderStatus = 'failed'; 
         state.error = action.payload;
         state.message = action.payload;
         console.log(action.payload);
       })
       .addCase(createFolder.pending, (state) => {
-        state.folderStatus = 'loading'; // Change status to folderStatus
+        state.folderStatus = 'loading'; 
       })
       .addCase(createFolder.fulfilled, (state, action) => {
-        state.folderStatus = 'succeeded'; // Change status to folderStatus
+        state.folderStatus = 'succeeded'; 
         state.folders = [...state.folders, action.payload];
         const { name, _id } = action.payload
         const newLabelObject = {label:name,path:_id}
         state.moveItemsArray = [...state.moveItemsArray, newLabelObject];
       })
       .addCase(createFolder.rejected, (state, action) => {
-        state.folderStatus = 'failed'; // Change status to folderStatus
+        state.folderStatus = 'failed'; 
         state.error = action.payload;
         state.message = action.payload;
       })
       .addCase(moveFolder.pending, (state) => {
-        state.folderStatus = 'loading'; // Ensure status for moveFolder
+        state.folderStatus = 'loading'; 
       })
       .addCase(moveFolder.fulfilled, (state, action) => {
-        state.folderStatus = 'succeeded'; // Ensure status for moveFolder
+        state.folderStatus = 'succeeded'; 
         state.folders = state.folders.filter(folder => !action.payload.includes(folder._id));
       })
       .addCase(moveFolder.rejected, (state, action) => {
-        state.folderStatus = 'failed'; // Ensure status for moveFolder
+        state.folderStatus = 'failed'; 
         state.error = action.payload;
       })
       .addCase(renameFolder.pending, (state) => {
-        state.folderStatus = 'loading'; // Ensure status for renameFolder
+        state.folderStatus = 'loading'; 
       })
       .addCase(renameFolder.fulfilled, (state, action) => {
-        state.folderStatus = 'succeeded'; // Ensure status for renameFolder
+        state.folderStatus = 'succeeded'; 
         const { _id, name } = action.payload;
         state.folders = updateFolderName(state.folders, _id, name);
       })
       .addCase(renameFolder.rejected, (state, action) => {
-        state.folderStatus = 'failed'; // Ensure status for renameFolder
+        state.folderStatus = 'failed'; 
         state.error = action.payload;
       })
       .addCase(getAllFolders.pending, (state) => {
-        state.moveItemStatus = 'loading'; // Ensure moveItemStatus for getAllFolders
+        state.moveItemStatus = 'loading';
       })
       .addCase(getAllFolders.fulfilled, (state, action) => {
-        state.moveItemStatus = 'succeeded'; // Ensure moveItemStatus for getAllFolders
+        state.moveItemStatus = 'succeeded'; 
         state.moveItemsArray = [...action.payload];
       })
       .addCase(getAllFolders.rejected, (state, action) => {
-        state.moveItemStatus = 'failed'; // Ensure moveItemStatus for getAllFolders
+        state.moveItemStatus = 'failed'; 
         state.error = action.payload;
       })
       .addCase(getMainDirectories.pending, (state) => {
-        state.status = 'loading'; // Ensure status for getMainDirectories
+        state.status = 'loading'; 
       })
       .addCase(getMainDirectories.fulfilled, (state, action) => {
-        state.status = 'succeeded'; // Ensure status for getMainDirectories
+        state.status = 'succeeded';
         const combinedFolders = [...state.folders, ...action.payload];
         state.folders = Array.from(new Set(combinedFolders.map(folder => JSON.stringify(folder)))).map(folder => JSON.parse(folder));
         let keepInStorage = storeIdsAndNameOfMainFoldersInStorage(action.payload);
         localStorage.setItem('mainFolder', JSON.stringify(keepInStorage));
       })
       .addCase(getMainDirectories.rejected, (state, action) => {
-        state.status = 'failed'; // Ensure status for getMainDirectories
+        state.status = 'failed';
         state.error = action.payload;
       })
 
       .addCase(getAdirectory.pending, (state) => {
-        state.status = 'loading'; // Ensure status for getAdirectory
+        state.status = 'loading'; 
       })
       .addCase(getAdirectory.fulfilled, (state, action) => {
-        state.status = 'succeeded'; // Ensure status for getAdirectory
+        state.status = 'succeeded'; 
         state.folders = action.payload
       })
       .addCase(getAdirectory.rejected, (state, action) => {
-        state.status = 'failed'; // Ensure status for getAdirectory
+        state.status = 'failed'; 
         state.error = action.payload;
       })
 
       
       .addCase(receiveFile.pending, (state) => {
-        state.receiveFileStatus = 'loading'; // Ensure receiveFileStatus for receiveFile
+        state.receiveFileStatus = 'loading'; 
       })
       .addCase(receiveFile.fulfilled, (state, action) => {
-        state.receiveFileStatus = 'succeeded'; // Ensure receiveFileStatus for receiveFile
-        // state.folders = [...state.folders, ...action.payload.createSharedFiles];
+        state.receiveFileStatus = 'succeeded';
       })
       .addCase(receiveFile.rejected, (state, action) => {
-        state.receiveFileStatus = 'failed'; // Ensure status for receiveFile
+        state.receiveFileStatus = 'failed';
         state.error = action.payload;
       })
 
       .addCase(generateSecretCode.pending, (state) => {
-        state.generateSecretCodeStatus = 'loading'; // Ensure status for generateSecretCode
+        state.generateSecretCodeStatus = 'loading';
       })
       .addCase(generateSecretCode.fulfilled, (state, action) => {
-        state.status = 'succeeded'; // Ensure status for generateSecretCode
+        state.status = 'succeeded'; 
         state.generateSecretCodeStatus = action.payload.secreteCode;
       })
       .addCase(generateSecretCode.rejected, (state, action) => {
-        state.generateSecretCodeStatus = 'failed'; // Ensure status for generateSecretCode
+        state.generateSecretCodeStatus = 'failed';
         state.error = action.payload;
       })
 
-
-     
       // .addCase(downloadFile.pending, (state) => {
-      //   state.downloadStatus = 'loading'; // Ensure status for getFilesInFolder
+      //   state.downloadStatus = 'loading';
       // })
       // .addCase(downloadFile.fulfilled, (state, action) => {
-      //   state.downloadStatus = 'succeeded'; // Ensure status for getFilesInFolder
+      //   state.downloadStatus = 'succeeded'; 
       // })
       // .addCase(downloadFile.rejected, (state, action) => {
-      //   state.downloadStatus = 'failed'; // Ensure status for getFilesInFolder
+      //   state.downloadStatus = 'failed';
       //   state.error = action.payload;
       // });
 

@@ -20,7 +20,7 @@ const pathsSlice = createSlice({
       const historyData = action.payload;
     
       let breadCrumbs = [
-      ];
+      ];  
     
       const savedBreadCrumbs = JSON.parse(localStorage.getItem('breadCrumbs')) || [];
       breadCrumbs.push(...savedBreadCrumbs);

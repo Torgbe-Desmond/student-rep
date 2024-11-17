@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Button, Container, Typography, Box, CircularProgress, Snackbar, Alert } from '@mui/material';
-import { register } from '../../Features/AuthSlice';
+import { clearError, register } from '../../Features/AuthSlice';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 import './Register.css';
@@ -15,19 +15,19 @@ const Register = () => {
   });
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // Snackbar message state
-  const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbar visibility state
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false); 
   const dispatch = useDispatch();
   const registerStatus = useSelector((state) => state.auth.registerStatus);
+  const error = useSelector((state) => state.auth.error);
   const navigate = useNavigate();
   const reference_Id = localStorage.getItem('reference_Id');
-
 
   useEffect(() => {
     if (registerStatus === 'succeeded' && reference_Id) {
       navigate(`/${reference_Id}/directories`);
     }
-  }, [registerStatus,reference_Id, navigate]);
+  }, [registerStatus, reference_Id, navigate]);
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
@@ -48,14 +48,13 @@ const Register = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check for empty fields
-    if (!userInfo.username || !userInfo.email || !userInfo.password || !confirmPassword) {
+    if (!userInfo?.username || !userInfo?.email || !userInfo?.password || !confirmPassword) {
       setSnackbarMessage('Please fill in all fields.');
       setOpenSnackbar(true);
       return;
     }
 
-    if (userInfo.password !== confirmPassword) {
+    if (userInfo?.password !== confirmPassword) {
       setPasswordError(true);
       setSnackbarMessage("Passwords don't match.");
       setOpenSnackbar(true);
@@ -65,15 +64,27 @@ const Register = () => {
     dispatch(register(userInfo));
   };
 
+useEffect(() => {
+  if (error) {
+    setSnackbarMessage(error);
+    setOpenSnackbar(true);
+  }
+
+  return () => {
+    dispatch(clearError());
+  };
+}, [error, dispatch]);
+
+
   return (
     <div className='register-container'>
       <Container maxWidth="sm">
         <Typography variant="h4" align="center">
           <ShareOutlinedIcon sx={{ fontSize: 50 }} />
           <FileCopyOutlinedIcon sx={{ fontSize: 50 }} />
-       </Typography>        
-       <Box  mt={2} p={4} sx={{}}>
-       <form onSubmit={handleSubmit}>
+        </Typography>        
+        <Box mt={2} p={4}>
+          <form onSubmit={handleSubmit}>
             <TextField
               label="Username"
               name="username"
@@ -120,7 +131,7 @@ const Register = () => {
               color={passwordError ? 'error' : 'primary'}
               fullWidth
               disabled={registerStatus === 'loading'}
-              style={{ position: 'relative', marginTop:5 }}
+              style={{ position: 'relative', marginTop: 5 }}
             >
               {registerStatus === 'loading' ? (
                 <CircularProgress size={24} color="inherit" />
