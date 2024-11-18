@@ -32,10 +32,6 @@ function Category() {
 
     return (
         <div className="category-container">
-            {/* <Paper sx={{background:'transparent', boxShadow:'none'}}>
-                 <FolderOpenOutlinedIcon sx={{fontSize:100, color:'#FFF'}}/>  
-                 <InsertDriveFileOutlinedIcon sx={{fontSize:100, color:'#FFF'}}/>
-            </Paper> */}
             <Typography variant="h5" className="login-text">CHOOSE A CATEGORY TO BEGIN</Typography>
             <Paper className="category-paper" elevation={3}>
             {loading && <LinearProgress sx={{height:'2px'}} className="loading-bar" />}

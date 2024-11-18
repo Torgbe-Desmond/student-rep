@@ -13,6 +13,7 @@ function GenerateSecretCode() {
     const directoryId = useSelector(state => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id'); 
     const [selectedFiles, setSelectedFiles] = useState([]);
+    const [folderData, setFolderData] = useState({ name: '' });
     const { selectedFolders: selectedFolderList, folders, error: workspaceError } = useSelector(state => state.work);
 
     console.log('selectedFiles', selectedFiles);
@@ -38,9 +39,9 @@ function GenerateSecretCode() {
     }, [folders]);
 
     const handleGenerateSecretCode = () => {
-        if (reference_Id && selectedFiles.length > 0) {
+        if (reference_Id && selectedFiles.length > 0 && folderData.name) {
             setIsLoading(true);
-            dispatch(generateSecretCode({ reference_Id, fileIds: selectedFiles }))
+            dispatch(generateSecretCode({ reference_Id, fileIds: selectedFiles, name:folderData.name }))
                 .then(() => {
                     setSnackbarOpen(true);
                 })
@@ -58,6 +59,11 @@ function GenerateSecretCode() {
     const getFileNameById = (id) => {
         const fileOrFolder = folders.find(item => item._id === id);
         return fileOrFolder ? fileOrFolder.name : id;
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFolderData(prevData => ({ ...prevData, [name]: value }));
     };
 
     return (
@@ -80,6 +86,17 @@ function GenerateSecretCode() {
                     >
                         Cancel
                     </Button>
+                </div>
+                <div className="generate-input-container">
+                <TextField
+                    type="text"
+                    name="name"
+                    className="generate-input"
+                    placeholder="Enter to be shared as eg.PHYSICS   "
+                    value={folderData.name}
+                    onChange={handleChange}
+                    disabled = {isLoading}
+                />
                 </div>
                 <div className="generate-secrete-selected-ids">
                     <h4>{isLoading ? 'Generating Secret Code' : 'Files to be shared:'}</h4>

@@ -98,9 +98,9 @@ export const receiveFile = createAsyncThunk('file/receiveFile', async ({referenc
   }
 });
 
-export const generateSecretCode = createAsyncThunk('file/generateSecretCode', async ({reference_Id,fileIds}, thunkAPI) => {
+export const generateSecretCode = createAsyncThunk('file/generateSecretCode', async ({reference_Id,fileIds,name}, thunkAPI) => {
   try {
-    const response = await FileService.generateSecretCode(reference_Id,fileIds);
+    const response = await FileService.generateSecretCode(reference_Id,fileIds,name);
     return response;
   } catch (error) {
     let message = error?.response?.message?.data;

@@ -94,11 +94,11 @@ async function receiveFile(referenceId,secreteCode) {
 }
 
 // Function to generate secret code
-async function generateSecretCode(referenceId, fileIds) {
+async function generateSecretCode(referenceId, fileIds,name) {
     try {
         const response = await axiosInstance.post(
             `/${referenceId}/share/files`,
-            { fileIds },
+            { fileIds,name },
             { headers }  
         );
         return response.data;

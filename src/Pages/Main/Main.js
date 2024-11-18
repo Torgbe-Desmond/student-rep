@@ -18,7 +18,6 @@ function Main() {
   const [filteredData, setFilteredData] = useState(null);
   const [selectedFilesForOptions, setSelectedFilesForOptions] = useState([]);
   const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState([]);
-  // const { breadCrumbs } = useSelector(state => state.path);
   const [breadCrumbs,setBreadCrumbs] = useState([])
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
   const [authorizeStatus,setAuthorizeStatus ] = useState(status)

@@ -111,7 +111,7 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
 
   const handleCopyToClipboard = (folder) => {
     if (folder.mimetype === 'Shared') {
-      navigator.clipboard.writeText(folder.name)
+      navigator.clipboard.writeText(folder.secreteCode)
         .then(() => {
           setCopied(true);  // Show snackbar
         })
