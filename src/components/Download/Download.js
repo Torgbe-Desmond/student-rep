@@ -51,6 +51,8 @@ function Download() {
         document.body.removeChild(link);
     };
 
+    
+
     return (
         <div className="download-folder-overlay">
             <div className="download-folder-modal">
