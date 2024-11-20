@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Button, Container, Typography, Box, Snackbar, Alert, LinearProgress } from '@mui/material';
 import { verifyEmail } from '../../Features/AuthSlice';
@@ -40,7 +40,7 @@ const ForgotPasswordPage = () => {
     setSnackbarOpen(false);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (status === 'succeeded') {
       setSnackbarMessage('Verification email sent successfully!');
       setSnackbarSeverity('success');

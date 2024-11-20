@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button, Container, Box, Typography, Snackbar, Alert } from '@mui/material';
-import './PasswordUpdate.css'
-import { useDispatch } from 'react-redux';
+import './PasswordUpdate.css';
+import { useDispatch, useSelector } from 'react-redux';
 import { getVerificationToken, updatePassword } from '../../Features/AuthSlice';
 import { useParams } from 'react-router-dom';
 
@@ -11,18 +11,36 @@ const PasswordUpdate = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('error');
   const dispatch = useDispatch();
-  const { reference_Id} = useParams();
+  const { reference_Id } = useParams();
+  const verificationTokenStatus = useSelector((state) => state.auth.verificationTokenStatus);
+
+  useEffect(() => {
+    if (reference_Id) {
+      dispatch(getVerificationToken({ reference_Id }));
+    }
+
+    return () => {
+      localStorage.removeItem('verificationToken');
+    };
+  }, [dispatch, reference_Id]);
+
+  useEffect(() => {
+    if (verificationTokenStatus === 'succeeded') {
+      setSnackbarMessage('Token verification successful');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    } else if (verificationTokenStatus === 'failed') {
+      setSnackbarMessage('Token verification failed');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    } else if(verificationTokenStatus === 'succeeded'){
+      setSnackbarMessage('Password updated successfully');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
+    }
+  }, [verificationTokenStatus]);
 
 
-  useEffect(()=>{
-      if(reference_Id){
-        console.log('kaka',reference_Id)
-        dispatch(getVerificationToken({reference_Id}))
-      }
-      return ()=>{
-        localStorage.removeItem('verificationToken')
-      }
-  },[reference_Id])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,12 +72,7 @@ const PasswordUpdate = () => {
       return;
     }
 
-
-    dispatch(updatePassword({newPassword}))
-    setSnackbarMessage('Password updated successfully');
-    setSnackbarSeverity('success');
-    setOpenSnackbar(true);
-
+    dispatch(updatePassword({ newPassword }));
     setPasswords({ newPassword: '', confirmPassword: '' });
   };
 
@@ -68,49 +81,57 @@ const PasswordUpdate = () => {
   };
 
   return (
-   <div className='password-update-container'>
-     <Container maxWidth="sm">
-      <Box mt={4} p={4}  sx={{ background: '#FFF', borderRadius: '8px', backgroundColor:'transparent' }}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Update Password
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="New Password"
-            name="newPassword"
-            type="password"
-            value={passwords.newPassword}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            label="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            value={passwords.confirmPassword}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+    <div className="password-update-container">
+      <Container maxWidth="sm">
+        <Box
+          mt={4}
+          p={4}
+          sx={{ background: '#FFF', borderRadius: '8px', backgroundColor: 'transparent' }}
+        >
+          <Typography variant="h5" align="center" gutterBottom>
             Update Password
-          </Button>
-        </form>
-      </Box>
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="New Password"
+              name="newPassword"
+              type="password"
+              value={passwords.newPassword}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              value={passwords.confirmPassword}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+            />
+            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+              Update Password
+            </Button>
+          </form>
+        </Box>
 
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-      >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </Container>
-   </div>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={handleSnackbarClose}
+            severity={snackbarSeverity}
+            sx={{ width: '100%' }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Container>
+    </div>
   );
 };
 
