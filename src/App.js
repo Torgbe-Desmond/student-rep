@@ -29,10 +29,7 @@ function App() {
           {/* Forgot Password */}
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-          {/* Protected Route for Password Update */}
-          <Route element={<ProtectVerification />}>
             <Route path="/:reference_Id/update-password" element={<PasswordUpdate />} />
-          </Route>
 
           {/* Public Routes */}
           <Route path="/" element={<Login />} />
