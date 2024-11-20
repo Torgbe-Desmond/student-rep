@@ -10,8 +10,8 @@ import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
-  const [openSnackbar, setOpenSnackbar] = useState(false); 
-  const [snackbarMessage, setSnackbarMessage] = useState(''); 
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const dispatch = useDispatch();
   const moveItemStatus = useSelector((state) => state.work.moveItemStatus);
   const status = useSelector((state) => state.auth.status);
@@ -38,17 +38,16 @@ const Login = () => {
     }
   }, [location.pathname]);
 
-useEffect(() => {
-  if (error) {
-    setSnackbarMessage(error);
-    setOpenSnackbar(true);
-  }
+  useEffect(() => {
+    if (error) {
+      setSnackbarMessage(error);
+      setOpenSnackbar(true);
+    }
 
-  return () => {
-    dispatch(clearError());
-  };
-}, [error, dispatch]);
-
+    return () => {
+      dispatch(clearError());
+    };
+  }, [error, dispatch]);
 
   const handleChange = (e) => {
     setCredentials({
@@ -59,7 +58,7 @@ useEffect(() => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!credentials.email) {
       setSnackbarMessage('Email is required');
       setOpenSnackbar(true);
@@ -69,7 +68,7 @@ useEffect(() => {
       setOpenSnackbar(true);
       return;
     }
-    
+
     if (!credentials.password) {
       setSnackbarMessage('Password is required');
       setOpenSnackbar(true);
@@ -88,12 +87,12 @@ useEffect(() => {
   };
 
   return (
-    <div className='login-container'>
+    <div className="login-container">
       <Container maxWidth="sm">
         <Typography variant="h4" align="center">
           <ShareOutlinedIcon sx={{ fontSize: 50 }} />
           <FileCopyOutlinedIcon sx={{ fontSize: 50 }} />
-       </Typography>
+        </Typography>
         <Box mt={2} p={4}>
           <form onSubmit={handleSubmit}>
             <TextField
@@ -115,6 +114,11 @@ useEffect(() => {
               margin="normal"
               disabled={status === 'loading'}
             />
+            <Typography align="right" sx={{ margin: 2 }}>
+              <Link to="/forgot-password" variant="body2">
+                Forgot Password?
+              </Link>
+            </Typography>
             <Button
               type="submit"
               variant="contained"

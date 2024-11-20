@@ -33,11 +33,38 @@ async function logout() {
 }
 
 
-// Function to handle forgot password
-async function forgotPassword(token, email) {
-    const response = await axiosInstance.post(`/auth/forgot-password`, { email });
+async function verifyEmail(email) {
+    const response = await axiosInstance.post(`/auth/send-email-verification`, { email });
     return response.data;
 }
+
+
+async function getVerificationToken(reference_Id) {
+    console.log('reference_Id',reference_Id)
+    const response = await axiosInstance.get(`/auth/${reference_Id}/get-verification-token`);
+    return response.data;
+}
+
+
+// Function to handle forgot password
+async function updatePassword(newPassword) {
+      const token = localStorage.getItem('verificationToken');
+      if (!token) {
+        throw new Error('User is not authenticated. Token is missing.');
+      }
+      const response = await axiosInstance.post(
+        '/auth/update-password',
+        { newPassword },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+             Authorization: `Bearer ${JSON.stringify(token)}`,
+          },
+        }
+      );
+  
+      return response.data;
+  }
 
 // Function to get all users
 async function getAll() {
@@ -50,7 +77,9 @@ export const AuthService = {
     logout,
     register,
     deleteUser,
+    verifyEmail,
     sendRecoveryLink,
-    forgotPassword,
+    updatePassword,
+    getVerificationToken,
     getAll,
 };

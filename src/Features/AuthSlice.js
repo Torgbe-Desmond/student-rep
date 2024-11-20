@@ -6,6 +6,7 @@ const initialState = {
   status: 'idle', 
   logoutStatus: 'idle',
   registerStatus: 'idle',
+  verifyEmailStatus:'idle',
   role: '',
   error: null,
   message: null, 
@@ -62,15 +63,37 @@ export const sendRecoveryLink = createAsyncThunk('auth/sendRecoveryLink', async 
   }
 });
 
-export const forgotPassword = createAsyncThunk('auth/forgotPassword', async ({ token, email }, thunkAPI) => {
+export const updatePassword = createAsyncThunk('auth/updatePassword', async ({newPassword }, thunkAPI) => {
   try {
-      const response = await AuthService.forgotPassword(token, email);
+      const response = await AuthService.updatePassword(newPassword);
       return response;
   } catch (error) {
       const message = error?.response?.data?.message || error.message;
       return thunkAPI.rejectWithValue(message);
   }
 });
+
+export const verifyEmail = createAsyncThunk('auth/verifyEmail', async ({ email }, thunkAPI) => {
+  try {
+      const response = await AuthService.verifyEmail(email);
+      return response;
+  } catch (error) {
+      const message = error?.response?.data?.message || error.message;
+      return thunkAPI.rejectWithValue(message);
+  }
+});
+
+export const getVerificationToken = createAsyncThunk('auth/getVerificationToken', async ({ reference_Id }, thunkAPI) => {
+  try {
+      const response = await AuthService.getVerificationToken(reference_Id);
+      return response;
+  } catch (error) {
+      const message = error?.response?.data?.message || error.message;
+      return thunkAPI.rejectWithValue(message);
+  }
+});
+
+
 
 export const getAll = createAsyncThunk('auth/getAll', async (_, thunkAPI) => {
   try {
@@ -150,7 +173,45 @@ const authSlice = createSlice({
         state.logoutStatus = 'failed';
         state.error = action.payload;
         state.message = action.payload;
+      })
+      .addCase(verifyEmail.pending, (state) => {
+        state.verifyEmailStatus = 'loading';
+      })
+      .addCase(verifyEmail.fulfilled, (state) => {
+        state.verifyEmailStatus = 'succeeded';
+        state.message = 'Verification was successfully'
+      })
+      .addCase(verifyEmail.rejected, (state, action) => {
+        state.verifyEmailStatus = 'failed';
+        state.error = action.payload;
+        state.message = action.payload;
+      })
+      .addCase(updatePassword.pending, (state) => {
+        state.verifyEmailStatus = 'loading';
+      })
+      .addCase(updatePassword.fulfilled, (state) => {
+        state.verifyEmailStatus = 'succeeded';
+        state.message = 'Verification was successfully'
+      })
+      .addCase(updatePassword.rejected, (state, action) => {
+        state.verifyEmailStatus = 'failed';
+        state.error = action.payload;
+        state.message = action.payload;
+      })
+      .addCase(getVerificationToken.pending, (state) => {
+        state.verificationTokenStatus = 'loading';
+      })
+      .addCase(getVerificationToken.fulfilled, (state,action) => {
+        state.verificationTokenStatus = 'succeeded';
+        state.message = 'Verification was successfully'
+        localStorage.setItem('verificationToken',action.payload.token)
+      })
+      .addCase(getVerificationToken.rejected, (state, action) => {
+        state.verificationTokenStatus = 'failed';
+        state.error = action.payload;
+        state.message = action.payload;
       });
+      
   },
 });
 
