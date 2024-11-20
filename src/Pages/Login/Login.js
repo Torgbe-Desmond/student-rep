@@ -136,7 +136,7 @@ const Login = () => {
           </form>
         </Box>
 
-        <Typography align="center" mt={5}>
+        <Typography align="center" m={2}>
           Don’t have an account?{' '}
           <Link to="/register" variant="body2">
             Register here

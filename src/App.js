@@ -10,7 +10,6 @@ import ParticlesComponent from './components/particles/Particles';
 import ForgotPasswordPage from './Pages/ForgotPassword/ForgotPassword';
 import PasswordUpdate from './Pages/PasswordUpdate/PasswordUpdate';
 import ProtectRoutes from './Layout/ProtectRoutes';
-import ProtectVerification from './Layout/ProtectVerification';
 
 function App() {
   const stack = useSelector((state) => state.stack.components);

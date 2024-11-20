@@ -3,13 +3,14 @@ import { TextField, Button, Container, Box, Typography, Snackbar, Alert } from '
 import './PasswordUpdate.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getVerificationToken, updatePassword } from '../../Features/AuthSlice';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const PasswordUpdate = () => {
   const [passwords, setPasswords] = useState({ newPassword: '', confirmPassword: '' });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('error');
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   const { reference_Id } = useParams();
   const verificationTokenStatus = useSelector((state) => state.auth.verificationTokenStatus);
@@ -29,6 +30,9 @@ const PasswordUpdate = () => {
       setSnackbarMessage('Token verification successful');
       setSnackbarSeverity('success');
       setOpenSnackbar(true);
+      setTimeout(()=>{
+          navigate('/')
+      },3000)
     } else if (verificationTokenStatus === 'failed') {
       setSnackbarMessage('Token verification failed');
       setSnackbarSeverity('error');

@@ -74,7 +74,7 @@ const ForgotPasswordPage = () => {
             margin="normal"
           />
 
-          <Button type="submit" variant="contained" color="primary" fullWidth>
+          <Button sx={{marginTop:3}} type="submit" variant="contained" color="primary" fullWidth>
             Verify Email
           </Button>
         </form>

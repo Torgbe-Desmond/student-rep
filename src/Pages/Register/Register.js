@@ -141,7 +141,7 @@ useEffect(() => {
             </Button>
           </form>
         </Box>
-        <Typography align="center" mt={5}>
+        <Typography align="center" m={2}>
           Already have an account?{' '}
           <Link to="/" variant="body2">
             Login here
