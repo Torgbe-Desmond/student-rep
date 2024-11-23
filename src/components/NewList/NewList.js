@@ -27,7 +27,15 @@ const getFilteredData = (folderData, selectedFolders) => ({
   folders: folderData?.filter(folder => selectedFolders.includes(folder._id) && (folder.mimetype === 'Folder' || folder.mimetype === 'Subscriptions')),
 });
 
-function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForOptions, setSelectedFoldersForOptions, handleReload }) {
+function NewList(
+  { 
+  initialFolderData, 
+  selectedFoldersState, 
+  setSelectedFilesForOptions, 
+  setSelectedFoldersForOptions, 
+  handleReload
+ }
+) {
   const [folderData, setFolderData] = useState([]);
   const [selectedFolders, setSelectedFolders] = useState([]);
   const { reference_Id } = useParams();
@@ -51,6 +59,62 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
       selectedFoldersState([]);
     }
   },[stackState])
+
+  useEffect(() => {
+    if (initialFolderData?.length) {
+      const processedData = groupTimestamps(initialFolderData);
+      setFolderData(processedData);
+    }
+  }, [initialFolderData]);
+
+
+  const groupTimestamps = (data) => {
+    const grouped = {};
+    const colors = [
+      '#FFDDC1', // Light peach
+      '#D1E8E4', // Pale aqua
+      '#FFC3A0', // Light orange
+      '#D5AAFF', // Lavender
+      '#B9FBC0', // Mint green
+      '#FFB3BA', // Light pink
+      '#BFFCC6', // Pale green
+      '#FFFFBA', // Light yellow
+      '#FFDFBA', // Peach
+      '#BAE1FF', // Light blue
+      '#C1D5FF', // Soft blue
+      '#FFABAB', // Coral pink
+      '#FFC1E3', // Light rose
+      '#B4FFAB', // Lime green
+      '#FFF7AB', // Lemon yellow
+      '#ABEFFB', // Aqua blue
+      '#D2BAFF', // Soft purple
+      '#FFD9C0', // Apricot
+      '#C0FFE3', // Pale teal
+      '#E3C0FF', // Soft lavender
+    ];
+    
+    data.forEach((item) => {
+      const date = new Date(item.lastUpdated);
+      const seconds = Math.floor(date.getSeconds() / 5) * 5;
+      const timeKey = new Date(date.setSeconds(seconds, 0)).toISOString();
+
+      if (!grouped[timeKey]) {
+        grouped[timeKey] = [];
+      }
+      grouped[timeKey].push({ ...item });
+    });
+
+    const groupKeys = Object.keys(grouped);
+    groupKeys.forEach((key, index) => {
+      grouped[key].forEach((item) => {
+        item.backgroundColor = colors[index % colors.length];
+      });
+    });
+
+    return Object.values(grouped).flat();
+  };
+  
+  
 
   const handleSelectAll = (event) => {
     const allFolderIds = event.target.checked ? folderData?.map(folder => folder._id) : [];
@@ -127,7 +191,7 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
 
   return (
     <div className="newlist-container">
-      <TableContainer component={Paper} sx={{ width: '100%' }}>
+      <TableContainer component={Paper} sx={{ width: '100%',  }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -146,48 +210,61 @@ function NewList({ initialFolderData, selectedFoldersState, setSelectedFilesForO
             </TableRow>
           </TableHead>
           <TableBody>
-            {status === 'loading' && (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  <CircularProgress />
+          {status === 'loading' && (
+            <TableRow>
+              <TableCell colSpan={6} align="center">
+                <CircularProgress />
+              </TableCell>
+            </TableRow>
+          )}
+          {status === 'failed' && (
+            <TableRow>
+              <TableCell colSpan={6} align="center">
+                <Typography color="error">{error || 'Failed to load folders'}</Typography>
+              </TableCell>
+            </TableRow>
+          )}
+          {status === 'succeeded' && folderData?.length > 0 ? (
+            folderData?.map((folder) => (
+              <TableRow
+                key={folder._id}
+                selected={selectedFolders.includes(folder._id)}
+                sx={{
+                  backgroundColor: `${folder.backgroundColor || 'transparent'}`,
+                }}
+              >
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={selectedFolders?.includes(folder._id)}
+                    onChange={() => toggleFolderSelection(folder._id)}
+                  />
                 </TableCell>
-              </TableRow>
-            )}
-            {status === 'failed' && (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  <Typography color="error">{error || 'Failed to load folders'}</Typography>
+                <TableCell
+                  onClick={() => handleCopyToClipboard(folder)}
+                  sx={{ cursor: folder.mimetype === 'Shared' ? 'pointer' : 'default' }}
+                >
+                  {renderIcon(folder.mimetype)}
                 </TableCell>
-              </TableRow>
-            )}
-            {status === 'succeeded' && folderData?.length > 0 ? (
-              folderData?.map(folder => (
-                <TableRow key={folder._id} selected={selectedFolders.includes(folder._id)}>
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedFolders?.includes(folder._id)}
-                      onChange={() => toggleFolderSelection(folder._id)}
-                    />
-                  </TableCell>
-                  <TableCell onClick={() => handleCopyToClipboard(folder)} sx={{ cursor: folder.mimetype === 'Shared' ? 'pointer' : 'default' }}>
-                    {renderIcon(folder.mimetype)}
-                  </TableCell>
-                  <TableCell onClick={() => handleNavigate(folder._id, folder.mimetype)} sx={{ cursor: 'pointer' }}>
-                    {folder.name}
-                  </TableCell>
-                  <TableCell>{folder.mimetype}</TableCell>
-                  <TableCell>{handleFileSize(folder)}</TableCell>
-                  <TableCell>{new Date(folder.lastUpdated).toLocaleDateString()}</TableCell>
+                <TableCell
+                  onClick={() => handleNavigate(folder._id, folder.mimetype)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  {folder.name}
+                </TableCell>
+                <TableCell>{folder.mimetype}</TableCell>
+                <TableCell>{handleFileSize(folder)}</TableCell>
+                <TableCell>{new Date(folder.lastUpdated).toLocaleDateString()}</TableCell>
                 </TableRow>
-              ))
-            ) : status === 'succeeded' && folderData?.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  <Typography>No folders available</Typography>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
+            ))
+          ) : status === 'succeeded' && folderData?.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={6} align="center">
+                <Typography>No folders available</Typography>
+              </TableCell>
+            </TableRow>
+          )}
+      </TableBody>
+
         </Table>
       </TableContainer>
       {status === 'failed' && (
