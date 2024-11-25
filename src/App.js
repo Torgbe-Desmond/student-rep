@@ -16,7 +16,7 @@ function App() {
 
   return (
     <Router>
-      <ParticlesComponent />
+      {/* <ParticlesComponent /> */}
       <div>
         <Routes>
           {/* Protected Routes for Directories */}

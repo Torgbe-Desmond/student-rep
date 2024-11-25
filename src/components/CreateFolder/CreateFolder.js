@@ -35,6 +35,8 @@ function CreateFolder() {
         setFolderData(prevData => ({ ...prevData, [name]: value }));
     };
 
+
+
     return (
         <div className="create-folder-overlay">
             <div className="create-folder-modal">

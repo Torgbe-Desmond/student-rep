@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Button, Container, Typography, Box, Snackbar, Alert, LinearProgress } from '@mui/material';
 import { verifyEmail } from '../../Features/AuthSlice';
 import './ForgotPassword.css'
+import { Link } from 'react-router-dom';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
@@ -78,6 +79,12 @@ const ForgotPasswordPage = () => {
             Verify Email
           </Button>
         </form>
+        <Typography align="center" sx={{marginTop:3}} >
+          Go back {' '}
+          <Link to="/" variant="body2">
+            Login here
+          </Link>
+        </Typography>
       </Box>
 
       {/* Snackbar for notifications */}

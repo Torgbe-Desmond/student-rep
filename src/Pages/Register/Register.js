@@ -131,7 +131,7 @@ useEffect(() => {
               color={passwordError ? 'error' : 'primary'}
               fullWidth
               disabled={registerStatus === 'loading'}
-              style={{ position: 'relative', marginTop: 5 }}
+              style={{ position: 'relative', marginTop: 10 }}
             >
               {registerStatus === 'loading' ? (
                 <CircularProgress size={24} color="inherit" />
@@ -141,7 +141,7 @@ useEffect(() => {
             </Button>
           </form>
         </Box>
-        <Typography align="center" m={2}>
+        <Typography align="center">
           Already have an account?{' '}
           <Link to="/" variant="body2">
             Login here

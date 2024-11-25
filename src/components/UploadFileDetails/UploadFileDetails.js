@@ -32,7 +32,7 @@ const UploadFileDetails = () => {
 
     const handleAddFile = useCallback(() => {
         const totalSize = calculateTotalSize(uploadedFiles);
-        const maxTotalSize = 10 * 1024 * 1024; 
+        const maxTotalSize = 15 * 1024 * 1024; 
 
         const inputElement = document.createElement('input');
         inputElement.type = 'file';
@@ -56,7 +56,7 @@ const UploadFileDetails = () => {
 
             if (validFiles.length < newFiles.length) {
                 setSnackbarOpen(true);
-                setSnackbarMessage('File must be less than 10MB');
+                setSnackbarMessage('File must be less than 15MB');
             }
 
             // Update uploaded files and total size

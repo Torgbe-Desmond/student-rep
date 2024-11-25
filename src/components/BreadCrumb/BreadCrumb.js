@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 const Breadcrumb = ({ breadcrumbs }) => {
   const { directoryId,reference_Id } = useParams();
-  const { moveItemsArray = [] } = useSelector(state => state.work);
+  const { moveItemsArray = [] ,status} = useSelector(state => state.work);
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
@@ -18,6 +18,9 @@ const Breadcrumb = ({ breadcrumbs }) => {
 
   const handleClick = (event, path = null) => {
     event.preventDefault();
+    if(status==='loading'){
+       return;
+    }
     if(path){
       navigate(`/${reference_Id}/directories/${path}`)
     } else {
@@ -44,7 +47,8 @@ const Breadcrumb = ({ breadcrumbs }) => {
               {breadcrumb?.label}
             </RouterLink>
           ) : (
-            <Typography key={index} color="text.primary">
+            <Typography 
+            key={index} color="text.primary">
               {breadcrumb?.label}
             </Typography>
           )
