@@ -25,7 +25,6 @@ export default function BasicSpeedDial({
     const dispatch = useDispatch();
     const [isValid, setIsValid] = useState(true);
     const { directoryId } = useParams();
-    console.log('directoryId',directoryId)
 
     const handleAction = useCallback(
         (actionType) => handleStack(actionType, dispatch),

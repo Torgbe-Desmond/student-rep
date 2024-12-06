@@ -10,7 +10,8 @@ const ButtonIcon = ({
   onClick 
 }) => {
   return (
-    <Tooltip title={ariaLabel} arrow>
+     <Tooltip title={ariaLabel} arrow>
+      <span>
       <IconButton
         disabled={disabled}
         color={color}
@@ -19,6 +20,7 @@ const ButtonIcon = ({
       >
         {iconType}
       </IconButton>
+      </span>
     </Tooltip>
   );
 };

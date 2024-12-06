@@ -32,7 +32,7 @@ const SessionExpiredModal = () => {
                       color="primary"
                       onClick={moveToLogin}
                     >
-                      Please Login
+                      Logout
                     </Button>
             </div>
         </div>

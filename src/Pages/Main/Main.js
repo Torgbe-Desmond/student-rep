@@ -47,10 +47,10 @@ function Main() {
       dispatch(getMainDirectories({ reference_Id }));
       dispatch(getAllFolders({ reference_Id }));
     }
-    if (authorizeStatus === true){
+    if (authorizeStatus){
         handleAction('SessionExpiredModal');
     }
-  }, [dispatch, reference_Id, directoryId]);
+  }, [dispatch, reference_Id, directoryId,status]);
 
   const handleAction = useCallback(
     (actionType) => handleStack(actionType, dispatch),
@@ -84,18 +84,6 @@ function Main() {
       />
 
       {/* <UploadStatus/> */}
-{/* 
-        <Tabs
-          value={value}
-          // onChange={handleChange}
-          variant="scrollable"
-          scrollButtons="auto"
-        >
-          <Tab label="Tab One" />
-          <Tab label="Tab Two" />
-          <Tab label="Tab Three" />
-          <Tab label="Tab Four" />
-        </Tabs> */}
 
 
       <Breadcrumb breadcrumbs={breadCrumbs}

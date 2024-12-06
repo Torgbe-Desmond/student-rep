@@ -61,7 +61,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     <div className="search-options">
       <TextField
         className="search-input"
-        label="Search files/folders by name"
+        label="Search files by name"
         variant="outlined"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}

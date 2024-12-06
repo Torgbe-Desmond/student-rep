@@ -1,4 +1,4 @@
-import { Breadcrumbs, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Typography } from "@mui/material";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import './BreadCrumb.css';
 import { useDispatch, useSelector } from "react-redux";
@@ -31,10 +31,13 @@ const Breadcrumb = ({ breadcrumbs }) => {
 
   return (
     <div className="breadCrumb">
-      <RouterLink
-      onClick={(e) => handleClick(e)}
-      style={{ textDecoration: 'none', color: 'inherit', fontSize:'18px',paddingBottom:5, paddingRight:4 }}
-      >{"Home / "}</RouterLink> 
+      <Button 
+        sx={{marginRight:1}}
+        variant="outlined"
+        onClick={(e)=> handleClick(e)}
+      >
+        Home
+      </Button>
       <Breadcrumbs aria-label="breadcrumb"> 
         {breadcrumbs?.map((breadcrumb, index) => (
           breadcrumb?.path ? (
