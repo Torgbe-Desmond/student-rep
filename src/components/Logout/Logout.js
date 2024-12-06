@@ -36,6 +36,7 @@ function Logout() {
                         variant="contained" 
                         color="primary" 
                         className="logout-btn"
+                        disabled={isLoading}
                     >
                         Logout
                     </Button>
@@ -44,6 +45,7 @@ function Logout() {
                         variant="contained" 
                         color="primary" 
                         className="cancel-btn"
+                        disabled={isLoading}
                     >
                         Cancel
                     </Button>

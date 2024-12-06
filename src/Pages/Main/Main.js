@@ -8,6 +8,12 @@ import { clearFilesAndFolders, getAdirectory, getAllFolders, getMainDirectories 
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb';
 import { setCurrentDirectory } from '../../Features/PathSlice';
 import handleStack from '../../components/HandleStack/HandleStack';
+import UploadStatus from '../../components/UploadStatus/UploadStatus';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { Box } from '@mui/material';
+import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
+
 
 function Main() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -21,6 +27,11 @@ function Main() {
   const [breadCrumbs,setBreadCrumbs] = useState([])
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
   const [authorizeStatus,setAuthorizeStatus ] = useState(status)
+  const [value, setValue] = React.useState('1');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   useEffect(()=>{
     const savedBreadCrumbs = JSON.parse(localStorage.getItem('breadCrumbs'));
@@ -72,7 +83,25 @@ function Main() {
         selectedFoldersForOptions={selectedFoldersForOptions}
       />
 
-      <Breadcrumb breadcrumbs={breadCrumbs} />
+      {/* <UploadStatus/> */}
+{/* 
+        <Tabs
+          value={value}
+          // onChange={handleChange}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          <Tab label="Tab One" />
+          <Tab label="Tab Two" />
+          <Tab label="Tab Three" />
+          <Tab label="Tab Four" />
+        </Tabs> */}
+
+
+      <Breadcrumb breadcrumbs={breadCrumbs}
+       />
+
+
 
       <NewList 
         initialFolderData={filteredData} 
@@ -81,8 +110,15 @@ function Main() {
         setSelectedFoldersForOptions={setSelectedFoldersForOptions}
         handleReload={handleReload}
       />
+
+      <BasicSpeedDial
+        selectedItems={selectedItems} 
+        selectedFilesForOptions={selectedFilesForOptions}
+        selectedFoldersForOptions={selectedFoldersForOptions}
+      />
     </div>
   );
 }
 
 export default Main;
+

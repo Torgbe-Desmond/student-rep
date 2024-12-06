@@ -50,7 +50,6 @@ function CreateFolder() {
                         >
                             {isLoading ? 'Creating..' : 'Create'}
                         </Button>
-                        {/* <div className='creating-folder'>{folderData?.name}</div> */}
                         <Button 
                         variant="contained" 
                         onClick={() => handleStackClear(dispatch)} 

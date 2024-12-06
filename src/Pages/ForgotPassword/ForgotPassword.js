@@ -87,7 +87,6 @@ const ForgotPasswordPage = () => {
         </Typography>
       </Box>
 
-      {/* Snackbar for notifications */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}

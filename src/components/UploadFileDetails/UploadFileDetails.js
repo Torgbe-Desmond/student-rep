@@ -1,9 +1,16 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, cloneElement } from 'react';
 import './UploadFileDetails.css';
-import { Button, TextField, Snackbar, Alert, LinearProgress, Box } from '@mui/material';
+import { Button, TextField, Snackbar, Alert, LinearProgress, Box, List } from '@mui/material';
 import { handleStackClear } from '../HandleStack/HandleStack';
 import { useDispatch, useSelector } from 'react-redux';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import { styled } from '@mui/material/styles';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { uploadFile } from '../../Features/WorkSpace';
 
 const UploadFileDetails = () => {
@@ -16,6 +23,21 @@ const UploadFileDetails = () => {
     const dispatch = useDispatch();
     const reference_Id = localStorage.getItem('reference_Id');
     const { currentDirectory } = useSelector(state => state.path);
+    const [dense, setDense] = useState(false);
+
+    function generate(element) {
+        return [0, 1, 2].map((value) =>
+          cloneElement(element, {
+            key: value,
+          }),
+        );
+      }
+      
+      const Demo = styled('div')(({ theme }) => ({
+        backgroundColor: theme.palette.background.paper,
+      }));
+  
+
 
     const handleClose = useCallback(() => {
         handleStackClear(dispatch);
@@ -29,6 +51,11 @@ const UploadFileDetails = () => {
     const calculateTotalSize = (files) => {
         return files.reduce((acc, file) => acc + file.size, 0);
     };
+
+    const calculateSelectedFileSize = (fileSizeKB,fileSizeMB)=>{
+          const size =  fileSizeKB > 1000 ? `${fileSizeMB} MB` : `${fileSizeKB} KB`
+          return size;
+    }
 
     const handleAddFile = useCallback(() => {
         const totalSize = calculateTotalSize(uploadedFiles);
@@ -145,25 +172,46 @@ const UploadFileDetails = () => {
                     </div>
                     {isUploading && <LinearProgress />}
                     <div className="file-list">
+                    <List dense={dense}>
                         {uploadedFiles.map((file, index) => {
+
                             const fileSizeKB = (file.size / 1024).toFixed(2);
                             const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                            
                             return (
-                                <div key={index} className="file-details">
-                                    <Box className="upload-name-input">
-                                        {file.name}
-                                    </Box>
-                                    <p className='upload-size'>Size: {fileSizeKB > 1000 ? `${fileSizeMB} MB` : `${fileSizeKB} KB`}</p>
-                                    <div>
-                                       <DeleteOutlineOutlinedIcon 
-                                       disabled={isUploading}
-                                       className="delete-icon" 
-                                       onClick={() => handleRemoveFile(index)} />
-                                    </div>
-                                </div>
+
+                         <>
+                              <ListItem
+                                      secondaryAction={
+                                        <IconButton edge="end" aria-label="delete">
+                                          <DeleteIcon 
+                                          onClick={() => handleRemoveFile(index)}
+                                          disabled={isUploading}
+                                          />
+                                        </IconButton>
+                                       }
+                                      >
+                                     <ListItemAvatar>
+                                       <Avatar>
+                                         <InsertDriveFileIcon />
+                                       </Avatar>
+                                     </ListItemAvatar>
+                                     
+                                     <ListItemText
+                                       sx={{
+                                        maxWidth:'90%',
+                                        overflowY: "auto",
+        
+                                       }}
+                                       primary= {file.name}
+                                       secondary={calculateSelectedFileSize(fileSizeKB,fileSizeMB)}
+                                     />
+                              </ListItem>
+                        </> 
+
+                              
                             );
                         })} 
+                </List>
                     </div>
                     <p> Total selected size: {totalSize > 1000 ? `${(totalSize / (1024 * 1024)).toFixed(2)} MB` : `${(totalSize / 1024).toFixed(2)} KB`}</p>
                 </div>

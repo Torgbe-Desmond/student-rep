@@ -287,6 +287,6 @@ function NewList(
       />
     </div>
   );
-}
+} 
 
 export default NewList;

@@ -21,6 +21,14 @@
   width: 100%;
 }
 
+.button-group {
+  display: none;
+  gap: 0.2rem;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+}
+
   @media (min-width: 600px) {
     .search-options {
       flex-direction: row;  
@@ -28,6 +36,11 @@
     }
   .button-group {
     gap: 2rem;
+    display: flex;
+    gap: 0.2rem;
+    height: auto;
+    justify-content: center;
+    align-items: center;
   }
   .logout{
     display: flex;
@@ -42,13 +55,7 @@
     max-width: 400px;
   }
   
-  .button-group {
-    display: flex;
-    gap: 0.2rem;
-    height: auto;
-    justify-content: center;
-    align-items: center;
-  }
+
 
   
   
