@@ -6,13 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { clearFilesAndFolders, getAdirectory, getAllFolders, getMainDirectories } from '../../Features/WorkSpace';
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb';
-import { setCurrentDirectory } from '../../Features/PathSlice';
-import handleStack from '../../components/HandleStack/HandleStack';
-import UploadStatus from '../../components/UploadStatus/UploadStatus';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { Box } from '@mui/material';
+import { restoreBreadCrumbs, setCurrentDirectory } from '../../Features/PathSlice';
 import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
+import handleStack from '../../components/HandleStack/HandleStack';;
 
 
 function Main() {
@@ -24,6 +20,7 @@ function Main() {
   const [filteredData, setFilteredData] = useState(null);
   const [selectedFilesForOptions, setSelectedFilesForOptions] = useState([]);
   const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState([]);
+  const breadCrumb = useSelector(state=>state.path.breadCrumbs)
   const [breadCrumbs,setBreadCrumbs] = useState([])
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
   const [authorizeStatus,setAuthorizeStatus ] = useState(status)
@@ -33,19 +30,21 @@ function Main() {
     setValue(newValue);
   };
 
-  useEffect(()=>{
-    const savedBreadCrumbs = JSON.parse(localStorage.getItem('breadCrumbs'));
-    setBreadCrumbs(savedBreadCrumbs)
-  },[localStorage.getItem('breadCrumbs')])
 
+  useEffect(()=>{
+    setBreadCrumbs(breadCrumb)
+  },[breadCrumb])
 
   const handleReload = useCallback(() => {
+
+      dispatch(restoreBreadCrumbs())
+      dispatch(getAllFolders({ reference_Id }));
+
     if (reference_Id && directoryId) {
       dispatch(getAdirectory({ reference_Id, directoryId }));
       dispatch(setCurrentDirectory(directoryId));
     } else if (reference_Id) {
       dispatch(getMainDirectories({ reference_Id }));
-      dispatch(getAllFolders({ reference_Id }));
     }
     if (authorizeStatus){
         handleAction('SessionExpiredModal');
@@ -88,7 +87,6 @@ function Main() {
 
       <Breadcrumb breadcrumbs={breadCrumbs}
        />
-
 
 
       <NewList 

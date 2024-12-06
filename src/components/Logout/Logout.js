@@ -16,7 +16,7 @@ function Logout() {
         dispatch(logout())
             .finally(() => {
                 localStorage.removeItem('reference_Id');
-                localStorage.removeItem('breadCrumbs');
+                localStorage.removeItem('TemporaryBreadCrumbs');
                 localStorage.removeItem('token');
                 localStorage.removeItem('role');
                 localStorage.removeItem('mainFolder');

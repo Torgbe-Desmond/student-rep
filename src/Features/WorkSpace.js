@@ -46,6 +46,20 @@ const updateFolderName = (folders, id, newName) => {
 }
 
 
+const updateName = (folders, path, label) => {
+  const folderIndex = folders.findIndex(folder => folder.path === path);
+  if (folderIndex !== -1) {
+    const updatedFolders = [...folders];
+    updatedFolders[folderIndex] = {
+      ...updatedFolders[folderIndex],
+      label,
+    };
+    return updatedFolders;
+  }
+  return folders;
+}
+
+
 const storeIdsAndNameOfMainFoldersInStorage = (folders)=>{
   let mainFoldersIdsAndName = []
   folders.forEach(element => {
@@ -305,6 +319,8 @@ const fileFolderSlice = createSlice({
         state.folderStatus = 'succeeded'; 
         const { _id, name } = action.payload;
         state.folders = updateFolderName(state.folders, _id, name);
+        state.moveItemsArray = updateName(state.moveItemsArray, _id, name);
+        console.log(updateName(state.moveItemsArray, _id, name))
       })
       .addCase(renameFolder.rejected, (state, action) => {
         state.folderStatus = 'failed'; 

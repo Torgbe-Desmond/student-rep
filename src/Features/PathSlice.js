@@ -17,50 +17,31 @@ const pathsSlice = createSlice({
   initialState,
   reducers: {
     addBreadCrumb: (state, action) => {
-      const historyData = action.payload;
-    
-      let breadCrumbs = [
-      ];  
-    
-      const savedBreadCrumbs = JSON.parse(localStorage.getItem('breadCrumbs')) || [];
-      breadCrumbs.push(...savedBreadCrumbs);
-    
-      const pathSet = new Set();
-    
-      const updatedBreadCrumbs = [];
-      breadCrumbs.forEach(crumb => {
-        if (!pathSet.has(crumb?.path)) {
-          pathSet.add(crumb?.path);
-          updatedBreadCrumbs.push(crumb);
-        }
-      });
-    
-      const index = updatedBreadCrumbs.findIndex(crumb => crumb?.path === historyData?.path);
-      if (index === -1) {
-        updatedBreadCrumbs.push(historyData);
+      const historyData = action.payload[0];
+      const index = state.breadCrumbs.findIndex(crumb => crumb?.path === historyData?.path);
+      if (index === -1 && index != undefined) {
+        state.breadCrumbs.push(historyData);
+        state.breadCrumbs = state.breadCrumbs.filter(item=>item != null);
       } else {
-        updatedBreadCrumbs.splice(index + 1);
+        state.breadCrumbs.splice(index + 1);
       }
-    
-      const finalBreadCrumbs = updatedBreadCrumbs.filter(breadcrumb => breadcrumb != null && breadcrumb !== '');
-    
-      localStorage.setItem('breadCrumbs', JSON.stringify(finalBreadCrumbs));
     },
-    
     clearBreadCrumb: (state) => {
-      localStorage.setItem('breadCrumbs', JSON.stringify([]));    
+      state.breadCrumbs = [];
     },
     setCurrentDirectory: (state, action) => {
       state.currentDirectory = action.payload;
     },
-    addStudentHistory: (state, action) => {
-      const { _id, name } = action.payload;
-      const history = getStudentHistory();
-      const exists = history.some(historyItem => historyItem._id === _id);
-      if (!exists) {
-        const newHistory = [...history, { _id, name }];
-        localStorage.setItem('studentHistory', JSON.stringify(newHistory));
+    storeBreadCrumbs:(state)=>{
+      localStorage.setItem('TemporaryBreadCrumbs',  JSON.stringify(state.breadCrumbs))
+    },
+    restoreBreadCrumbs:(state,action)=>{
+      let tempExist = JSON.parse(localStorage.getItem('TemporaryBreadCrumbs')) || [];
+      if(tempExist.length > 0){
+          state.breadCrumbs = JSON.parse(localStorage.getItem('TemporaryBreadCrumbs'));
+          localStorage.setItem('TemporaryBreadCrumbs', JSON.stringify([]))
       }
+       
     },
   },
 });
@@ -69,7 +50,8 @@ export const {
   addBreadCrumb, 
   clearBreadCrumb, 
   setCurrentDirectory,
-  addStudentHistory 
+  storeBreadCrumbs,
+  restoreBreadCrumbs 
 } = pathsSlice.actions;
 
 export default pathsSlice.reducer;

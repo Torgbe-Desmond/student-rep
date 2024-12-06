@@ -1,5 +1,4 @@
 import axios from 'axios';
-localStorage.setItem('breadCrumbs', JSON.stringify([]))
 const url = [
     'https://file-transfer-app-backend.onrender.com/api/v1',
     'http://localhost:4000/api/v1'

@@ -6,14 +6,15 @@ import { addBreadCrumb, clearBreadCrumb } from "../../Features/PathSlice";
 import { useEffect } from "react";
 
 const Breadcrumb = ({ breadcrumbs }) => {
-  const { directoryId,reference_Id } = useParams();
+  const { directoryId , reference_Id } = useParams();
   const { moveItemsArray = [] ,status} = useSelector(state => state.work);
   const navigate = useNavigate();
   const dispatch = useDispatch()
 
+
   useEffect(()=>{
     const historyData = moveItemsArray.filter(history => history?.path.includes(directoryId));
-    dispatch(addBreadCrumb(historyData[0]));
+      dispatch(addBreadCrumb(historyData));
   },[directoryId])
 
   const handleClick = (event, path = null) => {
