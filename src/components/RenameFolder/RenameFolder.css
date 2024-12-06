@@ -9,12 +9,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
 }
 
 /* Modal styling */
 .rename-folder-modal {
-    background-color: #ffffff;
+    background: rgba(255, 255, 255, 0.856);
     border-radius: 8px;
     padding: 24px;
     width: 400px;
@@ -74,4 +73,20 @@
 .rename-input {
     width: 100%;
     font-size: 14px;
+}
+
+
+@media screen and (max-width:640px) {
+    .rename-folder-modal {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+        background: #FFF;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 80vw;
+    }
 }
