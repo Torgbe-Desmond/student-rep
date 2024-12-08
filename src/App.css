@@ -1,20 +1,9 @@
 /* App.css */
-.app-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  width: 100vw;
-  max-width: 800px; /* Adjust as needed */
-  margin: 0 auto;
-  box-sizing: border-box;
-  color:#fff;
-}
-
 
 ::-webkit-scrollbar {
   width: 10px;
   height: 4px;
+  display: none;
 }
 
 /* Track */

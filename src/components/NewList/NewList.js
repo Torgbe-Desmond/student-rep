@@ -42,6 +42,7 @@ function NewList(
   const { reference_Id } = useParams();
   const { status, error } = useSelector(state => state.work);
   const stackState = useSelector((state) => state.stack.stackState);
+  const colorDifferentiation = useSelector((state) => state.settings.colorDifferentiation);
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
 
@@ -242,7 +243,7 @@ function NewList(
                 key={folder._id}
                 selected={selectedFolders.includes(folder._id)}
                 sx={{
-                  backgroundColor: `${folder.backgroundColor || 'transparent'}`,
+                  backgroundColor: `${colorDifferentiation ? folder.backgroundColor : 'transparent'}`,
                 }}
               >
                 <TableCell padding="checkbox">

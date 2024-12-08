@@ -5,6 +5,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   path: [],
   breadCrumbs: [],
+  bottomTab:false,
   currentDirectory: '',
 };
 
@@ -43,6 +44,10 @@ const pathsSlice = createSlice({
       }
        
     },
+    toggleBottomTab:(state)=>{
+      state.bottomTab = !state.bottomTab;
+    },
+  
   },
 });
 
@@ -51,7 +56,8 @@ export const {
   clearBreadCrumb, 
   setCurrentDirectory,
   storeBreadCrumbs,
-  restoreBreadCrumbs 
+  restoreBreadCrumbs,
+  toggleBottomTab 
 } = pathsSlice.actions;
 
 export default pathsSlice.reducer;

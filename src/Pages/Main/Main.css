@@ -2,12 +2,39 @@
 .app-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  width: 100vw;
-  max-width: 1000px; /* Adjust as needed */
-  margin: 0 auto;
+  width: 100%;
+  height: 100vh;
   box-sizing: border-box;
-  /* background-color: antiquewhite; */
+  overflow-y: scroll;
 }
 
+.top-app-container{
+  margin-top: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  contain: content;
+}
+
+@media screen and (min-width:600px) {
+   .app-container {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     padding: 20px;
+     width: 100vw;
+     max-width: 1000px; 
+     margin: 0 auto;
+     box-sizing: border-box;
+   }
+
+   .top-app-container{
+    margin-top: 75px;
+  }
+   
+}

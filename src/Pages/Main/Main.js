@@ -10,6 +10,9 @@ import { restoreBreadCrumbs, setCurrentDirectory } from '../../Features/PathSlic
 import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
 import handleStack from '../../components/HandleStack/HandleStack';
 import UploadStatus from '../../components/UploadStatus/UploadStatus';
+import SimpleBottomNavigation from '../../components/SimpleBottomNavigation/SimpleBottomNavigation';
+import ScrollSearch from '../../components/ScrollSearch/ScrollSearch';
+import { AppBar, Box, InputBase, Toolbar } from '@mui/material';
 
 function Main() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -24,6 +27,18 @@ function Main() {
   const [breadCrumbs,setBreadCrumbs] = useState([])
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
   const [authorizeStatus,setAuthorizeStatus ] = useState(status);
+  const [showSearch, setShowSearch] = useState(false);
+
+  
+  useEffect(() => {
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup the event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(()=>{
     setBreadCrumbs(breadCrumb)
@@ -64,16 +79,41 @@ function Main() {
     setFilteredData(folders);
   }, [folders]);
 
+
+  const handleScroll = () => {
+    console.log('scrolling')
+    const scrollThreshold = 150; // Show search bar after scrolling 150px
+    if (window.scrollY > scrollThreshold) {
+      setShowSearch(true);
+    } else {
+      setShowSearch(false);
+    }
+  };
+
+  useEffect(() => {
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup the event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <div className="app-container">
-      <SearchBarWithActions 
+     <Box sx={{ position: 'fixed', zIndex: 1, }}>
+     <SearchBarWithActions 
         folderData={_folders} 
         setFilteredData={setFilteredData} 
         selectedItems={selectedItems} 
         selectedFilesForOptions={selectedFilesForOptions}
         selectedFoldersForOptions={selectedFoldersForOptions}
-      />
+      />  
+     </Box>
 
+     <div className='top-app-container'>
+      
       <Breadcrumb 
         breadcrumbs={breadCrumbs}
        />
@@ -86,6 +126,8 @@ function Main() {
         handleReload={handleReload}
       />
 
+     </div>
+
       <UploadStatus
         reference_Id={reference_Id}
       />
@@ -95,6 +137,8 @@ function Main() {
         selectedFilesForOptions={selectedFilesForOptions}
         selectedFoldersForOptions={selectedFoldersForOptions}
       />
+
+      <SimpleBottomNavigation />
     </div>
   );
 }

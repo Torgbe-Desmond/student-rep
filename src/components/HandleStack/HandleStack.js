@@ -11,6 +11,7 @@ import SessionExpiredModal from '../SessionExpiredModal/SessionExpiredModal';
 import GenerateSecretCode from '../GenerateSecreteCode/GenerateSecreteCode';
 import Logout from '../Logout/Logout';
 import { clearSelectedIds } from '../../Features/WorkSpace';
+import Settings from '../../Pages/Settings/Settings';
 
 
 export const componentMap = {
@@ -23,7 +24,8 @@ export const componentMap = {
   SessionExpiredModal:<SessionExpiredModal/>,
   ReceiveFiles:<ReceiveFiles/>,
   GenerateSecretCode:<GenerateSecretCode/>,
-  Logout:<Logout/>
+  Logout:<Logout/>,
+  Settings:<Settings/>
 };
 
 
@@ -44,7 +46,8 @@ const handleStack = (key, dispatch) => {
       SessionExpiredModal:'SessionExpiredModal',
       ReceiveFiles:'ReceiveFiles',
       GenerateSecretCode:'GenerateSecretCode',
-      Logout:'Logout'
+      Logout:'Logout',
+      Settings:'Settings'
   };
 
   if (stackComponents[key]) {

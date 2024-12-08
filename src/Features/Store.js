@@ -1,10 +1,9 @@
-// src/app/store.js
 import { configureStore } from '@reduxjs/toolkit';
 import stackReducer from './StackSlice';
 import workspaceRedduce from './WorkSpace'
 import authReducer from './AuthSlice'
 import pathReducer from './PathSlice'
-
+import settingsReducer from './settingsSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +11,6 @@ export const store = configureStore({
     work:workspaceRedduce,
     auth:authReducer,
     path:pathReducer,
+    settings:settingsReducer
   },
 });
