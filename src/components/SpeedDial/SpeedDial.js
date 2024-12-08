@@ -56,7 +56,7 @@ export default function BasicSpeedDial({
         zIndex:1,
         position:'fixed',
         right:20,
-        bottom:75
+        bottom:20
         }}>
       <SpeedDial
         ariaLabel="SpeedDial basic example"

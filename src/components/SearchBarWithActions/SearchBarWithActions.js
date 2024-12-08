@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TextField, IconButton } from '@mui/material';
+import { TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -9,29 +9,19 @@ import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutl
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
-import SearchIcon from '@mui/icons-material/Search';
+import './SearchBarWithActions.css';
+import ButtonIcon from '../Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedFolders } from '../../Features/WorkSpace';
 import handleStack from '../HandleStack/HandleStack';
 import { useParams } from 'react-router-dom';
-import { useMediaQuery } from '@mui/material';
 
-import './SearchBarWithActions.css';
-import ButtonIcon from '../Button/Button';
-
-function SearchBarWithActions({
-  folderData,
-  setFilteredData,
-  selectedItems,
-  selectedFilesForOptions,
-  selectedFoldersForOptions,
-}) {
+function SearchBarWithActions({ folderData, setFilteredData, selectedItems, selectedFilesForOptions, selectedFoldersForOptions }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [showSearch, setShowSearch] = useState(false); // State to toggle the search bar
-  const { directoryId } = useParams();
+  const { directoryId } = useParams()
   const dispatch = useDispatch();
-  const isLargeScreen = useMediaQuery('(min-width:1024px)'); // Match for large screens
   const [isValid, setIsValid] = useState(true);
+
 
   useEffect(() => {
     setIsValid(!directoryId);
@@ -52,10 +42,6 @@ function SearchBarWithActions({
     [dispatch]
   );
 
-  const handleSearchIconClick = () => {
-    setShowSearch((prev) => !prev); // Toggle search bar visibility
-  };
-
   const logout = [
     { iconType: <LogoutIcon />, color: 'secondary', disabled: null , action: () => handleAction('Logout'), label: 'Logout' },
   ]
@@ -73,44 +59,13 @@ function SearchBarWithActions({
 
   return (
     <div className="search-options">
-      {isLargeScreen ? (
-        <>
-          {showSearch ? (
-            <TextField
-              sx={{
-                width: '50%',
-                minWidth: '200px',
-                padding: 1,
-              }}
-              className="search-input"
-              label="Search files by name"
-              variant="outlined"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          ) : (
-            <IconButton onClick={handleSearchIconClick}>
-              <SearchIcon />
-            </IconButton>
-          )}
-        </>
-      ) : (
-       <>
-         <TextField
-          sx={{
-            width: '95%',
-            minWidth: '200px',
-            padding: 1,
-          }}
-          className="search-input"
-          placeholder="Search files by name"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-       
-       </>
-      )}
+      <TextField
+        className="search-input"
+        label="Search files by name"
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
       <div className="button-group">
         {buttonConfigs.map((config, index) => (
           <ButtonIcon
@@ -135,7 +90,6 @@ function SearchBarWithActions({
           />
         ))}
       </div>
-      
     </div>
   );
 }
