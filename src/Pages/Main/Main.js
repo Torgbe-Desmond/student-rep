@@ -113,7 +113,7 @@ function Main() {
      </Box>
 
      <div className='top-app-container'>
-      
+
       <Breadcrumb 
         breadcrumbs={breadCrumbs}
        />
@@ -138,7 +138,7 @@ function Main() {
         selectedFoldersForOptions={selectedFoldersForOptions}
       />
 
-      <SimpleBottomNavigation />
+      {/* <SimpleBottomNavigation /> */}
     </div>
   );
 }

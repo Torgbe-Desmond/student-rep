@@ -59,13 +59,13 @@ export default function SimpleBottomNavigation() {
    <div className='bottom-navigation-container'>
      <Box
       sx={{
-        width: '100%',
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-        backgroundColor: '#fffafa',
-        zIndex: 10,
+        // width: '100%',
+        // position: 'fixed',
+        // bottom: 0,
+        // left: 0,
+        // boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+        // backgroundColor: '#fffafa',
+        // // zIndex: 10,
       }}
     >
       <BottomNavigation
