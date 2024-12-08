@@ -243,7 +243,7 @@ function NewList(
                 key={folder._id}
                 selected={selectedFolders.includes(folder._id)}
                 sx={{
-                  backgroundColor: `${colorDifferentiation ? folder.backgroundColor : 'transparent'}`,
+                  backgroundColor: `${true ? folder.backgroundColor : 'transparent'}`,
                 }}
               >
                 <TableCell padding="checkbox">
