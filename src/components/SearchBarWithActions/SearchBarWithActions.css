@@ -1,7 +1,7 @@
 .search-options {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 0.5rem;
     width: 100vw;
     max-width: 100%;
@@ -29,7 +29,12 @@
   align-items: center;
 }
 
-  @media (min-width: 600px) {
+.search-input {
+  width: 100%;
+  max-width: 500px;
+}
+
+  @media screen and (min-width: 600px) {
     .search-options {
       flex-direction: row;  
       width: 100%;
@@ -44,16 +49,17 @@
   }
   .logout{
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
-    width: 70px;
+    width: 100%;
+
+  }
+  .search-input {
+    min-width: 700px;
   }
   }
   
-  .search-input {
-    width: 100%;
-    max-width: 400px;
-  }
+
   
 
 

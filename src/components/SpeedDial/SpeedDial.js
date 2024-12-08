@@ -22,6 +22,7 @@ export default function BasicSpeedDial({
     selectedFilesForOptions,
     selectedFoldersForOptions
 }) {
+
     const dispatch = useDispatch();
     const [isValid, setIsValid] = useState(true);
     const { directoryId } = useParams();
@@ -36,17 +37,16 @@ export default function BasicSpeedDial({
       }, [directoryId]);
 
       const buttonConfigs = [
+        { iconType: <FileDownloadOutlinedIcon />, color: 'primary', disabled: isValid, action: () => handleAction('ReceiveFiles'), label: 'Received Shared Files' },
+        { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('CreateFolder'), label: 'Create Folder' },
+        { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('UploadFileDetails'), label: 'Upload File' },
         { iconType: <DeleteIcon />, color: 'primary', disabled: selectedItems?.length === 0 || isValid , action: () => handleAction('Delete'), label: 'Delete' },
         { iconType: <EditIcon />, color: 'primary', disabled: selectedFoldersForOptions?.length !== 1 || isValid, action: () => handleAction('RenameFolder'), label: 'Rename' },
         { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: selectedItems?.length === 0 || isValid, action: () => handleAction('Move'), label: 'Move' },
         { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1 || isValid, action: () => handleAction('Download'), label: 'Download' },
         { iconType: <FileUploadOutlinedIcon />, color: 'primary', disabled: selectedFilesForOptions?.length == 0 || isValid, action: () => handleAction('GenerateSecretCode'), label: 'Share Files' },
-        { iconType: <FileDownloadOutlinedIcon />, color: 'primary', disabled: isValid, action: () => handleAction('ReceiveFiles'), label: 'Received Shared Files' },
-        { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('CreateFolder'), label: 'Create Folder' },
-        { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('UploadFileDetails'), label: 'Upload File' },
       ];
     
-
   return (
   <div className='basic-speed-dial'>
       <Box sx={{ 
@@ -55,7 +55,7 @@ export default function BasicSpeedDial({
         flexGrow: 1, 
         zIndex:1,
         position:'fixed',
-        right:10,
+        right:5,
         bottom:10
         }}>
       <SpeedDial

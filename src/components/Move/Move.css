@@ -82,23 +82,14 @@
 
 .move-button-container {
     display: flex;
-    justify-content: flex-end;
+    width: 100%;
+    justify-content: space-between;
     gap: 10px;
 }
 
 /* Button styles */
 .move-btn {
-    width: 100px;
-}
-
-.move-btn:first-of-type {
-    background-color: #4caf50;
-    color: white;
-}
-
-.move-btn:last-of-type {
-    background-color: #f44336;
-    color: white;
+    min-width: 200px;
 }
 
 
@@ -106,5 +97,17 @@
     .move-modal {
         width: 400px;
     }
+    .bottom-move-modal {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        width: 100%;
+    }
+    .move-btn {
+        min-width: 100px;
+    }
+    
+    
   }
   

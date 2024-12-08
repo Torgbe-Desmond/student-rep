@@ -60,6 +60,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
   return (
     <div className="search-options">
       <TextField
+      sx={{width:'100%',minWidth:'100px'}}
         className="search-input"
         label="Search files by name"
         variant="outlined"

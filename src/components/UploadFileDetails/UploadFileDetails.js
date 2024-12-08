@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, cloneElement } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './UploadFileDetails.css';
 import { Button, TextField, Snackbar, Alert, LinearProgress, Box, List } from '@mui/material';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -16,28 +16,13 @@ import { uploadFile } from '../../Features/WorkSpace';
 const UploadFileDetails = () => {
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [open, setOpen] = useState(true);
-    const [snackbarOpen, setSnackbarOpen] = useState(false); 
-    const [isUploading, setIsUploading] = useState(false); 
-    const [snackbarMessage,setSnackbarMessage] = useState('')
-    const [totalSize, setTotalSize] = useState(0); 
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [totalSize, setTotalSize] = useState(0);
     const dispatch = useDispatch();
     const reference_Id = localStorage.getItem('reference_Id');
     const { currentDirectory } = useSelector(state => state.path);
-    const [dense, setDense] = useState(false);
-
-    function generate(element) {
-        return [0, 1, 2].map((value) =>
-          cloneElement(element, {
-            key: value,
-          }),
-        );
-      }
-      
-      const Demo = styled('div')(({ theme }) => ({
-        backgroundColor: theme.palette.background.paper,
-      }));
-  
-
 
     const handleClose = useCallback(() => {
         handleStackClear(dispatch);
@@ -52,14 +37,13 @@ const UploadFileDetails = () => {
         return files.reduce((acc, file) => acc + file.size, 0);
     };
 
-    const calculateSelectedFileSize = (fileSizeKB,fileSizeMB)=>{
-          const size =  fileSizeKB > 1000 ? `${fileSizeMB} MB` : `${fileSizeKB} KB`
-          return size;
-    }
+    const calculateSelectedFileSize = (fileSizeKB, fileSizeMB) => {
+        return fileSizeKB > 1000 ? `${fileSizeMB} MB` : `${fileSizeKB} KB`;
+    };
 
     const handleAddFile = useCallback(() => {
         const totalSize = calculateTotalSize(uploadedFiles);
-        const maxTotalSize = 15 * 1024 * 1024; 
+        const maxTotalSize = 15 * 1024 * 1024;
 
         const inputElement = document.createElement('input');
         inputElement.type = 'file';
@@ -74,7 +58,6 @@ const UploadFileDetails = () => {
             let newTotalSize = totalSize;
             let filecount = 0;
 
-            // Filter files that are valid based on the total size
             const validFiles = newFiles.filter(file => {
                 newTotalSize += file.size;
                 filecount += 1;
@@ -86,10 +69,9 @@ const UploadFileDetails = () => {
                 setSnackbarMessage('File must be less than 15MB');
             }
 
-            // Update uploaded files and total size
             setUploadedFiles(prevFiles => {
                 const updatedFiles = [...prevFiles, ...validFiles];
-                setTotalSize(calculateTotalSize(updatedFiles)); 
+                setTotalSize(calculateTotalSize(updatedFiles));
                 return updatedFiles;
             });
 
@@ -109,30 +91,31 @@ const UploadFileDetails = () => {
         setUploadedFiles(prevFiles => {
             const updatedFiles = [...prevFiles];
             updatedFiles.splice(index, 1);
-            setTotalSize(calculateTotalSize(updatedFiles)); 
+            setTotalSize(calculateTotalSize(updatedFiles));
             return updatedFiles;
         });
     }, []);
 
     const handleUpload = useCallback(() => {
-        setIsUploading(true); 
+        setIsUploading(true);
 
         const formData = new FormData();
         uploadedFiles.forEach(file => {
             formData.append('files', file);
         });
-      
+
         if (uploadedFiles.length > 0 && currentDirectory) {
             dispatch(uploadFile({ reference_Id, directoryId: currentDirectory, formData }))
                 .then(() => {
-                    setIsUploading(false); 
-                    handleClose();
+                    setIsUploading(false);
                 })
                 .catch(() => {
-                    setIsUploading(false); 
+                    setIsUploading(false);
+                }).finally(() => {
+                    handleClose();
                 });
         } else {
-            setIsUploading(false); 
+            setIsUploading(false);
         }
     }, [dispatch, reference_Id, currentDirectory, uploadedFiles, handleClose]);
 
@@ -142,90 +125,81 @@ const UploadFileDetails = () => {
                 <div className="upload-file-details-content">
                     <div className="button-container">
 
-                        <Button 
-                        variant="contained" 
-                        className="btn add-file-btn" 
-                        onClick={handleAddFile} 
-                        disabled={isUploading}>
+                        <Button
+                            variant="contained"
+                            className="btn add-file-btn"
+                            onClick={handleAddFile}
+                            disabled={isUploading}>
                             Add File
                         </Button>
 
-                        <Button 
-                        variant="contained" 
-                        className="btn close-btn" 
-                        onClick={handleClose} 
-                        disabled={isUploading}>
+                        <Button
+                            variant="contained"
+                            className="btn close-btn"
+                            onClick={handleClose}
+                            disabled={isUploading}>
                             Close
                         </Button>
 
                         {uploadedFiles.length > 0 && (
-                            <Button 
-                            variant="contained" 
-                            className="btn change-name-btn" 
-                            onClick={handleUpload} 
-                            disabled={isUploading}>
-
+                            <Button
+                                variant="contained"
+                                className="btn change-name-btn"
+                                onClick={handleUpload}
+                                disabled={isUploading}>
                                 {isUploading ? 'Uploading...' : 'Upload'}
                             </Button>
-
                         )}
                     </div>
                     {isUploading && <LinearProgress />}
                     <div className="file-list">
-                    <List dense={dense}>
-                        {uploadedFiles.map((file, index) => {
+                        <List>
+                            {uploadedFiles.map((file, index) => {
 
-                            const fileSizeKB = (file.size / 1024).toFixed(2);
-                            const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                            return (
+                                const fileSizeKB = (file.size / 1024).toFixed(2);
+                                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                                return (
+                                    <ListItem
+                                        secondaryAction={
+                                            <IconButton edge="end" aria-label="delete">
+                                                <DeleteIcon
+                                                    onClick={() => handleRemoveFile(index)}
+                                                    disabled={isUploading}
+                                                />
+                                            </IconButton>
+                                        }>
+                                        <ListItemAvatar>
+                                            <Avatar>
+                                                <InsertDriveFileIcon />
+                                            </Avatar>
+                                        </ListItemAvatar>
 
-                         <>
-                              <ListItem
-                                      secondaryAction={
-                                        <IconButton edge="end" aria-label="delete">
-                                          <DeleteIcon 
-                                          onClick={() => handleRemoveFile(index)}
-                                          disabled={isUploading}
-                                          />
-                                        </IconButton>
-                                       }
-                                      >
-                                     <ListItemAvatar>
-                                       <Avatar>
-                                         <InsertDriveFileIcon />
-                                       </Avatar>
-                                     </ListItemAvatar>
-                                     
-                                     <ListItemText
-                                       sx={{
-                                        maxWidth:'90%',
-                                        overflowY: "auto",
-        
-                                       }}
-                                       primary= {file.name}
-                                       secondary={calculateSelectedFileSize(fileSizeKB,fileSizeMB)}
-                                     />
-                              </ListItem>
-                        </> 
-
-                              
-                            );
-                        })} 
-                </List>
+                                        <ListItemText
+                                            sx={{
+                                                maxWidth: '90%',
+                                                overflowY: 'auto',
+                                            }}
+                                            primary={file.name}
+                                            secondary={calculateSelectedFileSize(fileSizeKB, fileSizeMB)}
+                                        />
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
                     </div>
                     <p> Total selected size: {totalSize > 1000 ? `${(totalSize / (1024 * 1024)).toFixed(2)} MB` : `${(totalSize / 1024).toFixed(2)} KB`}</p>
                 </div>
 
-                <Snackbar 
-                    open={snackbarOpen} 
-                    autoHideDuration={3000} 
-                    onClose={handleSnackbarClose} 
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={handleSnackbarClose}
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 >
-                    <Alert 
-                    onClose={handleSnackbarClose} 
-                    severity="warning" 
-                    sx={{ width: '100%' }}>
+                    <Alert
+                        onClose={handleSnackbarClose}
+                        severity="warning"
+                        sx={{ width: '100%' }}>
                         {snackbarMessage}
                     </Alert>
                 </Snackbar>

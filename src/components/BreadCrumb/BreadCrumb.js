@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addBreadCrumb, clearBreadCrumb } from "../../Features/PathSlice";
 import { useEffect } from "react";
 
-const Breadcrumb = ({ breadcrumbs }) => {
+const Breadcrumb = ({ breadcrumbs, }) => {
   const { directoryId , reference_Id } = useParams();
   const { moveItemsArray = [] ,status} = useSelector(state => state.work);
   const navigate = useNavigate();

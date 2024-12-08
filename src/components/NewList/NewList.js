@@ -17,6 +17,7 @@ import {
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import KeyIcon from '@mui/icons-material/Key';
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined';
+import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -185,6 +186,16 @@ function NewList(
     }
   };
 
+  const renderStatus = ({mimetype,url}) =>{
+    if (mimetype !== 'Folder' || mimetype !== 'Subscriptions' || mimetype !== 'Shared') {
+          if(url === 'fileUrl'){
+            return <CircularProgress size={24}/>
+          } else {
+            return <CheckCircleOutlineOutlinedIcon/>
+          }
+    }
+  }
+
   const handleCloseSnackbar = () => {
     setCopied(false);  
   };
@@ -202,6 +213,7 @@ function NewList(
                   onChange={handleSelectAll}
                 />
               </TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Folder</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Mime Type</TableCell>
@@ -212,7 +224,7 @@ function NewList(
           <TableBody>
           {status === 'loading' && (
             <TableRow>
-              <TableCell colSpan={6} align="center">
+              <TableCell colSpan={12} align="center">
                 <CircularProgress />
               </TableCell>
             </TableRow>
@@ -239,6 +251,7 @@ function NewList(
                     onChange={() => toggleFolderSelection(folder._id)}
                   />
                 </TableCell>
+                <TableCell>{renderStatus(folder)}</TableCell>
                 <TableCell
                   onClick={() => handleCopyToClipboard(folder)}
                   sx={{ cursor: folder.mimetype === 'Shared' ? 'pointer' : 'default' }}
@@ -258,7 +271,7 @@ function NewList(
             ))
           ) : status === 'succeeded' && folderData?.length === 0 && (
             <TableRow>
-              <TableCell colSpan={6} align="center">
+              <TableCell colSpan={12} align="center">
                 <Typography>No folders available</Typography>
               </TableCell>
             </TableRow>

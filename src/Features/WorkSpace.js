@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { FileService } from '../Services/FileService';
 import { FolderService } from '../Services/FolderService';
+import { isFulfilled, isRejected } from '@reduxjs/toolkit';
 
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
   moveItemsArray:[],
   downloadStatus:'idle',
   receiveFileStatus:'idle',
+  deleteFileStatus:'idle',
   status: 'idle',
   moveItemStatus:'idle',
   generateSecretCodeStatus:'idle',
@@ -44,6 +46,21 @@ const updateFolderName = (folders, id, newName) => {
   }
   return folders;
 }
+
+
+const updateFileUrl = (folders, id, url) => {
+  const fileIndex = folders.findIndex(folder => folder._id === id);
+  if (fileIndex !== -1) {
+    const updatedFolders = [...folders];
+    updatedFolders[fileIndex] = {
+      ...updatedFolders[fileIndex],
+      url,
+    };
+    return updatedFolders;
+  }
+  return folders;
+}
+
 
 
 const updateName = (folders, path, label) => {
@@ -217,6 +234,10 @@ const fileFolderSlice = createSlice({
     clearSelectedIds:(state)=>{
       state.selectedFolders = [];
    },
+    updateFile:(state,action)=>{
+      const { id , url } = action.payload;
+        state.folders = updateFileUrl(state.folders,id, url);
+    }
 
   },
   extraReducers: (builder) => {
@@ -252,6 +273,7 @@ const fileFolderSlice = createSlice({
       .addCase(uploadFile.fulfilled, (state, action) => {
         state.fileStatus = 'succeeded';
         state.folders = [...state.folders, ...action.payload.files];
+        state.fileStatus = 'idle';
       })
       .addCase(uploadFile.rejected, (state, action) => {
         state.fileStatus = 'failed'; 
@@ -399,7 +421,24 @@ const fileFolderSlice = createSlice({
       //   state.error = action.payload;
       // });
 
-      
+      // .addMatcher(isFulfilled, (state) => {
+      //   // Reset statuses to idle after successful actions
+      //   state.fileStatus = 'idle';
+      //   state.folderStatus = 'idle';
+      //   state.downloadStatus = 'idle';
+      //   state.moveItemStatus = 'idle';
+      //   state.generateSecretCodeStatus = 'idle';
+      //   state.receiveFileStatus = 'idle';
+      // })
+      // .addMatcher(isRejected, (state) => {
+      //   // Reset statuses to idle after rejected actions
+      //   state.fileStatus = 'idle';
+      //   state.folderStatus = 'idle';
+      //   state.downloadStatus = 'idle';
+      //   state.moveItemStatus = 'idle';
+      //   state.generateSecretCodeStatus = 'idle';
+      //   state.receiveFileStatus = 'idle';
+      // });
   
     }})
   
@@ -408,7 +447,8 @@ const fileFolderSlice = createSlice({
     clearMoveItemsArray,
     clearStudentFilesAndFolders,
     setSelectedFolders,
-    clearSelectedIds
+    clearSelectedIds,
+    updateFile
   } = fileFolderSlice.actions;
 
   export default fileFolderSlice.reducer;

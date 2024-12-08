@@ -1,12 +1,12 @@
 import axios from 'axios';
 const url = [
     'https://file-transfer-app-backend.onrender.com/api/v1',
-    'http://localhost:4000/api/v1'
+    'http://localhost:5000/api/v1'
 ];
   
 // Create an Axios instance
 const axiosInstance = axios.create({
-    baseURL: url[0], 
+    baseURL: url[1], 
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
@@ -25,7 +25,6 @@ axiosInstance.interceptors.request.use(
         console.log('configuration error',error)
     }
 );
-
 
 axiosInstance.interceptors.response.use(
 

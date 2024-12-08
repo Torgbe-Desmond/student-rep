@@ -40,15 +40,6 @@
 }
 
 
-.file-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
-    max-width: 500px;
-    contain: content;
-}
-
 .file-details {
     display: flex;
     align-items: center;
@@ -96,17 +87,41 @@
 }
 
 .delete-icon:hover {
-    color: #ff4c4c; /* Darker shade on hover */
+    color: #ff4c4c; 
 }
-
 
 .file-list {
-    max-height: 500px; /* Adjust the height based on how much you want to show */
+    max-height: 400px; 
     padding: 10px;
-    border: 1px solid #ddd; /* Adds a light border around the file list */
-    border-radius: 5px; /* Rounded corners */
-    background-color: #f9f9f9; /* Light background color */
-    margin-top: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adds a shadow for better visibility */
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    background-color: #f9f9f9; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+    max-width: 500px;
+    contain: content;
+    overflow-y: scroll;
 }
 
+
+
+@media screen and (min-width:600px) {
+    .file-list {
+        padding: 10px;
+        border: 1px solid #ddd; 
+        border-radius: 5px; 
+        background-color: #f9f9f9; 
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 20px;
+        max-width: 500px;
+        contain: content;
+        overflow-y: scroll;
+    }
+     
+}

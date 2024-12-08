@@ -23,8 +23,6 @@ function App() {
     dispatch(storeBreadCrumbs())
   }
 
-  const alertUser = () => {
-  };
 
   return (
     <Router>

@@ -8,8 +8,8 @@ import { clearFilesAndFolders, getAdirectory, getAllFolders, getMainDirectories 
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb';
 import { restoreBreadCrumbs, setCurrentDirectory } from '../../Features/PathSlice';
 import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
-import handleStack from '../../components/HandleStack/HandleStack';;
-
+import handleStack from '../../components/HandleStack/HandleStack';
+import UploadStatus from '../../components/UploadStatus/UploadStatus';
 
 function Main() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -23,33 +23,25 @@ function Main() {
   const breadCrumb = useSelector(state=>state.path.breadCrumbs)
   const [breadCrumbs,setBreadCrumbs] = useState([])
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
-  const [authorizeStatus,setAuthorizeStatus ] = useState(status)
-  const [value, setValue] = React.useState('1');
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
+  const [authorizeStatus,setAuthorizeStatus ] = useState(status);
 
   useEffect(()=>{
     setBreadCrumbs(breadCrumb)
   },[breadCrumb])
 
   const handleReload = useCallback(() => {
-
       dispatch(restoreBreadCrumbs())
       dispatch(getAllFolders({ reference_Id }));
-
-    if (reference_Id && directoryId) {
-      dispatch(getAdirectory({ reference_Id, directoryId }));
-      dispatch(setCurrentDirectory(directoryId));
-    } else if (reference_Id) {
-      dispatch(getMainDirectories({ reference_Id }));
-    }
-    if (authorizeStatus){
-        handleAction('SessionExpiredModal');
-    }
-  }, [dispatch, reference_Id, directoryId,status]);
+      if (reference_Id && directoryId) {
+        dispatch(getAdirectory({ reference_Id, directoryId }));
+        dispatch(setCurrentDirectory(directoryId));
+      } else if (reference_Id) {
+        dispatch(getMainDirectories({ reference_Id }));
+      }
+      if (authorizeStatus){
+          handleAction('SessionExpiredModal');
+      }
+  }, [dispatch, reference_Id, directoryId , status]);
 
   const handleAction = useCallback(
     (actionType) => handleStack(actionType, dispatch),
@@ -82,12 +74,9 @@ function Main() {
         selectedFoldersForOptions={selectedFoldersForOptions}
       />
 
-      {/* <UploadStatus/> */}
-
-
-      <Breadcrumb breadcrumbs={breadCrumbs}
+      <Breadcrumb 
+        breadcrumbs={breadCrumbs}
        />
-
 
       <NewList 
         initialFolderData={filteredData} 
@@ -95,6 +84,10 @@ function Main() {
         setSelectedFilesForOptions={setSelectedFilesForOptions}
         setSelectedFoldersForOptions={setSelectedFoldersForOptions}
         handleReload={handleReload}
+      />
+
+      <UploadStatus
+        reference_Id={reference_Id}
       />
 
       <BasicSpeedDial

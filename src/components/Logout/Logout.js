@@ -15,12 +15,7 @@ function Logout() {
         setIsLoading(true);
         dispatch(logout())
             .finally(() => {
-                localStorage.removeItem('reference_Id');
-                localStorage.removeItem('TemporaryBreadCrumbs');
-                localStorage.removeItem('token');
-                localStorage.removeItem('role');
-                localStorage.removeItem('mainFolder');
-                localStorage.removeItem('Unauthorized');
+                localStorage.clear()
                 setIsLoading(false);
                 handleStackClear(dispatch)
                 navigate('/');
