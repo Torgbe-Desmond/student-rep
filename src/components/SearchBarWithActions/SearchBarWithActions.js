@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -21,6 +21,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
   const { directoryId } = useParams()
   const dispatch = useDispatch();
   const [isValid, setIsValid] = useState(true);
+  const [showSearch, setShowSearch] = useState(false);
 
 
   useEffect(() => {
@@ -57,8 +58,43 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('UploadFileDetails'), label: 'Upload File' },
   ];
 
+   // Handle scroll event
+   useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+      const scrollPercentage = (scrollPosition / totalHeight) * 100;
+
+      // Show the search bar when scroll percentage is greater than 10%
+      if (scrollPercentage > 4) {
+        setShowSearch(true);
+      } else {
+        setShowSearch(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+
   return (
     <div className="search-options">
+        {showSearch && (
+        <Box sx={{ position: "fixed", top: '4%', transform: "translateX(-50%)",transform: "translateY(-50%)", width: "90%", zIndex: 1000 }}>
+          <TextField
+            className="search-input"
+            label="Search files by name"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Box>
+      )}
       <TextField
         className="search-input"
         label="Search files by name"

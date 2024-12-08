@@ -11,7 +11,7 @@ import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
 import handleStack from '../../components/HandleStack/HandleStack';
 import UploadStatus from '../../components/UploadStatus/UploadStatus';
 import SimpleBottomNavigation from '../../components/SimpleBottomNavigation/SimpleBottomNavigation';
-import ScrollSearch from '../../components/ScrollSearch/ScrollSearch';
+import { Box, TextField } from '@mui/material';
 
 function Main() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -22,28 +22,28 @@ function Main() {
   const [filteredData, setFilteredData] = useState(null);
   const [selectedFilesForOptions, setSelectedFilesForOptions] = useState([]);
   const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState([]);
-  const breadCrumb = useSelector(state=>state.path.breadCrumbs)
-  const [breadCrumbs,setBreadCrumbs] = useState([])
+  const breadCrumb = useSelector(state => state.path.breadCrumbs);
+  const [breadCrumbs, setBreadCrumbs] = useState([]);
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
-  const [authorizeStatus,setAuthorizeStatus ] = useState(status);
+  const [authorizeStatus, setAuthorizeStatus] = useState(status);
 
-  useEffect(()=>{
-    setBreadCrumbs(breadCrumb)
-  },[breadCrumb])
+  useEffect(() => {
+    setBreadCrumbs(breadCrumb);
+  }, [breadCrumb]);
 
   const handleReload = useCallback(() => {
-      dispatch(restoreBreadCrumbs())
-      dispatch(getAllFolders({ reference_Id }));
-      if (reference_Id && directoryId) {
-        dispatch(getAdirectory({ reference_Id, directoryId }));
-        dispatch(setCurrentDirectory(directoryId));
-      } else if (reference_Id) {
-        dispatch(getMainDirectories({ reference_Id }));
-      }
-      if (authorizeStatus){
-          handleAction('SessionExpiredModal');
-      }
-  }, [dispatch, reference_Id, directoryId , status]);
+    dispatch(restoreBreadCrumbs());
+    dispatch(getAllFolders({ reference_Id }));
+    if (reference_Id && directoryId) {
+      dispatch(getAdirectory({ reference_Id, directoryId }));
+      dispatch(setCurrentDirectory(directoryId));
+    } else if (reference_Id) {
+      dispatch(getMainDirectories({ reference_Id }));
+    }
+    if (authorizeStatus) {
+      handleAction('SessionExpiredModal');
+    }
+  }, [dispatch, reference_Id, directoryId, status]);
 
   const handleAction = useCallback(
     (actionType) => handleStack(actionType, dispatch),
@@ -51,7 +51,7 @@ function Main() {
   );
 
   useEffect(() => {
-    setAuthorizeStatus(status)
+    setAuthorizeStatus(status);
   }, [status]);
 
   useEffect(() => {
@@ -65,38 +65,35 @@ function Main() {
     setFolders(folders);
     setFilteredData(folders);
   }, [folders]);
-  
 
+ 
   return (
     <div className="app-container">
+      {/* Conditionally render the search bar based on scroll percentage */}
+    
 
-     <SearchBarWithActions 
-        folderData={_folders} 
-        setFilteredData={setFilteredData} 
-        selectedItems={selectedItems} 
+      <SearchBarWithActions
+        folderData={_folders}
+        setFilteredData={setFilteredData}
+        selectedItems={selectedItems}
         selectedFilesForOptions={selectedFilesForOptions}
         selectedFoldersForOptions={selectedFoldersForOptions}
       />
 
-      <Breadcrumb 
-        breadcrumbs={breadCrumbs}
-       />
+      <Breadcrumb breadcrumbs={breadCrumbs} />
 
-
-      <NewList 
-        initialFolderData={filteredData} 
+      <NewList
+        initialFolderData={filteredData}
         selectedFoldersState={setSelectedItems}
         setSelectedFilesForOptions={setSelectedFilesForOptions}
         setSelectedFoldersForOptions={setSelectedFoldersForOptions}
         handleReload={handleReload}
       />
 
-      <UploadStatus
-        reference_Id={reference_Id}
-      />
+      <UploadStatus reference_Id={reference_Id} />
 
       <BasicSpeedDial
-        selectedItems={selectedItems} 
+        selectedItems={selectedItems}
         selectedFilesForOptions={selectedFilesForOptions}
         selectedFoldersForOptions={selectedFoldersForOptions}
       />
@@ -107,4 +104,3 @@ function Main() {
 }
 
 export default Main;
-
