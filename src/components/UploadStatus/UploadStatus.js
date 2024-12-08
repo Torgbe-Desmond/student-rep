@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import LinearProgress from '@mui/material/LinearProgress';
 import { Typography, Alert, CircularProgress, Snackbar } from '@mui/material';
 import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
@@ -16,7 +14,7 @@ export default function UploadStatus({ reference_Id }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const newSocket = io('http://localhost:5000', {
+    const newSocket = io('https://file-transfer-app-backend.onrender.com', {
       query: {
         userData: JSON.stringify({
           reference_Id,
