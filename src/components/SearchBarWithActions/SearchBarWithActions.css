@@ -3,7 +3,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    width: 100vw;
+    width: 100%;
     max-width: 100%;
     flex-direction: column;
     background-color: #fff;
@@ -29,12 +29,15 @@
   align-items: center;
 }
 
+.search-input {
+  width: 100%;
+  max-width: 400px;
+}
+
   @media (min-width: 600px) {
     .search-options {
       flex-direction: row;  
       width: 100%;
-      padding:5px 5px 5px 15px;
-
     }
   .button-group {
     gap: 2rem;
@@ -52,10 +55,7 @@
   }
   }
   
-  .search-input {
-    width: 100%;
-    max-width: 400px;
-  }
+
   
 
 

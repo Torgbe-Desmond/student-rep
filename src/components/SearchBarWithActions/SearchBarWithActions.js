@@ -67,7 +67,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
       // Show the search bar when scroll percentage is greater than 20%
       if (scrollPercentage > 20) {
         setShowSearch(true);
-      } else if(scrollPercentage < 1) {
+      } else {
         setShowSearch(false);
       }
     };

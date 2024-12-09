@@ -4,8 +4,8 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 100vw;
-  max-width: 900px; /* Adjust as needed */
+  width: auto;
+  max-width: 900px;
   margin: 0 auto;
   box-sizing: border-box;
   overflow: scroll;
@@ -26,14 +26,16 @@
 }
 
 .app-container {
-  position: relative;
-  padding-top: 60px; /* Space for fixed search bar */
+  padding-top: 10px;
 }
 
 
 
-@media screen and (min-width:640px) {
-   
+@media screen and (min-width:600px) {
+
+.app-container{
+  padding: 25px;
+}
 .search-input {
   width: 300px;
   padding: 10px;
@@ -48,8 +50,5 @@
   box-shadow: 0 0 10px rgba(63, 81, 181, 0.5); 
 }
 
-.app-container {
-  position: relative;
-  padding-top: 60px;
-} 
+
 } 
