@@ -65,7 +65,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
       const scrollPercentage = (scrollPosition / totalHeight) * 100;
 
       // Show the search bar when scroll percentage is greater than 20%
-      if (scrollPercentage > 20) {
+      if (scrollPercentage > 50) {
         setShowSearch(true);
       } else {
         setShowSearch(false);
@@ -82,9 +82,9 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
   return (
     <div className="search-options">
       {showSearch ? (
-        <Box sx={{    zIndex:-1, position: "fixed", top: '5.6%', transform: "translateX(-50%)", transform: "translateY(-50%)", width: "90%", zIndex: 1000 }}>
+        <Box sx={{    zIndex:-1, position: "fixed", top: '5.6%', transform: "translateX(-50%)", transform: "translateY(-50%)", width: "90%", zIndex: 1000, }}>
           <TextField
-            className="search-input fixed"
+            className="search-input fixed input-search-options "
             sx={{
               boxShadow: '0 0 10px rgba(63, 81, 181, 0.5)',
             }}
