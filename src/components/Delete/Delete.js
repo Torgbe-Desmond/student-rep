@@ -136,6 +136,7 @@ function Delete() {
             <List>
               {files.map((id, index) => (
                 <ListItem
+                 
                   key={id}
                   secondaryAction={
                     <IconButton 
@@ -152,7 +153,12 @@ function Delete() {
                       <InsertDriveFileIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={getFileNameById(id)} />
+                  <ListItemText 
+                  sx={{ 
+                    maxWidth:'70%',
+                    overflowX:'scroll'
+                  }}
+                  primary={getFileNameById(id)} />
                 </ListItem>
               ))}
             </List>

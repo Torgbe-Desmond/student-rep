@@ -11,7 +11,6 @@ import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
 import handleStack from '../../components/HandleStack/HandleStack';
 import UploadStatus from '../../components/UploadStatus/UploadStatus';
 import SimpleBottomNavigation from '../../components/SimpleBottomNavigation/SimpleBottomNavigation';
-import { Box, TextField } from '@mui/material';
 
 function Main() {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -26,6 +25,7 @@ function Main() {
   const [breadCrumbs, setBreadCrumbs] = useState([]);
   const { status } = JSON.parse(localStorage.getItem('Unauthorized')) || {};
   const [authorizeStatus, setAuthorizeStatus] = useState(status);
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
 
   useEffect(() => {
     setBreadCrumbs(breadCrumb);
@@ -66,12 +66,8 @@ function Main() {
     setFilteredData(folders);
   }, [folders]);
 
- 
   return (
-    <div className="app-container">
-      {/* Conditionally render the search bar based on scroll percentage */}
-    
-
+    <div className={`app-container ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
       <SearchBarWithActions
         folderData={_folders}
         setFilteredData={setFilteredData}

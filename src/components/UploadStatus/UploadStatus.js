@@ -13,8 +13,10 @@ export default function UploadStatus({ reference_Id }) {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const dispatch = useDispatch();
 
+  let url = ['https://file-transfer-app-backend.onrender.com','http://localhost:5000']
+
   useEffect(() => {
-    const newSocket = io('https://file-transfer-app-backend.onrender.com', {
+    const newSocket = io(url[1], {
       query: {
         userData: JSON.stringify({
           reference_Id,

@@ -7,7 +7,7 @@ const url = [
 // Create an Axios instance
 
 const axiosInstance = axios.create({
-    baseURL: url[0], 
+    baseURL: url[1], 
     headers: {
         'Content-Type': 'application/json',
     },

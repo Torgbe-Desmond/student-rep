@@ -1,6 +1,18 @@
 /* App.css */
 
-::-webkit-scrollbar {
+/* body {
+  background: #012041c3;
+} */
+/* NewList.css */
+/* 3b82f680 */
+
+.dark-mode {
+  background-color: #333;
+  color: white;
+}
+
+
+::-webkit-scrollbar { 
   width: 10px;
   height: 4px;
   display: none;

@@ -12,7 +12,9 @@
     height: 100%;
     z-index: 1000;
 }
-
+.create-folder-overlay.dark-mode {
+    background-color: rgba(0, 0, 0, 0.7);
+}
 .create-folder-modal {
     display: flex;
     flex-direction: column;

@@ -13,6 +13,8 @@ import {
   Button,
   Snackbar,
   IconButton,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import KeyIcon from '@mui/icons-material/Key';
@@ -20,8 +22,9 @@ import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutl
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import './NewList.css';
+import { toggleDarkMode } from '../../Features/ThemeSlice';
 
 const getFilteredData = (folderData, selectedFolders) => ({
   files: folderData?.filter(folder => selectedFolders.includes(folder._id) && folder.mimetype !== 'Folder' && folder.mimetype !== 'Subscriptions'),
@@ -45,6 +48,9 @@ function NewList(
   const colorDifferentiation = useSelector((state) => state.settings.colorDifferentiation);
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
     setFolderData(initialFolderData);
@@ -61,6 +67,19 @@ function NewList(
       selectedFoldersState([]);
     }
   },[stackState])
+
+
+  const [isDarkModeParent, setIsDarkModeParent] = useState(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     if (initialFolderData?.length) {
@@ -201,98 +220,145 @@ function NewList(
     setCopied(false);  
   };
 
+  const getCellStyles = (isDarkMode) => ({
+    backgroundColor: isDarkMode ? '#555' : '#fff',
+    color: isDarkMode ? 'white' : 'black',
+  });
+
+  const toggleDarkModeParent = () => {
+    dispatch(toggleDarkMode())
+    setIsDarkModeParent((prevMode) => {
+      const newMode = !prevMode;
+      localStorage.setItem('darkMode', newMode);
+      return newMode;
+    });
+  };
+
+
   return (
-    <div className="newlist-container">
-      <TableContainer component={Paper} sx={{ width: '100%',  }}>
+    <div
+      className={`newlist-container ${isDarkMode ? 'dark-mode' : ''}`}
+      style={{
+        color: isDarkMode ? 'tranparent' : 'black',
+      }}
+    >
+      <FormControlLabel
+        sx={{
+          color: isDarkMode ? '#FFF' : 'black',
+          padding:{xs:0.5,md:1}
+        }}
+        control={<Switch checked={isDarkMode} onChange={toggleDarkModeParent} />}
+        label="Dark Mode"
+      />
+  
+      <TableContainer component={Paper} sx={{ width: '100%' }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox">
+              <TableCell padding="checkbox" sx={getCellStyles(isDarkMode)}>
                 <Checkbox
-                  indeterminate={selectedFolders?.length > 0 && selectedFolders?.length < folderData?.length}
+                  sx={getCellStyles(isDarkMode)}
+                  indeterminate={
+                    selectedFolders?.length > 0 && selectedFolders?.length < folderData?.length
+                  }
                   checked={selectedFolders?.length === folderData?.length && folderData?.length > 0}
                   onChange={handleSelectAll}
                 />
               </TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Folder</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Mime Type</TableCell>
-              <TableCell>Items</TableCell>
-              <TableCell>Last Modified</TableCell>
+              {['Status', 'Folder', 'Name', 'Mime Type', 'Items', 'Last Modified'].map((header) => (
+                <TableCell key={header} sx={getCellStyles(isDarkMode)}>
+                  {header}
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-          {status === 'loading' && (
-            <TableRow>
-              <TableCell colSpan={12} align="center">
-                <CircularProgress />
-              </TableCell>
-            </TableRow>
-          )}
-          {status === 'failed' && (
-            <TableRow>
-              <TableCell colSpan={12} align="center">
-                <Typography color="error">{error || 'Failed to load folders'}</Typography>
-              </TableCell>
-            </TableRow>
-          )}
-          {status === 'succeeded' && folderData?.length > 0 ? (
-            folderData?.map((folder) => (
-              <TableRow
-                key={folder._id}
-                selected={selectedFolders.includes(folder._id)}
-                sx={{
-                  backgroundColor: `${true ? folder.backgroundColor : 'transparent'}`,
-                }}
-              >
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedFolders?.includes(folder._id)}
-                    onChange={() => toggleFolderSelection(folder._id)}
-                  />
+            {status === 'loading' && (
+              <TableRow>
+                <TableCell sx={getCellStyles(isDarkMode)} colSpan={12} align="center">
+                  <CircularProgress />
                 </TableCell>
-                <TableCell>{renderStatus(folder)}</TableCell>
-                <TableCell
-                  onClick={() => handleCopyToClipboard(folder)}
-                  sx={{ cursor: folder.mimetype === 'Shared' ? 'pointer' : 'default' }}
+              </TableRow>
+            )}
+            {status === 'failed' && (
+              <TableRow>
+                <TableCell sx={getCellStyles(isDarkMode)} colSpan={12} align="center">
+                  <Typography color="error">{error || 'Failed to load folders'}</Typography>
+                </TableCell>
+              </TableRow>
+            )}
+            {status === 'succeeded' && folderData?.length > 0 ? (
+              folderData.map((folder) => (
+                <TableRow
+                  key={folder._id}
+                  selected={selectedFolders.includes(folder._id)}
+                  sx={{
+                    backgroundColor: isDarkMode ? '#444' : folder.backgroundColor,
+                    '&:hover': {
+                      backgroundColor: isDarkMode ? '#555' : '#f5f5f5',
+                    },
+                  }}
                 >
-                  {renderIcon(folder.mimetype)}
-                </TableCell>
-                <TableCell
-                  onClick={() => handleNavigate(folder._id, folder.mimetype)}
-                  sx={{ cursor: 'pointer' }}
-                >
-                  {folder.name}
-                </TableCell>
-                <TableCell>{folder.mimetype}</TableCell>
-                <TableCell>{handleFileSize(folder)}</TableCell>
-                <TableCell>{new Date(folder.lastUpdated).toLocaleDateString()}</TableCell>
+                  <TableCell sx={getCellStyles(isDarkMode)} padding="checkbox">
+                    <Checkbox
+                      sx={getCellStyles(isDarkMode)}
+                      checked={selectedFolders.includes(folder._id)}
+                      onChange={() => toggleFolderSelection(folder._id)}
+                    />
+                  </TableCell>
+                  <TableCell sx={getCellStyles(isDarkMode)}>{renderStatus(folder)}</TableCell>
+                  <TableCell
+                    sx={{
+                      ...getCellStyles(isDarkMode),
+                      cursor: folder.mimetype === 'Shared' ? 'pointer' : 'default',
+                    }}
+                    onClick={() => handleCopyToClipboard(folder)}
+                  >
+                    {renderIcon(folder.mimetype)}
+                  </TableCell>
+                  <TableCell
+                    sx={{
+                      ...getCellStyles(isDarkMode),
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => handleNavigate(folder._id, folder.mimetype)}
+                  >
+                    {folder.name}
+                  </TableCell>
+                  <TableCell sx={getCellStyles(isDarkMode)}>{folder.mimetype}</TableCell>
+                  <TableCell sx={getCellStyles(isDarkMode)}>{handleFileSize(folder)}</TableCell>
+                  <TableCell sx={getCellStyles(isDarkMode)}>
+                    {new Date(folder.lastUpdated).toLocaleDateString()}
+                  </TableCell>
                 </TableRow>
-            ))
-          ) : status === 'succeeded' && folderData?.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={12} align="center">
-                <Typography>No folders available</Typography>
-              </TableCell>
-            </TableRow>
-          )}
-      </TableBody>
-
+              ))
+            ) : (
+              status === 'succeeded' &&
+              folderData?.length === 0 && (
+                <TableRow>
+                  <TableCell sx={getCellStyles(isDarkMode)} colSpan={12} align="center">
+                    <Typography>No folders available</Typography>
+                  </TableCell>
+                </TableRow>
+              )
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
+  
       {status === 'failed' && (
-        <div className='reload-btn-container'>
+        <div className="reload-btn-container">
           <Button onClick={handleReload} sx={{ mt: 2 }} variant="outlined">
             Reload
           </Button>
         </div>
       )}
+  
       <Snackbar
         open={copied}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        message="Secrete copied to clipboard"
+        message="Secret copied to clipboard"
         action={
           <IconButton size="small" aria-label="close" color="inherit" onClick={handleCloseSnackbar}>
             <CloseIcon fontSize="small" />
@@ -301,6 +367,7 @@ function NewList(
       />
     </div>
   );
+  
 } 
 
 export default NewList;

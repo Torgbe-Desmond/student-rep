@@ -11,17 +11,19 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import './SearchBarWithActions.css';
 import ButtonIcon from '../Button/Button';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedFolders } from '../../Features/WorkSpace';
 import handleStack from '../HandleStack/HandleStack';
 import { useParams } from 'react-router-dom';
 
-function SearchBarWithActions({ folderData, setFilteredData, selectedItems, selectedFilesForOptions, selectedFoldersForOptions }) {
+function SearchBarWithActions({ folderData, setFilteredData, selectedItems, selectedFilesForOptions, selectedFoldersForOptions,getCellStyles }) {
   const [searchTerm, setSearchTerm] = useState('');
   const { directoryId } = useParams();
   const dispatch = useDispatch();
   const [isValid, setIsValid] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
+
 
   useEffect(() => {
     setIsValid(!directoryId);
@@ -89,15 +91,24 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
   }, []);
 
   return (
-    <div className="search-options">
+    
+
+    <div className={`search-options ${isDarkMode ? 'dark-mode' : ''}`}>
       {showSearch ? (
         <Box sx={{    zIndex:-1, position: "fixed", top: '5.6%', transform: "translateX(-50%)", transform: "translateY(-50%)", width: "90%", zIndex: 1000, }}>
           <TextField
             className="search-input fixed input-search-options "
             sx={{
               boxShadow: '0 0 10px rgba(63, 81, 181, 0.5)',
+              color: isDarkMode ? '#FFF' : '',
+            '& .MuiInputBase-input': {
+              color: isDarkMode ? '#FFF' : '', 
+            },
+            '& .MuiInputBase-input::placeholder': {
+             color: isDarkMode ? '#FFF' : '',  
+            },
             }}
-            label="Search files by name"
+            placeholder='Search files by name'
             variant="outlined"
             fullWidth
             value={searchTerm}
@@ -106,12 +117,22 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
         </Box>
       ) : (
         <TextField
-          className="search-input"
-          label="Search files by name"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        sx={{
+          color: isDarkMode ? '#FFF' : '', 
+          '& .MuiInputBase-input': {
+            color: isDarkMode ? '#FFF' : '', 
+          },
+          '& .MuiInputBase-input::placeholder': {
+            color: isDarkMode ? '#FFF' : '',  
+          },
+        }}
+        className="search-input"
+        placeholder='Search files by name'
+        variant="outlined"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      
       )}
 
       <div className="button-group">
