@@ -2,8 +2,8 @@
 .app-container {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  padding: 20px;
   width: 100vw;
   max-width: 900px; /* Adjust as needed */
   margin: 0 auto;
