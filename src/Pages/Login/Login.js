@@ -32,11 +32,11 @@ const Login = () => {
     }
   }, [moveItemStatus, reference_Id, navigate]);
 
-  useEffect(() => {
-    if (location.pathname === '/') {
-      localStorage.clear();
-    }
-  }, [location.pathname]);
+  // useEffect(() => {
+  //   if (location.pathname === '/') {
+  //     localStorage.clear();
+  //   }
+  // }, [location.pathname]);
 
   useEffect(() => {
     if (error) {

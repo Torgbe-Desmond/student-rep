@@ -48,6 +48,8 @@ export default function ScrollSearch() {
         </AppBar>
       )}
 
+      {/* More content */}
+      <div style={{ height: '200vh', backgroundColor: '#e0e0e0' }}></div>
     </div>
   );
 }

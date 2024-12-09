@@ -232,7 +232,7 @@ function NewList(
           )}
           {status === 'failed' && (
             <TableRow>
-              <TableCell colSpan={6} align="center">
+              <TableCell colSpan={12} align="center">
                 <Typography color="error">{error || 'Failed to load folders'}</Typography>
               </TableCell>
             </TableRow>

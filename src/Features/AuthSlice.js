@@ -13,6 +13,7 @@ const initialState = {
   data: [],
 };
 
+
 export const login = createAsyncThunk('auth/login', async (credentials, thunkAPI) => {
   try {
       const response = await AuthService.login(credentials);

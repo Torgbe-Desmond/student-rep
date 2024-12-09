@@ -161,10 +161,9 @@ const UploadFileDetails = () => {
                                 return (
                                     <ListItem
                                         secondaryAction={
-                                            <IconButton edge="end" aria-label="delete">
+                                            <IconButton disabled={isUploading} edge="end" aria-label="delete">
                                                 <DeleteIcon
                                                     onClick={() => handleRemoveFile(index)}
-                                                    disabled={isUploading}
                                                 />
                                             </IconButton>
                                         }>
