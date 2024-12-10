@@ -107,7 +107,7 @@ const Settings = () => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: isDarkMode ? '#333' : '#ffffff', // Set dark mode List background color
+          backgroundColor: isDarkMode ? '#333' : '#ffffff',
           height: '100vh',
           overflow: 'hidden',
         }}
@@ -119,7 +119,7 @@ const Settings = () => {
                 src={selectedFiles[currentPage].url}
                 controls
                 style={{
-                  maxWidth: '100%',
+                  maxWidth: '70%',
                   objectFit: 'contain',
                   margin: '20px 0px',
                 }}
@@ -128,12 +128,12 @@ const Settings = () => {
 
             {selectedFiles[currentPage]?.mimetype.startsWith('image') && (
               <img
+                
                 src={selectedFiles[currentPage].url}
                 alt={`Selected file ${currentPage}`}
                 style={{
-                  width: '100%',
+                  width: '75%',
                   objectFit: 'contain',
-                  marginBottom: '10px',
                 }}
               />
             )}
