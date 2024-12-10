@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   AppBar,
-  Button,
   Dialog,
   IconButton,
   List,
@@ -24,6 +23,7 @@ const Settings = () => {
     (state) => state.work
   );
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0); // Track current file page
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.theme.darkMode);
 
@@ -48,6 +48,26 @@ const Settings = () => {
     dispatch(toggleBottomTab());
   };
 
+  const handleWheelScroll = (e) => {
+    if (e.deltaY > 0) {
+      nextPage();
+    } else {
+      prevPage();
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage < selectedFiles.length - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <Dialog
       fullScreen
@@ -56,10 +76,7 @@ const Settings = () => {
       TransitionComponent={Transition}
       sx={{
         backgroundColor: isDarkMode ? '#333' : '#ffffff',
-        height:'100%',
-        '& .css-xbarva-MuiList-root':{
-          height:'100%'
-        }
+        height: '100%',
       }}
     >
       <AppBar
@@ -78,7 +95,7 @@ const Settings = () => {
         >
           <Typography variant="h6" sx={{ textAlign: 'flex-end' }}>
             {selectedFiles.length > 0
-              ? `${selectedFiles.length} items selected`
+              ? `${currentPage} / ${ selectedFiles.length} items selected`
               : 'No files selected'}
           </Typography>
 
@@ -89,44 +106,44 @@ const Settings = () => {
       </AppBar>
 
       <List
+        onWheel={handleWheelScroll}
         sx={{
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
           backgroundColor: isDarkMode ? '#333' : '#ffffff', // Set dark mode List background color
-          padding: 2, // Adding some padding for better layout
+          height: '100vh',
+          overflow: 'hidden',
         }}
       >
-        {selectedFiles.map((file, index) => {
-          if (file.mimetype.startsWith('video')) {
-            return (
+        {selectedFiles.length > 0 && (
+          <>
+            {selectedFiles[currentPage]?.mimetype.startsWith('video') && (
               <video
-                key={index}
-                src={file.url}
+                src={selectedFiles[currentPage].url}
                 controls
                 style={{
                   maxWidth: '100%',
                   objectFit: 'contain',
-                  marginBottom: '10px', // better than padding for spacing
+                  margin: '20px 0px',
                 }}
               />
-            );
-          } else if (file.mimetype.startsWith('image')) {
-            return (
+            )}
+
+            {selectedFiles[currentPage]?.mimetype.startsWith('image') && (
               <img
-                key={index}
-                src={file.url}
-                alt={`Selected file ${index}`}
+                src={selectedFiles[currentPage].url}
+                alt={`Selected file ${currentPage}`}
                 style={{
                   width: '100%',
                   objectFit: 'contain',
                   marginBottom: '10px',
                 }}
               />
-            );
-          } else {
-            return <Button key={index}>No Media</Button>;
-          }
-        })}
+            )}
+          </>
+        )}
       </List>
     </Dialog>
   );
