@@ -23,7 +23,7 @@ const UploadFileDetails = () => {
     const dispatch = useDispatch();
     const reference_Id = localStorage.getItem('reference_Id');
     const { currentDirectory } = useSelector(state => state.path);
-    const isDarkMode = useSelector(state => state.theme.darkMode); // Get dark mode value
+    const isDarkMode = useSelector(state => state.theme.darkMode); 
 
     const handleClose = useCallback(() => {
         handleStackClear(dispatch);
@@ -159,7 +159,6 @@ const UploadFileDetails = () => {
                                 const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
                                 return (
                                     <ListItem
-                                        className={isDarkMode ? 'dark-mode' : ''}
                                         secondaryAction={
                                             <IconButton disabled={isUploading} edge="end" aria-label="delete">
                                                 <DeleteIcon

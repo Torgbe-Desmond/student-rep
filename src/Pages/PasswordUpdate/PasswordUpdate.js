@@ -14,6 +14,7 @@ const PasswordUpdate = () => {
   const dispatch = useDispatch();
   const { reference_Id } = useParams();
   const verificationTokenStatus = useSelector((state) => state.auth.verificationTokenStatus);
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
 
   useEffect(() => {
     if (reference_Id) {
@@ -83,6 +84,17 @@ const PasswordUpdate = () => {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
+  
+  const darkMode = {
+    color: isDarkMode ? '#FFF' : '', 
+    '& .MuiInputBase-input': {
+      color: isDarkMode ? '#FFF' : '', 
+      background: isDarkMode ? '#555':''
+    },
+    '& .MuiInputBase-input::placeholder': {
+      color: isDarkMode ? '#FFF' : '',  
+    },
+ }
 
   return (
     <div className="password-update-container">
@@ -97,7 +109,8 @@ const PasswordUpdate = () => {
           </Typography>
           <form onSubmit={handleSubmit}>
             <TextField
-              label="New Password"
+              sx={darkMode}
+              placeholder="New Password"
               name="newPassword"
               type="password"
               value={passwords.newPassword}
@@ -106,7 +119,8 @@ const PasswordUpdate = () => {
               margin="normal"
             />
             <TextField
-              label="Confirm Password"
+              sx={darkMode}
+              placeholder="Confirm Password"
               name="confirmPassword"
               type="password"
               value={passwords.confirmPassword}

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedFolders } from '../../Features/WorkSpace';
 import handleStack from '../HandleStack/HandleStack';
 import { useParams } from 'react-router-dom';
+import SlideshowIcon from '@mui/icons-material/Slideshow';
 
 function SearchBarWithActions({ folderData, setFilteredData, selectedItems, selectedFilesForOptions, selectedFoldersForOptions,getCellStyles }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -54,9 +55,11 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: selectedItems?.length === 0 || isValid, action: () => handleAction('Move'), label: 'Move' },
     { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1 || isValid, action: () => handleAction('Download'), label: 'Download' },
     { iconType: <FileUploadOutlinedIcon />, color: 'primary', disabled: selectedFilesForOptions?.length == 0 || isValid, action: () => handleAction('GenerateSecretCode'), label: 'Share Files' },
+    // { iconType: <SlideshowIcon />, color: 'primary',  disabled: selectedFilesForOptions?.length !== 1 || isValid, action: () => handleAction('DisplayImage'), label: 'Display' },
     { iconType: <FileDownloadOutlinedIcon />, color: 'primary', disabled: isValid, action: () => handleAction('ReceiveFiles'), label: 'Received Shared Files' },
     { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('CreateFolder'), label: 'Create Folder' },
     { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('UploadFileDetails'), label: 'Upload File' },
+
   ];
 
   // Handle scroll event
@@ -73,13 +76,11 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
       console.log('scrollPercentage',scrollPercentage)
 
 
-      if(scrollPosition > 500){
-        if (scrollPercentage > 50) {
+        if (scrollPercentage > 1) {
           setShowSearch(true);
         } else {
           setShowSearch(false);
         }
-      }
     
     };
 
@@ -93,34 +94,13 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
   return (
     
 
-    <div className={`search-options ${isDarkMode ? 'dark-mode' : ''}`}>
-      {showSearch ? (
-        <Box sx={{    zIndex:-1, position: "fixed", top: '5.6%', transform: "translateX(-50%)", transform: "translateY(-50%)", width: "90%", zIndex: 1000, }}>
-          <TextField
-            className="search-input fixed input-search-options "
-            sx={{
-              boxShadow: '0 0 10px rgba(63, 81, 181, 0.5)',
-              color: isDarkMode ? '#FFF' : '',
-            '& .MuiInputBase-input': {
-              color: isDarkMode ? '#FFF' : '', 
-            },
-            '& .MuiInputBase-input::placeholder': {
-             color: isDarkMode ? '#FFF' : '',  
-            },
-            }}
-            placeholder='Search files by name'
-            variant="outlined"
-            fullWidth
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </Box>
-      ) : (
+    <div className={`search-options ${isDarkMode ? 'dark-mode' : ''} ${showSearch ? 'position' : ''}`}>
         <TextField
         sx={{
           color: isDarkMode ? '#FFF' : '', 
           '& .MuiInputBase-input': {
             color: isDarkMode ? '#FFF' : '', 
+            background: isDarkMode ? '#555':''
           },
           '& .MuiInputBase-input::placeholder': {
             color: isDarkMode ? '#FFF' : '',  
@@ -133,7 +113,6 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       
-      )}
 
       <div className="button-group">
         {buttonConfigs.map((config, index) => (

@@ -12,6 +12,7 @@ import GenerateSecretCode from '../GenerateSecreteCode/GenerateSecreteCode';
 import Logout from '../Logout/Logout';
 import { clearSelectedIds } from '../../Features/WorkSpace';
 import Settings from '../../Pages/Settings/Settings';
+import DisplayImage from '../DisplayImage/DisplayImage';
 
 
 export const componentMap = {
@@ -25,7 +26,8 @@ export const componentMap = {
   ReceiveFiles:<ReceiveFiles/>,
   GenerateSecretCode:<GenerateSecretCode/>,
   Logout:<Logout/>,
-  Settings:<Settings/>
+  Settings:<Settings/>,
+  DisplayImage:<DisplayImage/>
 };
 
 
@@ -47,7 +49,8 @@ const handleStack = (key, dispatch) => {
       ReceiveFiles:'ReceiveFiles',
       GenerateSecretCode:'GenerateSecretCode',
       Logout:'Logout',
-      Settings:'Settings'
+      Settings:'Settings',
+      DisplayImage:'DisplayImage'
   };
 
   if (stackComponents[key]) {

@@ -22,6 +22,7 @@ const Register = () => {
   const error = useSelector((state) => state.auth.error);
   const navigate = useNavigate();
   const reference_Id = localStorage.getItem('reference_Id');
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
 
   useEffect(() => {
     if (registerStatus === 'succeeded' && reference_Id) {
@@ -75,6 +76,17 @@ useEffect(() => {
   };
 }, [error, dispatch]);
 
+ const darkMode = {
+    color: isDarkMode ? '#FFF' : '', 
+    '& .MuiInputBase-input': {
+      color: isDarkMode ? '#FFF' : '', 
+      background: isDarkMode ? '#555':''
+    },
+    '& .MuiInputBase-input::placeholder': {
+      color: isDarkMode ? '#FFF' : '',  
+    },
+ }
+
 
   return (
     <div className='register-container'>
@@ -86,7 +98,8 @@ useEffect(() => {
         <Box mt={2} p={4}>
           <form onSubmit={handleSubmit}>
             <TextField
-              label="Username"
+              sx={darkMode}
+              placeholder="Username"
               name="username"
               value={userInfo.username}
               onChange={handleChange}
@@ -95,7 +108,8 @@ useEffect(() => {
               disabled={registerStatus === 'loading'}
             />
             <TextField
-              label="Email"
+              sx={darkMode}
+              placeholder="Email"
               name="email"
               value={userInfo.email}
               onChange={handleChange}
@@ -104,7 +118,8 @@ useEffect(() => {
               disabled={registerStatus === 'loading'}
             />
             <TextField
-              label="Password"
+              sx={darkMode}
+              placeholder="Password"
               name="password"
               type="password"
               value={userInfo.password}
@@ -114,7 +129,8 @@ useEffect(() => {
               disabled={registerStatus === 'loading'}
             />
             <TextField
-              label="Confirm Password"
+             sx={darkMode}
+              placeholder="Confirm Password"
               name="confirmPassword"
               type="password"
               value={confirmPassword}
@@ -131,7 +147,7 @@ useEffect(() => {
               color={passwordError ? 'error' : 'primary'}
               fullWidth
               disabled={registerStatus === 'loading'}
-              style={{ position: 'relative', marginTop: 10 }}
+              style={{ position: 'relative', marginTop: 10,height:'50px' }}
             >
               {registerStatus === 'loading' ? (
                 <CircularProgress size={24} color="inherit" />
@@ -143,7 +159,7 @@ useEffect(() => {
         </Box>
         <Typography align="center">
           Already have an account?{' '}
-          <Link to="/" variant="body2">
+          <Link sx={{color:'blue'}}  to="/" variant="body2">
             Login here
           </Link>
         </Typography>

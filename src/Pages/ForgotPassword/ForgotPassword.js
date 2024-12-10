@@ -10,8 +10,8 @@ const ForgotPasswordPage = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
 
-  console.log('email',email)
 
   const dispatch = useDispatch();
   const status = useSelector((state) => state.auth.verifyEmailStatus);
@@ -55,9 +55,21 @@ const ForgotPasswordPage = () => {
     }
   }, [status, error]);
 
+  const darkMode = {
+    color: isDarkMode ? '#FFF' : '', 
+    '& .MuiInputBase-input': {
+      color: isDarkMode ? '#FFF' : '', 
+      background: isDarkMode ? '#555':''
+    },
+    '& .MuiInputBase-input::placeholder': {
+      color: isDarkMode ? '#FFF' : '',  
+    },
+ }
+
+
   return (
     <div className='forgot-password-container'>
-       <Container maxWidth="sm" >
+       <Container sx={{width:'500px'}} maxWidth="sm" >
       <Box mt={4} p={4} sx={{ background: '#FFF', backgroundColor:'transparent',  }}>
         <Typography variant="h4" gutterBottom>
           Forgot Password ?
@@ -67,7 +79,8 @@ const ForgotPasswordPage = () => {
 
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Enter email"
+            sx={darkMode}
+            placeholder="Enter email"
             value={email}
             onChange={handleChange}
             fullWidth
@@ -75,7 +88,12 @@ const ForgotPasswordPage = () => {
             margin="normal"
           />
 
-          <Button sx={{marginTop:3}} type="submit" variant="contained" color="primary" fullWidth>
+          <Button 
+          sx={{marginTop:3, height:'50px'}} 
+          type="submit" 
+          variant="contained"
+          color="primary" 
+          fullWidth>
             Verify Email
           </Button>
         </form>

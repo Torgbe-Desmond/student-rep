@@ -7,6 +7,8 @@ import { handleStackClear } from '../HandleStack/HandleStack';
 import { clearSelectedIds, deleteFile, deleteFolder } from '../../Features/WorkSpace';
 import axios from 'axios';
 import './Delete.css';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+
 
 function Delete() {
   const [randomName, setRandomName] = useState('');
@@ -21,20 +23,7 @@ function Delete() {
   const [files, setFiles] = useState(selectedFolderList);
 
   useEffect(() => {
-    async function getRandomWord() {
-      try {
-        const response = await axios.get('https://random-word-api.herokuapp.com/word?length=5');
-        if (response.data) {
-          setRandomName(response.data[0]);
-        }
-      } catch (error) {
-        console.error('Error fetching random word:', error);
-      }
-    }
-
-    getRandomWord();
     setCurrentDirectory(reduxCurrentDirectory);
-
     return () => {
       setRandomName('');
     };
@@ -104,6 +93,22 @@ function Delete() {
 
   };
 
+  const renderIcon = (id) => {  
+    const fileOrFolder = folders.find(item => item._id === id);
+    let mimetype = fileOrFolder ? fileOrFolder.mimetype : id;
+    console.log(mimetype)
+    switch (mimetype) {
+      case 'Folder':
+      case 'Subscriptions':
+        return <FolderOpenIcon />
+      default:
+        return <InsertDriveFileIcon />;
+    }
+  };
+
+
+
+
   const getFileNameById = (id) => {
     const fileOrFolder = folders.find(item => item._id === id);
     return fileOrFolder ? fileOrFolder.name : id;
@@ -142,7 +147,7 @@ function Delete() {
                     <IconButton 
                       edge="end" 
                       aria-label="delete"
-                      onClick={() => handleRemoveFile(index)} // Pass index to remove the correct item
+                      onClick={() => handleRemoveFile(index)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -150,7 +155,7 @@ function Delete() {
                 >
                   <ListItemAvatar>
                     <Avatar>
-                      <InsertDriveFileIcon />
+                      {renderIcon(id)}
                     </Avatar>
                   </ListItemAvatar>
                   <ListItemText 

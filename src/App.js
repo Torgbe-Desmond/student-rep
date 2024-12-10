@@ -72,3 +72,25 @@ function App() {
 }
 
 export default App;
+
+
+// const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// if (isDarkMode) {
+//   document.body.classList.add('dark-mode');
+// } else {
+//   document.body.classList.add('light-mode');
+// }
+
+// // Listen for changes to the preference
+// window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+//   if (e.matches) {
+//     // Dark mode enabled
+//     document.body.classList.add('dark-mode');
+//     document.body.classList.remove('light-mode');
+//   } else {
+//     // Light mode enabled
+//     document.body.classList.add('light-mode');
+//     document.body.classList.remove('dark-mode');
+//   }
+// });

@@ -18,6 +18,7 @@ const Login = () => {
   const error = useSelector((state) => state.auth.error);
   const reference_Id = localStorage.getItem('reference_Id');
   const navigate = useNavigate();
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
   const location = useLocation();
 
   useEffect(() => {
@@ -31,12 +32,6 @@ const Login = () => {
       navigate(`/${reference_Id}/directories`);
     }
   }, [moveItemStatus, reference_Id, navigate]);
-
-  // useEffect(() => {
-  //   if (location.pathname === '/') {
-  //     localStorage.clear();
-  //   }
-  // }, [location.pathname]);
 
   useEffect(() => {
     if (error) {
@@ -87,7 +82,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className={`login-container ${isDarkMode ? '':''}`}>
       <Container maxWidth="sm">
         <Typography variant="h4" align="center">
           <ShareOutlinedIcon sx={{ fontSize: 50 }} />
@@ -96,7 +91,17 @@ const Login = () => {
         <Box mt={2} p={4}>
           <form onSubmit={handleSubmit}>
             <TextField
-              label="Email"
+             sx={{
+              color: isDarkMode ? '#FFF' : '', 
+              '& .MuiInputBase-input': {
+                color: isDarkMode ? '#FFF' : '', 
+                background: isDarkMode ? '#555':''
+              },
+              '& .MuiInputBase-input::placeholder': {
+                color: isDarkMode ? '#FFF' : '',  
+              },
+            }}
+              placeholder="Email"
               name="email"
               value={credentials.email}
               onChange={handleChange}
@@ -104,8 +109,18 @@ const Login = () => {
               margin="normal"
               disabled={status === 'loading'}
             />
-            <TextField
-              label="Password"
+            <TextField 
+              sx={{
+                color: isDarkMode ? '#FFF' : '', 
+                '& .MuiInputBase-input': {
+                  color: isDarkMode ? '#FFF' : '', 
+                  background: isDarkMode ? '#555':''
+                },
+                '& .MuiInputBase-input::placeholder': {
+                  color: isDarkMode ? '#FFF' : '',  
+                },
+              }}
+              placeholder="Password"
               name="password"
               type="password"
               value={credentials.password}
@@ -125,7 +140,7 @@ const Login = () => {
               color="primary"
               fullWidth
               disabled={status === 'loading'}
-              style={{ position: 'relative', marginTop: 5 }}
+              style={{ position: 'relative', marginTop: 5,height:'50px' }}
             >
               {status === 'loading' ? (
                 <CircularProgress size={24} color="inherit" />
@@ -136,12 +151,11 @@ const Login = () => {
           </form>
         </Box>
 
-        <Typography align="center">
-          Don’t have an account?{' '}
-          <Link to="/register" variant="body2">
-            Register here
-          </Link>
-        </Typography>
+           <Typography align="center">
+              <Link to="/register" variant="body2">
+                Register
+              </Link>
+            </Typography>
       </Container>
 
       <Snackbar
