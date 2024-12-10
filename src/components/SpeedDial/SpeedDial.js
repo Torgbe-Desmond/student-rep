@@ -11,10 +11,12 @@ import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import SlideshowIcon from '@mui/icons-material/Slideshow';
 import { useDispatch, useSelector } from 'react-redux';
 import handleStack from '../HandleStack/HandleStack';
 import { useParams } from 'react-router-dom';
 import './SpeedDial.css'
+import { toggleBottomTab } from '../../Features/PathSlice';
 
 
 export default function BasicSpeedDial({
@@ -45,6 +47,10 @@ export default function BasicSpeedDial({
         { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: selectedItems?.length === 0 || isValid, action: () => handleAction('Move'), label: 'Move' },
         { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1 || isValid, action: () => handleAction('Download'), label: 'Download' },
         { iconType: <FileUploadOutlinedIcon />, color: 'primary', disabled: selectedFilesForOptions?.length == 0 || isValid, action: () => handleAction('GenerateSecretCode'), label: 'Share Files' },
+        { iconType: <SlideshowIcon />, color: 'primary',  disabled: selectedFilesForOptions?.length !== 1 || isValid, action: () =>{ 
+          handleAction('Settings')
+          dispatch(toggleBottomTab());
+        }, label: 'Settings' },
       ];
     
   return (

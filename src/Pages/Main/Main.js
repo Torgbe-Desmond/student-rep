@@ -94,7 +94,7 @@ function Main() {
         selectedFoldersForOptions={selectedFoldersForOptions}
       />
 
-      {/* <SimpleBottomNavigation /> */}
+      <SimpleBottomNavigation />
     </div>
   );
 }

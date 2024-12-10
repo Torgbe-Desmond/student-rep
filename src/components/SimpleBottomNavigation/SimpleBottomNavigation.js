@@ -44,15 +44,15 @@ export default function SimpleBottomNavigation() {
     //   action: () => console.log('Favorites clicked'), 
     //   label: 'Favorites' 
     // },
-    { 
-      icon: <BuildIcon/>, 
-      color: 'primary', 
-      action: () => {
-        handleAction('Settings');
-        handleToggleDialog();
-      }, 
-      label: 'Settings' 
-    },
+    // { 
+    //   icon: <BuildIcon/>, 
+    //   color: 'primary', 
+    //   action: () => {
+    //     handleAction('Settings');
+    //     handleToggleDialog();
+    //   }, 
+    //   label: 'Settings' 
+    // },
   ];
 
   return (

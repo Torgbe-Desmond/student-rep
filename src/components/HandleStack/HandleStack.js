@@ -27,7 +27,7 @@ export const componentMap = {
   GenerateSecretCode:<GenerateSecretCode/>,
   Logout:<Logout/>,
   Settings:<Settings/>,
-  DisplayImage:<DisplayImage/>
+  // DisplayImage:<DisplayImage/>
 };
 
 
@@ -50,7 +50,7 @@ const handleStack = (key, dispatch) => {
       GenerateSecretCode:'GenerateSecretCode',
       Logout:'Logout',
       Settings:'Settings',
-      DisplayImage:'DisplayImage'
+      // DisplayImage:'DisplayImage'
   };
 
   if (stackComponents[key]) {
