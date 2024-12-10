@@ -73,12 +73,13 @@ const Settings = () => {
       sx={{
         backgroundColor: isDarkMode ? '#333' : '#ffffff',
         height: '100%',
+        padding:'10px'
       }}
     >
       <AppBar
         sx={{
           position: 'relative',
-          backgroundColor: isDarkMode ? '#444' : '#2196f3', // Dark mode AppBar color
+          backgroundColor: isDarkMode ? '#444' : '#2196f3',
           boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
         }}
       >
@@ -140,8 +141,6 @@ const Settings = () => {
           </>
         )}
       </List>
-
-      {/* Vertical Navigation with Icons on Right Side */}
       <div
         style={{
           position: 'fixed',
