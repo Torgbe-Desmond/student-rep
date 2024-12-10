@@ -47,7 +47,7 @@ export default function BasicSpeedDial({
         { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: selectedItems?.length === 0 || isValid, action: () => handleAction('Move'), label: 'Move' },
         { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1 || isValid, action: () => handleAction('Download'), label: 'Download' },
         { iconType: <FileUploadOutlinedIcon />, color: 'primary', disabled: selectedFilesForOptions?.length == 0 || isValid, action: () => handleAction('GenerateSecretCode'), label: 'Share Files' },
-        { iconType: <SlideshowIcon />, color: 'primary',  disabled: selectedFilesForOptions?.length !== 1 || isValid, action: () =>{ 
+        { iconType: <SlideshowIcon />, color: 'primary',  disabled: selectedItems?.length === 0 || isValid , action: () =>{ 
           handleAction('Settings')
           dispatch(toggleBottomTab());
         }, label: 'Settings' },
