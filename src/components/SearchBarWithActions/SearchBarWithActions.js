@@ -62,19 +62,11 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
 
   ];
 
-  // Handle scroll event
   useEffect(() => {
     const handleScroll = () => {
       const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       const scrollPercentage = (scrollPosition / totalHeight) * 100;
-
-      // Show the search bar when scroll percentage is greater than 20%
-
-      console.log('innerHeight',window.innerHeight)
-      console.log('scrollPosition',scrollPosition)
-      console.log('scrollPercentage',scrollPercentage)
-
 
         if (scrollPercentage > 1) {
           setShowSearch(true);

@@ -46,6 +46,11 @@ const Settings = () => {
   useEffect(() => {
     const files = filterFiles();
     setSelectedFiles(files || []);
+
+    return ()=>{
+      setSelectedFiles([])
+      setCurrentPage(0)
+    }
   }, [folders, selectedFolderList]);
 
   const handleToggleDialog = () => {
