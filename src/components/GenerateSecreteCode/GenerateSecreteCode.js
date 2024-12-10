@@ -16,8 +16,6 @@ function GenerateSecretCode() {
     const [folderData, setFolderData] = useState({ name: '' });
     const { selectedFolders: selectedFolderList, folders, error: workspaceError } = useSelector(state => state.work);
 
-    console.log('selectedFiles', selectedFiles);
-
     const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
         const onlyFileIds = folders
             ?.filter((file) =>

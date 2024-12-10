@@ -96,7 +96,6 @@ function Delete() {
   const renderIcon = (id) => {  
     const fileOrFolder = folders.find(item => item._id === id);
     let mimetype = fileOrFolder ? fileOrFolder.mimetype : id;
-    console.log(mimetype)
     switch (mimetype) {
       case 'Folder':
       case 'Subscriptions':

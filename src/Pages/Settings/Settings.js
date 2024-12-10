@@ -73,7 +73,8 @@ const Settings = () => {
       sx={{
         backgroundColor: isDarkMode ? '#333' : '#ffffff',
         height: '100%',
-        padding:'10px'
+        padding:'10px',
+        // overflow:'scroll'
       }}
     >
       <AppBar

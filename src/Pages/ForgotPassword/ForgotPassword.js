@@ -22,10 +22,8 @@ const ForgotPasswordPage = () => {
   };
 
   const handleSubmit = (e) => {
-    console.log(email)
     e.preventDefault();
     if (!email) {
-      console.log('entered')
       setSnackbarMessage('Please enter an email');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
