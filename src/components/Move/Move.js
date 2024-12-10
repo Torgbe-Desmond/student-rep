@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import {
     Button,
     CircularProgress,
@@ -11,12 +12,13 @@ import {
     Avatar,
     ListItemText,
     IconButton,
+    createTheme,
+    ThemeProvider,
 } from '@mui/material';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
 import {
     clearMoveItemsArray,
     getAllFolders,
@@ -25,6 +27,8 @@ import {
 } from '../../Features/WorkSpace';
 import { handleStackClear } from '../HandleStack/HandleStack';
 import './Move.css';
+
+// Define the dark and light theme using MUI's createThem
 
 function Move() {
     const dispatch = useDispatch();
@@ -40,6 +44,15 @@ function Move() {
     );
     const currentDirectory = useSelector((state) => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id');
+    
+    // Toggle between light and dark mode
+    const [darkMode, setDarkMode] = useState(false);
+
+    useEffect(() => {
+        // Check if dark mode preference is stored in localStorage
+        const storedDarkMode = localStorage.getItem('darkMode') === 'true';
+        setDarkMode(storedDarkMode);
+    }, []);
 
     useEffect(() => {
         dispatch(getAllFolders({ reference_Id }));
@@ -141,82 +154,84 @@ function Move() {
         : [];
 
     return (
-        <div className="move-overlay">
-            <div className="move-modal">
-                {isLoading ? (
-                    <LinearProgress />
-                ) : (
-                    <>
-                        <div className="top-move-modal">
-                            <TextField
-                                type="text"
-                                className="move-search-input"
-                                placeholder="Search folders"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                            <div className="available-folders">
-                                <List>
-                                    {filteredFolders.map((folder) => (
-                                        <ListItem key={folder._id}>
-                                            <ListItemAvatar>
-                                                <Avatar>
-                                                    <FolderOpenOutlinedIcon />
-                                                </Avatar>
-                                            </ListItemAvatar>
-                                            <ListItemText primary={folder.label} />
-                                        </ListItem>
-                                    ))}
-                                </List>
+            <div className={`${darkMode ? 'dark-mode':''} move-overlay `}>
+                <div className="move-modal">
+                    {isLoading ? (
+                        <LinearProgress />
+                    ) : (
+                        <>
+                            <div className="top-move-modal">
+                                <TextField
+                                    type="text"
+                                    className="move-search-input"
+                                    placeholder="Search folders"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                                <div className="available-folders">
+                                    <List>
+                                        {filteredFolders.map((folder) => (
+                                            <ListItem key={folder._id}>
+                                                <ListItemAvatar>
+                                                    <Avatar>
+                                                        <FolderOpenOutlinedIcon />
+                                                    </Avatar>
+                                                </ListItemAvatar>
+                                                <ListItemText 
+                                                sx={{color:darkMode ? '#000':''}}
+                                                primary={folder.label} />
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </div>
                             </div>
-                        </div>
-                        <div className="input-vv">
-                            <TextField
-                                type="text"
-                                className="move-search"
-                                placeholder="Type folder name to move"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                        </div>
-                    </>
-                )}
-                <div className="bottom-move-modal">
-                    <div className="move-button-container">
-                        <Button
-                            variant="contained"
-                            disabled={match.length !== 1 || isLoading}
-                            onClick={handleMoveAction}
-                            className='move-btn'
-                        >
-                            Move
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={() => handleStackClear(dispatch)}
-                            disabled={isLoading}
-                            className='move-btn'
+                            <div className="input-vv">
+                                <TextField
+                                    type="text"
+                                    className="move-search"
+                                    placeholder="Type folder name to move"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </div>
+                        </>
+                    )}
+                    <div className="bottom-move-modal">
+                        <div className="move-button-container">
+                            <Button
+                                variant="contained"
+                                disabled={match.length !== 1 || isLoading}
+                                onClick={handleMoveAction}
+                                className='move-btn'
+                            >
+                                Move
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={() => handleStackClear(dispatch)}
+                                disabled={isLoading}
+                                className='move-btn'
 
-                        >
-                            Cancel
-                        </Button>
+                            >
+                                Cancel
+                            </Button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <Snackbar
-                open={snackbar.open}
-                autoHideDuration={3000}
-                onClose={() => setSnackbar({ ...snackbar, open: false })}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-            >
-                <Alert
+                <Snackbar
+                    open={snackbar.open}
+                    autoHideDuration={3000}
                     onClose={() => setSnackbar({ ...snackbar, open: false })}
-                    severity={snackbar.severity}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 >
-                    {snackbar.message}
-                </Alert>
-            </Snackbar>
-        </div>
+                    <Alert
+                        onClose={() => setSnackbar({ ...snackbar, open: false })}
+                        severity={snackbar.severity}
+                    >
+                        {snackbar.message}
+                    </Alert>
+                </Snackbar>
+            </div>
     );
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography,
   Button,
@@ -11,6 +11,13 @@ import { handleStackClear } from '../HandleStack/HandleStack';
 const SessionExpiredModal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+      const storedDarkMode = localStorage.getItem('darkMode') === 'true';
+      setDarkMode(storedDarkMode);
+  }, []);
+
 
   const moveToLogin = () => {
     localStorage.clear()
@@ -25,7 +32,7 @@ const SessionExpiredModal = () => {
                    <Typography variant="h6" component="h2" gutterBottom>
                      Your session has expired
                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 2 }}>
+                    <Typography variant="body2" sx={{ mb: 2, color:darkMode ? '#000':'' }}>
                       Please log in again to continue.
                     </Typography>
                     <Button

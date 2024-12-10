@@ -26,6 +26,10 @@
     backdrop-filter: blur;
 }
 
+.dark-mode .logout-info {
+    color: #000;
+}
+
 
 .logout-button-container {
     display: flex;

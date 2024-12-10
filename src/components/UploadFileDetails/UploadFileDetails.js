@@ -23,6 +23,7 @@ const UploadFileDetails = () => {
     const dispatch = useDispatch();
     const reference_Id = localStorage.getItem('reference_Id');
     const { currentDirectory } = useSelector(state => state.path);
+    const isDarkMode = useSelector(state => state.theme.darkMode); // Get dark mode value
 
     const handleClose = useCallback(() => {
         handleStackClear(dispatch);
@@ -121,13 +122,12 @@ const UploadFileDetails = () => {
 
     return (
         open && (
-            <div className="upload-file-details-overlay">
-                <div className="upload-file-details-content">
+            <div className={`upload-file-details-overlay ${isDarkMode ? 'dark-mode' : ''}`}>
+                <div className={`upload-file-details-content ${isDarkMode ? 'dark-mode' : ''}`}>
                     <div className="button-container">
-
                         <Button
                             variant="contained"
-                            className="btn add-file-btn"
+                            className={`btn add-file-btn ${isDarkMode ? 'dark-mode' : ''}`}
                             onClick={handleAddFile}
                             disabled={isUploading}>
                             Add File
@@ -135,7 +135,7 @@ const UploadFileDetails = () => {
 
                         <Button
                             variant="contained"
-                            className="btn close-btn"
+                            className={`btn close-btn ${isDarkMode ? 'dark-mode' : ''}`}
                             onClick={handleClose}
                             disabled={isUploading}>
                             Close
@@ -144,7 +144,7 @@ const UploadFileDetails = () => {
                         {uploadedFiles.length > 0 && (
                             <Button
                                 variant="contained"
-                                className="btn change-name-btn"
+                                className={`btn change-name-btn ${isDarkMode ? 'dark-mode' : ''}`}
                                 onClick={handleUpload}
                                 disabled={isUploading}>
                                 {isUploading ? 'Uploading...' : 'Upload'}
@@ -155,13 +155,13 @@ const UploadFileDetails = () => {
                     <div className="file-list">
                         <List>
                             {uploadedFiles.map((file, index) => {
-
                                 const fileSizeKB = (file.size / 1024).toFixed(2);
                                 const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
                                 return (
                                     <ListItem
+                                        className={isDarkMode ? 'dark-mode' : ''}
                                         secondaryAction={
-                                            <IconButton disabled={isUploading}  edge="end" aria-label="delete">
+                                            <IconButton disabled={isUploading} edge="end" aria-label="delete">
                                                 <DeleteIcon
                                                     onClick={() => handleRemoveFile(index)}
                                                 />
@@ -186,7 +186,7 @@ const UploadFileDetails = () => {
                             })}
                         </List>
                     </div>
-                    <p> Total selected size: {totalSize > 1000 ? `${(totalSize / (1024 * 1024)).toFixed(2)} MB` : `${(totalSize / 1024).toFixed(2)} KB`}</p>
+                    <p>Total selected size: {totalSize > 1000 ? `${(totalSize / (1024 * 1024)).toFixed(2)} MB` : `${(totalSize / 1024).toFixed(2)} KB`}</p>
                 </div>
 
                 <Snackbar

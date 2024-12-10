@@ -67,7 +67,7 @@ function Main() {
   }, [folders]);
 
   return (
-    <div className={`app-container ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
+    <div className={`app-container ${isDarkMode ? 'dark-mode' : ''}`}>
       <SearchBarWithActions
         folderData={_folders}
         setFilteredData={setFilteredData}

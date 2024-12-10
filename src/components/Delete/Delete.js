@@ -158,7 +158,8 @@ function Delete() {
                     maxWidth:'70%',
                     overflowX:'scroll'
                   }}
-                  primary={getFileNameById(id)} />
+                  primary={getFileNameById(id)} 
+                  />
                 </ListItem>
               ))}
             </List>
