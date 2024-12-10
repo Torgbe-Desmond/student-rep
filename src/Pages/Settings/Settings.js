@@ -9,8 +9,12 @@ import {
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleBottomTab } from '../../Features/PathSlice';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import './Settings.css';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -46,14 +50,6 @@ const Settings = () => {
 
   const handleToggleDialog = () => {
     dispatch(toggleBottomTab());
-  };
-
-  const handleWheelScroll = (e) => {
-    if (e.deltaY > 0) {
-      nextPage();
-    } else {
-      prevPage();
-    }
   };
 
   const nextPage = () => {
@@ -95,7 +91,7 @@ const Settings = () => {
         >
           <Typography variant="h6" sx={{ textAlign: 'flex-end' }}>
             {selectedFiles.length > 0
-              ? `${currentPage} / ${ selectedFiles.length} items selected`
+              ? `${selectedFiles.length} items selected`
               : 'No files selected'}
           </Typography>
 
@@ -106,7 +102,6 @@ const Settings = () => {
       </AppBar>
 
       <List
-        onWheel={handleWheelScroll}
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -145,6 +140,44 @@ const Settings = () => {
           </>
         )}
       </List>
+
+      {/* Vertical Navigation with Icons on Right Side */}
+      <div
+        style={{
+          position: 'fixed',
+          top:'50%',
+          right: 10,
+          transform: 'translateY(-50%)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          background: '#FFF',
+          padding: '10px 10px',
+          borderRadius:'44px',
+          marginRight:'5px',
+          boxShadow:'0 10 5px rgba(161, 167, 204, 0.5)'
+        }}
+      >
+        <ArrowBackIosNewIcon
+          size={24}
+          onClick={prevPage}
+          color="primary"
+          disabled={currentPage === 0}
+          sx={{ marginBottom: '10px' }}
+        />
+
+        <Typography variant="body1" sx={{ marginBottom: '10px' }}>
+          {currentPage + 1} / {selectedFiles.length}
+        </Typography>
+
+        <ArrowForwardIosIcon
+          size={24}
+          sx={{ marginBottom: '10px' }}
+          color="primary"
+          disabled={currentPage === selectedFiles.length - 1}
+          onClick={nextPage}
+        />
+      </div>
     </Dialog>
   );
 };
