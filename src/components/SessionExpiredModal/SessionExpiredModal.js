@@ -5,18 +5,19 @@ import {
 } from '@mui/material';
 import './SessionExpiredModal.css'
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
 
 const SessionExpiredModal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [darkMode, setDarkMode] = useState(false);
+  const isDarkMode = useSelector((state) => state.theme.darkMode);
 
-  useEffect(() => {
-      const storedDarkMode = localStorage.getItem('darkMode') === 'true';
-      setDarkMode(storedDarkMode);
-  }, []);
+  // useEffect(() => {
+  //     const storedDarkMode = localStorage.getItem('darkMode') === 'true';
+  //     setDarkMode(storedDarkMode);
+  // }, []);
 
 
   const moveToLogin = () => {
@@ -26,13 +27,15 @@ const SessionExpiredModal = () => {
   };
 
   return (
-   <div className='session-expired-overlay'>
+   <div className={`session-expired-overlay ${isDarkMode ? 'session-dark-mode' :''}`}>
         <div className='session-expired-modal'>
             <div className='session-expired-body'>
-                   <Typography variant="h6" component="h2" gutterBottom>
+                   <Typography
+                   sx={{ color: isDarkMode ? 'session-dark-mode' :''}}
+                   variant="h6" component="h2" gutterBottom>
                      Your session has expired
                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 2, color:darkMode ? '#000':'' }}>
+                    <Typography variant="body2" sx={{ mb: 2, color:isDarkMode ? '#000':'' }}>
                       Please log in again to continue.
                     </Typography>
                     <Button

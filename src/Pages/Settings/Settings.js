@@ -68,122 +68,75 @@ const Settings = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-
   return (
     <Dialog
-      fullScreen
-      open={open}
-      onClose={handleToggleDialog}
-      TransitionComponent={Transition}
-      sx={{
-        backgroundColor: isDarkMode ? '#333' : '#ffffff',
-        height: '100%',
-        padding:'10px',
-        // overflow:'scroll'
-      }}
-    >
-      <AppBar
-        sx={{
-          position: 'relative',
-          backgroundColor: isDarkMode ? '#444' : '#2196f3',
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-        }}
-      >
-        <Toolbar
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Typography variant="h6" sx={{ textAlign: 'flex-end' }}>
-            {selectedFiles.length > 0
-              ? `${selectedFiles.length} items selected`
-              : 'No files selected'}
-          </Typography>
-
-          <IconButton edge="start" color="inherit" onClick={handleToggleDialog}>
-            <CloseIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-
-      <List
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: isDarkMode ? '#333' : '#ffffff',
-          height: '100vh',
-          overflow: 'hidden',
-        }}
-      >
-        {selectedFiles.length > 0 && (
-          <>
-            {selectedFiles[currentPage]?.mimetype.startsWith('video') && (
-              <video
-                src={selectedFiles[currentPage].url}
-                controls
-                style={{
-                  maxWidth: '70%',
-                  objectFit: 'contain',
-                  margin: '20px 0px',
-                }}
-              />
-            )}
-
-            {selectedFiles[currentPage]?.mimetype.startsWith('image') && (
-              <img
-                
-                src={selectedFiles[currentPage].url}
-                alt={`Selected file ${currentPage}`}
-                style={{
-                  width: '75%',
-                  objectFit: 'contain',
-                }}
-              />
-            )}
-          </>
-        )}
-      </List>
-      <div
-        style={{
-          position: 'fixed',
-          top:'50%',
-          right: 10,
-          transform: 'translateY(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          background: '#FFF',
-          padding: '10px 10px',
-          borderRadius:'44px',
-          marginRight:'5px',
-          boxShadow:'0 10 5px rgba(161, 167, 204, 0.5)'
-        }}
-      >
-        <ArrowBackIosNewIcon
-          size={24}
-          onClick={prevPage}
-          color="primary"
-          disabled={currentPage === 0}
-          sx={{ marginBottom: '10px' }}
-        />
-
-        <Typography variant="body1" sx={{ marginBottom: '10px' }}>
-          {currentPage + 1} / {selectedFiles.length}
+    fullScreen
+    open={open}
+    onClose={handleToggleDialog}
+    TransitionComponent={Transition}
+    sx={{backgroundColor: isDarkMode ? '#444' : '#2196f3',}}
+    className="dialog-wrapper"
+  >
+    <AppBar 
+    sx={{backgroundColor: isDarkMode ? '#444' : '#2196f3',}}
+    className="app-bar">
+      <Toolbar className="toolbar">
+        <Typography variant="h6">
+          {selectedFiles.length > 0
+            ? `${selectedFiles.length} items selected`
+            : 'No files selected'}
         </Typography>
-
-        <ArrowForwardIosIcon
-          size={24}
-          sx={{ marginBottom: '10px' }}
-          color="primary"
-          disabled={currentPage === selectedFiles.length - 1}
-          onClick={nextPage}
-        />
-      </div>
-    </Dialog>
+  
+        <IconButton edge="start" color="inherit" onClick={handleToggleDialog}>
+          <CloseIcon />
+        </IconButton>
+      </Toolbar>
+    </AppBar>
+  
+    <List 
+    sx={{backgroundColor: isDarkMode ? '#000' : '#000',}}
+    className="list-container">
+      {selectedFiles.length > 0 && (
+        <>
+          {selectedFiles[currentPage]?.mimetype.startsWith('video') && (
+            <video
+              src={selectedFiles[currentPage].url}
+              controls
+              className="video-player"
+            />
+          )}
+  
+          {selectedFiles[currentPage]?.mimetype.startsWith('image') && (
+            <img
+              src={selectedFiles[currentPage].url}
+              alt={`Selected file ${currentPage}`}
+              className="image-item"
+            />
+          )}
+        </>
+      )}
+    </List>
+    <div className="responsive-box">
+      <ArrowBackIosNewIcon
+        size={24}
+        onClick={prevPage}
+        color="primary"
+        disabled={currentPage === 0}
+      />
+  
+      <Typography variant="body1">
+        {currentPage + 1} / {selectedFiles.length}
+      </Typography>
+  
+      <ArrowForwardIosIcon
+        size={24}
+        onClick={nextPage}
+        color="primary"
+        disabled={currentPage === selectedFiles.length - 1}
+      />
+    </div>
+  </Dialog>
+  
   );
 };
 

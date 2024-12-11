@@ -26,6 +26,10 @@
     backdrop-filter: blur;
 }
 
+.session-dark-mode{
+    color: #000;
+}
+
 .session-expired-body {
     display: flex;
     flex-direction: column;
@@ -34,9 +38,6 @@
     gap: 20px;
     width: 100%;
 }
-
-
-
 
 @media screen and (max-width:640px) {
     .session-expired-modal {
