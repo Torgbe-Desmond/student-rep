@@ -236,11 +236,12 @@ function NewList(
 
 
   return (
-    <div
-      className={`newlist-container ${isDarkMode ? 'dark-mode' : ''}`}
-      style={{
-        color: isDarkMode ? 'tranparent' : 'black',
-      }}
+   <div  className={`newlist-container ${isDarkMode ? 'dark-mode' : ''}`}
+   style={{
+     color: isDarkMode ? 'tranparent' : 'black',
+   }}>
+       <div
+        className='files'
     >
       <FormControlLabel
         sx={{
@@ -366,6 +367,7 @@ function NewList(
         }
       />
     </div>
+   </div>
   );
   
 } 

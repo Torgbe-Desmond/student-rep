@@ -1,12 +1,23 @@
 .newlist-container {
     display: flex;
     width: 100%;
+    height: 100%;
     justify-content: flex-start;
     align-items: flex-start;
     padding:0rem;
     box-sizing: border-box;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .files { 
+    overflow: scroll;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
   
 .reload-btn-container{
@@ -14,4 +25,18 @@
   width: 100%;
   justify-content: center;
   align-items: center;
+}
+
+
+@media screen and (min-width:600px) {
+  .files { 
+    position: relative;
+    overflow: scroll;
+    width: 100%;
+    height: 100%;
+    /* background: red; */
+    /* -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none; */
+  }
 }

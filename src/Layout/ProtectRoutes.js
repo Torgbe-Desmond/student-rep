@@ -12,8 +12,8 @@ import handleStack from '../components/HandleStack/HandleStack';
 import SearchBarWithActions from '../components/SearchBarWithActions/SearchBarWithActions';
 import '../index.css'
 import { Box } from '@mui/material';
-import SimpleBottomNavigation from '../components/SimpleBottomNavigation/SimpleBottomNavigation';
 import BasicSpeedDial from '../components/SpeedDial/SpeedDial';
+import Breadcrumb from '../components/BreadCrumb/BreadCrumb';
 
 const ProtectRoutes = () => {
   const token = localStorage.getItem('token');
@@ -103,10 +103,11 @@ const ProtectRoutes = () => {
                />
           </Box>
 
+              {/* <Breadcrumb breadcrumbs={breadCrumbs} /> */}
+
            <Box className='main'>
               <Outlet context={sharedProps} />
            </Box>
-
 
           <Box>
             <BasicSpeedDial
