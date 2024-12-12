@@ -18,7 +18,6 @@ function Download() {
         }
     }, [dispatch, selectedFiles, reference_Id]);
 
-    console.log('selectedFiles',selectedFiles)
  
     const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
         const file = folders

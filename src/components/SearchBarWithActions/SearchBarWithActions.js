@@ -90,7 +90,7 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
   return (
     
 
-    <div className={`search-options ${isDarkMode ? 'dark-mode' : ''} ${showSearch ? 'position' : ''}`}>
+    <div className={`search-options ${isDarkMode ? 'dark-mode' : ''}`}>
         <TextField
         sx={{
           color: isDarkMode ? '#FFF' : '', 
