@@ -11,13 +11,13 @@
   }
 
   .files { 
-    overflow: scroll;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select: none;
+    /* overflow: scroll; */
+    /* position: absolute; */
+    /* width: 100%; */
+    /* height: 100%; */
+    /* -webkit-user-select: none; */
+    /* -moz-user-select: none; */
+    /* user-select: none; */
   }
   
 .reload-btn-container{
