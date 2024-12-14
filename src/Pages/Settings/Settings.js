@@ -24,10 +24,10 @@ const Settings = () => {
   const { selectedFolders: selectedFolderList, folders } = useSelector(
     (state) => state.work
   );
-  const [selectedFiles, setSelectedFiles] = useState([]);
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.theme.darkMode);
 
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [isVideoBuffering, setIsVideoBuffering] = useState(false);
@@ -108,7 +108,7 @@ const Settings = () => {
         setIsVideoPlaying(true);
       }
     } catch (error) {
-      console.log('Error playing/pausing video', error);
+      console.error('Error playing/pausing video:', error);
       setIsVideoPlaying(false);
     }
   };
@@ -146,6 +146,8 @@ const Settings = () => {
     dispatch(toggleBottomTab());
   };
 
+  const videoProgress = (currentTime / duration) * 100;
+
   return (
     <Dialog
       fullScreen
@@ -156,17 +158,22 @@ const Settings = () => {
       className="dialog-wrapper"
     >
       <AppBar
-        sx={{ backgroundColor: isDarkMode ? '#444' : '#2196f3' }}
+        sx={{ backgroundColor:'transparent' }}
         className="app-bar"
       >
         <Toolbar className="toolbar">
-          <Typography variant="h6">
+
+          <Typography 
+           sx={{ color: isDarkMode ? '#FFF' : '#000' }}
+          variant="h6">
             {selectedFiles.length > 0
               ? `${selectedFiles.length} items selected`
               : 'No files selected'}
           </Typography>
 
-          <IconButton edge="start" color="inherit" onClick={handleToggleDialog}>
+          <IconButton 
+          sx={{ color: isDarkMode ? '#FFF' : '#000' }}
+          edge="start" color="inherit" onClick={handleToggleDialog}>
             <CloseIcon />
           </IconButton>
         </Toolbar>
@@ -176,30 +183,42 @@ const Settings = () => {
         sx={{ backgroundColor: isDarkMode ? '#000' : '#000', overflowY: 'auto' }}
         className="list-container"
       >
-        {selectedFiles.map((file, index) => (
-          <div key={index} className="file-item">
+        {selectedFiles.map((file,index) => (
+          <div key={file._id} className="file-item">
             {file.mimetype.startsWith('video') && (
               <div className="video-player">
-                 <AutoplayVideo
-                   videoRef={videoRef}
-                   onVideoPress={onVideoPress}
-                   url={file.url}
-                   isMuted={isMuted}
-                   isVideoPlaying={isVideoPlaying}
-                 />
+                <AutoplayVideo
+                  index={index}
+                  videoRef={videoRef}
+                  onVideoPress={onVideoPress}
+                  url={file.url}
+                  isMuted={isMuted}
+                  isVideoPlaying={isVideoPlaying}
+                />
                 {(isVideoLoading || isVideoBuffering) && (
                   <div className="video-loading">
                     <CircularProgress size={75} color="inherit" />
                   </div>
                 )}
+
+                {/* <div className="video-progress-bar">
+                 <div
+                   className="progress"
+                   style={{ width: `${videoProgress}%` }}
+                 />
+                </div> */}
+
+                 
               </div>
             )}
             {file.mimetype.startsWith('image') && (
-              <img
-                src={file.url}
-                alt={`Selected file ${index}`}
-                className="image-item"
-              />
+              <div className="image-holder">
+                <img
+                  src={file.url}
+                  alt={`Selected file`}
+                  className="image-item"
+                />
+              </div>
             )}
           </div>
         ))}

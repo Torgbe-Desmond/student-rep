@@ -2,7 +2,7 @@
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'; // Material UI Play Icon
 import  './AutoplayVideo.css'
 
-const AutoplayVideo = ({videoRef,onVideoPress,url, isMuted ,isVideoPlaying}) => {
+const AutoplayVideo = ({index,videoRef,onVideoPress,url, isMuted ,isVideoPlaying}) => {
 
   return (
     <>
@@ -16,14 +16,14 @@ const AutoplayVideo = ({videoRef,onVideoPress,url, isMuted ,isVideoPlaying}) => 
            loop
            muted={isMuted}
            playsInline
-           preload="metadata"
            controls
+           preload="metadata"
          />
-         {!isVideoPlaying && (
+         {/* {!isVideoPlaying &&(
            <div className="play-button-overlay">
              <PlayArrowIcon style={{ fontSize: 50, color: 'white' }} />
            </div>
-         )}
+         )} */}
        </div>
     </>
  )

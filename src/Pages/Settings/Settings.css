@@ -24,9 +24,9 @@
     width: 100%;
   }
 
-  .dialog-wrapper {
+  /* .dialog-wrapper {
     background-color: var(--dialog-bg, #ffffff);
-  }
+  } */
   
   @media (min-width: 600px) {
     .dialog-wrapper {
@@ -36,7 +36,7 @@
   
   .app-bar {
     position: relative;
-    background-color: var(--app-bar-bg, #2196f3);
+    background-color: transparent;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   }
   
@@ -59,6 +59,7 @@
     scroll-snap-type: y mandatory;
     -webkit-overflow-scrolling: touch; 
     overscroll-behavior-y: contain;
+    
   }
 
 
@@ -68,6 +69,17 @@
   }
 
 
+  .image-holder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    height: 100%;
+    width: 100%;
+    flex-grow: 1;
+    scroll-snap-align: start;
+  }
+
   .video-player {
     height: 100%;
     width: 100%;
@@ -75,6 +87,7 @@
     scroll-snap-align: start;
     position: relative;
     overflow: hidden;
+    margin-top: 20px;
   }
 
   .video-element {
@@ -89,25 +102,26 @@
     justify-content: flex-start;
     max-width: 100%;
     max-height: 100%;
+    width: 100%;
+    height: 90%;
     object-fit: contain;
   }
 
   
-  /* .responsive-box {
-    position: fixed;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #fff;
-    padding: 10px;
-    border-radius: 44px;
-    margin-right: 5px;
-    box-shadow: 0 10px 5px rgba(161, 167, 204, 0.5);
+  .video-progress-bar {
+    width: 100%;
+    height: 10px;
+    /* background-color: rgba(0, 0, 0, 0.5); */
+    z-index: 999;
+    /* margin-top: 5px; */
   }
-   */
+  
+  .progress {
+    height: 20px;
+    background-color: #00bcd4;
+  }
+
+
   @media (min-width: 600px) {
     .responsive-box {
       right: 40px;
