@@ -236,12 +236,11 @@ function NewList(
 
 
   return (
-   <div  className={`newlist-container ${isDarkMode ? 'dark-mode' : ''}`}
-   style={{
-     color: isDarkMode ? 'tranparent' : 'black',
-   }}>
-       <div
-        className='files'
+    <div
+      className={`newlist-container ${isDarkMode ? 'dark-mode' : ''}`}
+      style={{
+        color: isDarkMode ? 'tranparent' : 'black',
+      }}
     >
       <FormControlLabel
         sx={{
@@ -251,8 +250,11 @@ function NewList(
         control={<Switch checked={isDarkMode} onChange={toggleDarkModeParent} />}
         label="Dark Mode"
       />
-  
-      <TableContainer component={Paper} sx={{ width: '100%' }}>
+
+      <div className='files'>
+      <TableContainer component={Paper} 
+      sx={{ width: '100%', }}
+      >
         <Table>
           <TableHead>
             <TableRow>
@@ -346,6 +348,7 @@ function NewList(
           </TableBody>
         </Table>
       </TableContainer>
+      </div>
   
       {status === 'failed' && (
         <div className="reload-btn-container">
@@ -367,7 +370,6 @@ function NewList(
         }
       />
     </div>
-   </div>
   );
   
 } 

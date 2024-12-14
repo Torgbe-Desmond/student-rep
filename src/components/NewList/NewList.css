@@ -7,19 +7,27 @@
     padding:0rem;
     box-sizing: border-box;
     flex-direction: column;
-    margin-bottom: 20px;
+    /* overflow: scroll; */
+
   }
 
   .files { 
-    /* overflow: scroll; */
+    overflow: scroll;
     /* position: absolute; */
-    /* width: 100%; */
-    /* height: 100%; */
-    /* -webkit-user-select: none; */
-    /* -moz-user-select: none; */
-    /* user-select: none; */
+    /* left: 0; */
+    /* bottom: 0; */
+    /* z-index: 10; */
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    overscroll-behavior: contain;
+    box-sizing: border-box;
+    scroll-behavior: smooth; /* Smooth scrolling */
   }
-  
+
+   
 .reload-btn-container{
   display: flex;
   width: 100%;

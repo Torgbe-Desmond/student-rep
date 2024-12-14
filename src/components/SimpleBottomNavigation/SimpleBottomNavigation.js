@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import handleStack from '../HandleStack/HandleStack';
 import { toggleBottomTab } from '../../Features/PathSlice';
 import './SimpleBottomNavigation.css'
+import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 
 export default function SimpleBottomNavigation() {
   const [value, setValue] = React.useState(0);

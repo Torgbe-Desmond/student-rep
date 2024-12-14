@@ -12,6 +12,16 @@
     z-index: 1000;
 }
 
+.videoCard {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+    object-fit: contain;
+    flex-grow: 1;
+  }
+  
+
 .display-image-container {
     display: flex;
     flex-direction: column;

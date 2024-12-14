@@ -77,6 +77,9 @@ code {
     monospace;
 }
 
+.app{ 
+  
+}
 .header{
   display: flex;
   justify-content: center;

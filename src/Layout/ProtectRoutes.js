@@ -92,7 +92,7 @@ const ProtectRoutes = () => {
   let component 
   if(token){
       component = (
-        <Box>
+        <Box className="app">
           <Box className='header'>
              <SearchBarWithActions
                 folderData={filteredData}

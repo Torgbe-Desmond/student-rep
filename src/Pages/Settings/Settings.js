@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   AppBar,
   Dialog,
@@ -9,13 +9,11 @@ import {
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleBottomTab } from '../../Features/PathSlice';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CircularProgress from '@mui/material/CircularProgress';
 import './Settings.css';
+import AutoplayVideo from '../../components/AutoplayVideo/AutoplayVideo';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -27,9 +25,101 @@ const Settings = () => {
     (state) => state.work
   );
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0); // Track current file page
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.theme.darkMode);
+
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
+  const [isVideoBuffering, setIsVideoBuffering] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef(null);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    if (!videoElement) return;
+
+    const handleWaiting = () => setIsVideoBuffering(true);
+    const handleCanPlay = () => {
+      setIsVideoBuffering(false);
+      setIsVideoLoading(false);
+    };
+    const handleLoadStart = () => setIsVideoLoading(true);
+    const handleLoadedMetadata = () => {
+      setDuration(videoElement.duration || 0);
+      setIsVideoLoading(false);
+    };
+    const handleTimeUpdate = () => setCurrentTime(videoElement.currentTime);
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          safePlay();
+        } else {
+          videoElement.pause();
+          setIsVideoPlaying(false);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    videoElement.addEventListener('waiting', handleWaiting);
+    videoElement.addEventListener('canplay', handleCanPlay);
+    videoElement.addEventListener('loadstart', handleLoadStart);
+    videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
+    videoElement.addEventListener('timeupdate', handleTimeUpdate);
+
+    observer.observe(videoElement);
+
+    return () => {
+      videoElement.removeEventListener('waiting', handleWaiting);
+      videoElement.removeEventListener('canplay', handleCanPlay);
+      videoElement.removeEventListener('loadstart', handleLoadStart);
+      videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+      observer.disconnect();
+    };
+  }, []);
+
+  const safePlay = () => {
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+    try {
+      videoElement.play();
+      setIsVideoPlaying(true);
+    } catch (error) {
+      console.error('Error playing video:', error);
+      setIsVideoPlaying(false);
+    }
+  };
+
+  const onVideoPress = () => {
+    const videoElement = videoRef.current;
+    if (!videoElement) return;
+
+    try {
+      if (isVideoPlaying) {
+        videoElement.pause();
+        setIsVideoPlaying(false);
+      } else {
+        videoElement.play();
+        setIsVideoPlaying(true);
+      }
+    } catch (error) {
+      console.log('Error playing/pausing video', error);
+      setIsVideoPlaying(false);
+    }
+  };
+
+  const toggleMute = () => {
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      videoElement.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   const filterFiles = () => {
     return folders
@@ -47,96 +137,74 @@ const Settings = () => {
     const files = filterFiles();
     setSelectedFiles(files || []);
 
-    return ()=>{
-      setSelectedFiles([])
-      setCurrentPage(0)
-    }
+    return () => {
+      setSelectedFiles([]);
+    };
   }, [folders, selectedFolderList]);
 
   const handleToggleDialog = () => {
     dispatch(toggleBottomTab());
   };
 
-  const nextPage = () => {
-    if (currentPage < selectedFiles.length - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  const prevPage = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
   return (
     <Dialog
-    fullScreen
-    open={open}
-    onClose={handleToggleDialog}
-    TransitionComponent={Transition}
-    sx={{backgroundColor: isDarkMode ? '#444' : '#2196f3',}}
-    className="dialog-wrapper"
-  >
-    <AppBar 
-    sx={{backgroundColor: isDarkMode ? '#444' : '#2196f3',}}
-    className="app-bar">
-      <Toolbar className="toolbar">
-        <Typography variant="h6">
-          {selectedFiles.length > 0
-            ? `${selectedFiles.length} items selected`
-            : 'No files selected'}
-        </Typography>
-  
-        <IconButton edge="start" color="inherit" onClick={handleToggleDialog}>
-          <CloseIcon />
-        </IconButton>
-      </Toolbar>
-    </AppBar>
-  
-    <List 
-    sx={{backgroundColor: isDarkMode ? '#000' : '#000',}}
-    className="list-container">
-      {selectedFiles.length > 0 && (
-        <>
-          {selectedFiles[currentPage]?.mimetype.startsWith('video') && (
-            <video
-              src={selectedFiles[currentPage].url}
-              controls
-              className="video-player"
-            />
-          )}
-  
-          {selectedFiles[currentPage]?.mimetype.startsWith('image') && (
-            <img
-              src={selectedFiles[currentPage].url}
-              alt={`Selected file ${currentPage}`}
-              className="image-item"
-            />
-          )}
-        </>
-      )}
-    </List>
-    <div className="responsive-box">
-      <ArrowBackIosNewIcon
-        size={24}
-        onClick={prevPage}
-        color="primary"
-        disabled={currentPage === 0}
-      />
-  
-      <Typography variant="body1">
-        {currentPage + 1} / {selectedFiles.length}
-      </Typography>
-  
-      <ArrowForwardIosIcon
-        size={24}
-        onClick={nextPage}
-        color="primary"
-        disabled={currentPage === selectedFiles.length - 1}
-      />
-    </div>
-  </Dialog>
-  
+      fullScreen
+      open={open}
+      onClose={handleToggleDialog}
+      TransitionComponent={Transition}
+      sx={{ backgroundColor: isDarkMode ? '#444' : '#2196f3' }}
+      className="dialog-wrapper"
+    >
+      <AppBar
+        sx={{ backgroundColor: isDarkMode ? '#444' : '#2196f3' }}
+        className="app-bar"
+      >
+        <Toolbar className="toolbar">
+          <Typography variant="h6">
+            {selectedFiles.length > 0
+              ? `${selectedFiles.length} items selected`
+              : 'No files selected'}
+          </Typography>
+
+          <IconButton edge="start" color="inherit" onClick={handleToggleDialog}>
+            <CloseIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      <List
+        sx={{ backgroundColor: isDarkMode ? '#000' : '#000', overflowY: 'auto' }}
+        className="list-container"
+      >
+        {selectedFiles.map((file, index) => (
+          <div key={index} className="file-item">
+            {file.mimetype.startsWith('video') && (
+              <div className="video-player">
+                 <AutoplayVideo
+                   videoRef={videoRef}
+                   onVideoPress={onVideoPress}
+                   url={file.url}
+                   isMuted={isMuted}
+                   isVideoPlaying={isVideoPlaying}
+                 />
+                {(isVideoLoading || isVideoBuffering) && (
+                  <div className="video-loading">
+                    <CircularProgress size={75} color="inherit" />
+                  </div>
+                )}
+              </div>
+            )}
+            {file.mimetype.startsWith('image') && (
+              <img
+                src={file.url}
+                alt={`Selected file ${index}`}
+                className="image-item"
+              />
+            )}
+          </div>
+        ))}
+      </List>
+    </Dialog>
   );
 };
 
