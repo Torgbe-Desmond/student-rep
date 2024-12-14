@@ -4,6 +4,8 @@ import  './AutoplayVideo.css'
 
 const AutoplayVideo = ({index,videoRef,onVideoPress,url, isMuted ,isVideoPlaying}) => {
 
+  console.log('isVideoPlaying',isVideoPlaying)
+
   return (
     <>
          <div className="video-container" onClick={onVideoPress}>
@@ -16,14 +18,13 @@ const AutoplayVideo = ({index,videoRef,onVideoPress,url, isMuted ,isVideoPlaying
            loop
            muted={isMuted}
            playsInline
-           controls
            preload="metadata"
          />
-         {/* {!isVideoPlaying &&(
+         {!isVideoPlaying &&(
            <div className="play-button-overlay">
              <PlayArrowIcon style={{ fontSize: 50, color: 'white' }} />
            </div>
-         )} */}
+         )}
        </div>
     </>
  )

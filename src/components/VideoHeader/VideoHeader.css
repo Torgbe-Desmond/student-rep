@@ -1,0 +1,21 @@
+.videoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position:absolute;
+    width: 100%;
+    color: #FFF;
+    background-color: transparent;
+    z-index: 100;
+    background-color: #000;
+}
+
+.videoHeader > * {
+    padding: 20px;
+}
+
+@media (min-width:375px) and (max-width:667px) {
+    .videoHeader {
+        border-top: 20px solid #000;
+    }
+}

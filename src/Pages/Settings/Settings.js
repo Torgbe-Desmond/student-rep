@@ -14,6 +14,7 @@ import { toggleBottomTab } from '../../Features/PathSlice';
 import CircularProgress from '@mui/material/CircularProgress';
 import './Settings.css';
 import AutoplayVideo from '../../components/AutoplayVideo/AutoplayVideo';
+import VideoHeader from '../../components/VideoHeader/VideoHeader';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -157,14 +158,14 @@ const Settings = () => {
       sx={{ backgroundColor: isDarkMode ? '#444' : '#2196f3' }}
       className="dialog-wrapper"
     >
-      <AppBar
-        sx={{ backgroundColor:'transparent' }}
+      {/* <AppBar
+        sx={{ backgroundColor: isDarkMode ? 'transparent' : 'transparent' }}
         className="app-bar"
       >
         <Toolbar className="toolbar">
 
           <Typography 
-           sx={{ color: isDarkMode ? '#FFF' : '#000' }}
+           sx={{ color: isDarkMode ? '#FFF' : '#FFF' }}
           variant="h6">
             {selectedFiles.length > 0
               ? `${selectedFiles.length} items selected`
@@ -172,12 +173,12 @@ const Settings = () => {
           </Typography>
 
           <IconButton 
-          sx={{ color: isDarkMode ? '#FFF' : '#000' }}
+          sx={{ color: isDarkMode ? '#FFF' : '#FFF' }}
           edge="start" color="inherit" onClick={handleToggleDialog}>
             <CloseIcon />
           </IconButton>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
 
       <List
         sx={{ backgroundColor: isDarkMode ? '#000' : '#000', overflowY: 'auto' }}
@@ -185,8 +186,17 @@ const Settings = () => {
       >
         {selectedFiles.map((file,index) => (
           <div key={file._id} className="file-item">
+              <VideoHeader
+                    toggleMute={toggleMute}
+                    isMuted={isMuted}
+                    handleToggleDialog={handleToggleDialog}
+                    selectedFiles={selectedFiles}
+                    mimetype = {file.mimetype}
+                />
             {file.mimetype.startsWith('video') && (
+              
               <div className="video-player">
+              
                 <AutoplayVideo
                   index={index}
                   videoRef={videoRef}
@@ -213,6 +223,7 @@ const Settings = () => {
             )}
             {file.mimetype.startsWith('image') && (
               <div className="image-holder">
+             
                 <img
                   src={file.url}
                   alt={`Selected file`}
