@@ -15,6 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import './Settings.css';
 import AutoplayVideo from '../../components/AutoplayVideo/AutoplayVideo';
 import VideoHeader from '../../components/VideoHeader/VideoHeader';
+import Footer from '../../components/Footer/Footer';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -33,59 +34,54 @@ const Settings = () => {
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [isVideoBuffering, setIsVideoBuffering] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const videoRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  useEffect(() => {
-    const videoElement = videoRef.current;
+  const videoRefs = useRef([]); // Store multiple refs for videos
 
-    if (!videoElement) return;
+  useEffect(() => {
+    const handleLoadedMetadata = (index) => {
+      const videoElement = videoRefs.current[index];
+      if (videoElement) {
+        setDuration(videoElement.duration);
+        setIsVideoLoading(false);
+      }
+    };
 
     const handleWaiting = () => setIsVideoBuffering(true);
-    const handleCanPlay = () => {
-      setIsVideoBuffering(false);
-      setIsVideoLoading(false);
+    const handleCanPlay = () => setIsVideoBuffering(false);
+    const handleTimeUpdate = (index) => {
+      const videoElement = videoRefs.current[index];
+      if (videoElement) {
+        setCurrentTime(videoElement.currentTime);
+      }
     };
-    const handleLoadStart = () => setIsVideoLoading(true);
-    const handleLoadedMetadata = () => {
-      setDuration(videoElement.duration || 0);
-      setIsVideoLoading(false);
-    };
-    const handleTimeUpdate = () => setCurrentTime(videoElement.currentTime);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          safePlay();
-        } else {
-          videoElement.pause();
-          setIsVideoPlaying(false);
-        }
-      },
-      { threshold: 0.5 }
-    );
+    selectedFiles.forEach((file, index) => {
+      const videoElement = videoRefs.current[index];
+      if (!videoElement) return;
 
-    videoElement.addEventListener('waiting', handleWaiting);
-    videoElement.addEventListener('canplay', handleCanPlay);
-    videoElement.addEventListener('loadstart', handleLoadStart);
-    videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
-    videoElement.addEventListener('timeupdate', handleTimeUpdate);
-
-    observer.observe(videoElement);
+      videoElement.addEventListener('loadedmetadata', () => handleLoadedMetadata(index));
+      videoElement.addEventListener('waiting', handleWaiting);
+      videoElement.addEventListener('canplay', handleCanPlay);
+      videoElement.addEventListener('timeupdate', () => handleTimeUpdate(index));
+    });
 
     return () => {
-      videoElement.removeEventListener('waiting', handleWaiting);
-      videoElement.removeEventListener('canplay', handleCanPlay);
-      videoElement.removeEventListener('loadstart', handleLoadStart);
-      videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      videoElement.removeEventListener('timeupdate', handleTimeUpdate);
-      observer.disconnect();
-    };
-  }, []);
+      selectedFiles.forEach((_, index) => {
+        const videoElement = videoRefs.current[index];
+        if (!videoElement) return;
 
-  const safePlay = () => {
-    const videoElement = videoRef.current;
+        videoElement.removeEventListener('loadedmetadata', () => handleLoadedMetadata(index));
+        videoElement.removeEventListener('waiting', handleWaiting);
+        videoElement.removeEventListener('canplay', handleCanPlay);
+        videoElement.removeEventListener('timeupdate', () => handleTimeUpdate(index));
+      });
+    };
+  }, [selectedFiles]);
+
+  const safePlay = (index) => {
+    const videoElement = videoRefs.current[index];
     if (!videoElement) return;
     try {
       videoElement.play();
@@ -96,8 +92,8 @@ const Settings = () => {
     }
   };
 
-  const onVideoPress = () => {
-    const videoElement = videoRef.current;
+  const onVideoPress = (index) => {
+    const videoElement = videoRefs.current[index];
     if (!videoElement) return;
 
     try {
@@ -114,12 +110,22 @@ const Settings = () => {
     }
   };
 
-  const toggleMute = () => {
-    const videoElement = videoRef.current;
+  const seekVideo = (index, time) => {
+    const videoElement = videoRefs.current[index];
     if (videoElement) {
-      videoElement.muted = !isMuted;
-      setIsMuted(!isMuted);
+      videoElement.currentTime = time;
+      setCurrentTime(time);
+      safePlay(index);
     }
+  };
+
+  const toggleMute = () => {
+    videoRefs.current.forEach((videoElement) => {
+      if (videoElement) {
+        videoElement.muted = !isMuted;
+      }
+    });
+    setIsMuted(!isMuted);
   };
 
   const filterFiles = () => {
@@ -147,8 +153,6 @@ const Settings = () => {
     dispatch(toggleBottomTab());
   };
 
-  const videoProgress = (currentTime / duration) * 100;
-
   return (
     <Dialog
       fullScreen
@@ -158,72 +162,43 @@ const Settings = () => {
       sx={{ backgroundColor: isDarkMode ? '#444' : '#2196f3' }}
       className="dialog-wrapper"
     >
-      {/* <AppBar
-        sx={{ backgroundColor: isDarkMode ? 'transparent' : 'transparent' }}
-        className="app-bar"
-      >
-        <Toolbar className="toolbar">
-
-          <Typography 
-           sx={{ color: isDarkMode ? '#FFF' : '#FFF' }}
-          variant="h6">
-            {selectedFiles.length > 0
-              ? `${selectedFiles.length} items selected`
-              : 'No files selected'}
-          </Typography>
-
-          <IconButton 
-          sx={{ color: isDarkMode ? '#FFF' : '#FFF' }}
-          edge="start" color="inherit" onClick={handleToggleDialog}>
-            <CloseIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar> */}
-
       <List
         sx={{ backgroundColor: isDarkMode ? '#000' : '#000', overflowY: 'auto' }}
         className="list-container"
       >
-        {selectedFiles.map((file,index) => (
+        {selectedFiles.map((file, index) => (
           <div key={file._id} className="file-item">
-              <VideoHeader
-                    toggleMute={toggleMute}
-                    isMuted={isMuted}
-                    handleToggleDialog={handleToggleDialog}
-                    selectedFiles={selectedFiles}
-                    mimetype = {file.mimetype}
-                />
+            <VideoHeader
+              toggleMute={toggleMute}
+              isMuted={isMuted}
+              handleToggleDialog={handleToggleDialog}
+              selectedFiles={selectedFiles}
+              mimetype={file.mimetype}
+            />
             {file.mimetype.startsWith('video') && (
-              
               <div className="video-player">
-              
                 <AutoplayVideo
                   index={index}
-                  videoRef={videoRef}
-                  onVideoPress={onVideoPress}
+                  videoRef={(el) => (videoRefs.current[index] = el)}
+                  onVideoPress={() => onVideoPress(index)}
                   url={file.url}
                   isMuted={isMuted}
                   isVideoPlaying={isVideoPlaying}
+                  currentTime={currentTime} 
+                  duration={duration}
+                  seekVideo={seekVideo}
                 />
+        
                 {(isVideoLoading || isVideoBuffering) && (
                   <div className="video-loading">
                     <CircularProgress size={75} color="inherit" />
                   </div>
                 )}
-
-                {/* <div className="video-progress-bar">
-                 <div
-                   className="progress"
-                   style={{ width: `${videoProgress}%` }}
-                 />
-                </div> */}
-
-                 
+               
               </div>
             )}
             {file.mimetype.startsWith('image') && (
               <div className="image-holder">
-             
                 <img
                   src={file.url}
                   alt={`Selected file`}

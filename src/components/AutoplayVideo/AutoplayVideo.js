@@ -1,8 +1,9 @@
 
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'; // Material UI Play Icon
 import  './AutoplayVideo.css'
+import Footer from '../Footer/Footer';
 
-const AutoplayVideo = ({index,videoRef,onVideoPress,url, isMuted ,isVideoPlaying}) => {
+const AutoplayVideo = ({currentTime,duration,index,videoRef,onVideoPress,url, isMuted,seekVideo ,isVideoPlaying}) => {
 
   console.log('isVideoPlaying',isVideoPlaying)
 
@@ -25,6 +26,15 @@ const AutoplayVideo = ({index,videoRef,onVideoPress,url, isMuted ,isVideoPlaying
              <PlayArrowIcon style={{ fontSize: 50, color: 'white' }} />
            </div>
          )}
+
+         <div className='video-footer'>
+         <Footer 
+             currentTime={currentTime} 
+             index={index}
+             duration={duration}
+             seekVideo={seekVideo}
+          />
+         </div>
        </div>
     </>
  )

@@ -22,3 +22,11 @@
     left: 45%;
     cursor: pointer;
   }
+
+  .video-footer{
+    position: absolute;
+    bottom: 0 ;
+    left: 0;
+    cursor: pointer;
+    width: 100%;
+  }
