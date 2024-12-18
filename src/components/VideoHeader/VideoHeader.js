@@ -35,7 +35,7 @@ function VideoHeader({ toggleMute, isMuted, handleToggleDialog, selectedFiles, m
           />
         )
       ) : <VolumeOffIcon
-      sx={{ fontSize: '32px', cursor: 'pointer', zIndex: 999 }}
+           sx={{ fontSize: '32px', cursor: 'pointer', zIndex: 999 }}
     />
     
     }

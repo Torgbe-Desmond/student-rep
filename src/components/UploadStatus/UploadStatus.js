@@ -36,7 +36,6 @@ export default function UploadStatus({ reference_Id }) {
 
   useEffect(() => {
     if (!socket) return;
-
     const onUploading = (data) => {
       dispatch(updateFile(data.file)); // Update file in Redux
       setSnackbarMessage(`${data?.process} for ${data?.file?.name}`);

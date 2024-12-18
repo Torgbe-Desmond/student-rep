@@ -14,6 +14,7 @@ import '../index.css'
 import { Box } from '@mui/material';
 import BasicSpeedDial from '../components/SpeedDial/SpeedDial';
 import Breadcrumb from '../components/BreadCrumb/BreadCrumb';
+import UploadStatus from '../components/UploadStatus/UploadStatus';
 
 const ProtectRoutes = () => {
   const token = localStorage.getItem('token');
@@ -103,7 +104,6 @@ const ProtectRoutes = () => {
                />
           </Box>
 
-              {/* <Breadcrumb breadcrumbs={breadCrumbs} /> */}
 
            <Box className='main'>
               <Outlet context={sharedProps} />
@@ -116,6 +116,10 @@ const ProtectRoutes = () => {
               selectedFoldersForOptions={selectedFoldersForOptions}
             />          
           </Box>
+
+          <UploadStatus 
+          reference_Id={reference_Id}
+          authorizeStatus={authorizeStatus} />
            
         </Box>
       )

@@ -34,17 +34,23 @@ const Settings = () => {
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [isVideoBuffering, setIsVideoBuffering] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [videoStates, setVideoStates] = useState([]);
+  const [activeVideoIndex, setActiveVideoIndex] = useState(null);
 
-  const videoRefs = useRef([]); // Store multiple refs for videos
+  const videoRefs = useRef([]);
 
   useEffect(() => {
     const handleLoadedMetadata = (index) => {
       const videoElement = videoRefs.current[index];
       if (videoElement) {
-        setDuration(videoElement.duration);
-        setIsVideoLoading(false);
+        setVideoStates((prevStates) => {
+          const newStates = [...prevStates];
+          newStates[index] = {
+            ...newStates[index],
+            duration: videoElement.duration,
+          };
+          return newStates;
+        });
       }
     };
 
@@ -53,7 +59,14 @@ const Settings = () => {
     const handleTimeUpdate = (index) => {
       const videoElement = videoRefs.current[index];
       if (videoElement) {
-        setCurrentTime(videoElement.currentTime);
+        setVideoStates((prevStates) => {
+          const newStates = [...prevStates];
+          newStates[index] = {
+            ...newStates[index],
+            currentTime: videoElement.currentTime,
+          };
+          return newStates;
+        });
       }
     };
 
@@ -61,10 +74,14 @@ const Settings = () => {
       const videoElement = videoRefs.current[index];
       if (!videoElement) return;
 
-      videoElement.addEventListener('loadedmetadata', () => handleLoadedMetadata(index));
+      videoElement.addEventListener('loadedmetadata', () =>
+        handleLoadedMetadata(index)
+      );
       videoElement.addEventListener('waiting', handleWaiting);
       videoElement.addEventListener('canplay', handleCanPlay);
-      videoElement.addEventListener('timeupdate', () => handleTimeUpdate(index));
+      videoElement.addEventListener('timeupdate', () =>
+        handleTimeUpdate(index)
+      );
     });
 
     return () => {
@@ -72,20 +89,35 @@ const Settings = () => {
         const videoElement = videoRefs.current[index];
         if (!videoElement) return;
 
-        videoElement.removeEventListener('loadedmetadata', () => handleLoadedMetadata(index));
+        videoElement.removeEventListener('loadedmetadata', () =>
+          handleLoadedMetadata(index)
+        );
         videoElement.removeEventListener('waiting', handleWaiting);
         videoElement.removeEventListener('canplay', handleCanPlay);
-        videoElement.removeEventListener('timeupdate', () => handleTimeUpdate(index));
+        videoElement.removeEventListener('timeupdate', () =>
+          handleTimeUpdate(index)
+        );
       });
     };
   }, [selectedFiles]);
 
+  const pauseAllVideos = (currentVideoRef) => {
+    videoRefs.current.forEach((videoRef, idx) => {
+      if (videoRef.current && videoRef.current !== currentVideoRef.current) {
+        videoRef.current.pause();
+      }
+    });
+  };
+
   const safePlay = (index) => {
     const videoElement = videoRefs.current[index];
     if (!videoElement) return;
+
     try {
+      pauseAllVideos();
       videoElement.play();
       setIsVideoPlaying(true);
+      setActiveVideoIndex(index);
     } catch (error) {
       console.error('Error playing video:', error);
       setIsVideoPlaying(false);
@@ -97,12 +129,11 @@ const Settings = () => {
     if (!videoElement) return;
 
     try {
-      if (isVideoPlaying) {
+      if (isVideoPlaying && activeVideoIndex === index) {
         videoElement.pause();
         setIsVideoPlaying(false);
       } else {
-        videoElement.play();
-        setIsVideoPlaying(true);
+        safePlay(index);
       }
     } catch (error) {
       console.error('Error playing/pausing video:', error);
@@ -114,10 +145,18 @@ const Settings = () => {
     const videoElement = videoRefs.current[index];
     if (videoElement) {
       videoElement.currentTime = time;
-      setCurrentTime(time);
+      setVideoStates((prevStates) => {
+        const newStates = [...prevStates];
+        newStates[index] = {
+          ...newStates[index],
+          currentTime: time,
+        };
+        return newStates;
+      });
       safePlay(index);
     }
   };
+
 
   const toggleMute = () => {
     videoRefs.current.forEach((videoElement) => {
@@ -153,17 +192,27 @@ const Settings = () => {
     dispatch(toggleBottomTab());
   };
 
+
+  const Show = (id)=>{
+    
+  }
+
   return (
     <Dialog
       fullScreen
       open={open}
       onClose={handleToggleDialog}
       TransitionComponent={Transition}
-      sx={{ backgroundColor: isDarkMode ? '#444' : '#2196f3' }}
+      sx={{
+        backgroundColor: isDarkMode ? '#444' : '#2196f3',
+      }}
       className="dialog-wrapper"
     >
       <List
-        sx={{ backgroundColor: isDarkMode ? '#000' : '#000', overflowY: 'auto' }}
+        sx={{
+          backgroundColor: isDarkMode ? '#444' : '#000',
+          overflowY: 'auto',
+        }}
         className="list-container"
       >
         {selectedFiles.map((file, index) => (
@@ -180,21 +229,23 @@ const Settings = () => {
                 <AutoplayVideo
                   index={index}
                   videoRef={(el) => (videoRefs.current[index] = el)}
-                  onVideoPress={() => onVideoPress(index)}
+                  onVideoPress={() => 
+                    onVideoPress(index)
+                  }
                   url={file.url}
                   isMuted={isMuted}
-                  isVideoPlaying={isVideoPlaying}
-                  currentTime={currentTime} 
-                  duration={duration}
+                  isVideoPlaying={isVideoPlaying && activeVideoIndex === index}
+                  pauseAllVideos={pauseAllVideos}
+                  currentTime={videoStates[index]?.currentTime || 0}
+                  duration={videoStates[index]?.duration || 0}
                   seekVideo={seekVideo}
                 />
-        
+
                 {(isVideoLoading || isVideoBuffering) && (
                   <div className="video-loading">
                     <CircularProgress size={75} color="inherit" />
                   </div>
                 )}
-               
               </div>
             )}
             {file.mimetype.startsWith('image') && (
@@ -212,5 +263,6 @@ const Settings = () => {
     </Dialog>
   );
 };
+
 
 export default Settings;
