@@ -11,9 +11,6 @@ import {
     ListItemAvatar,
     Avatar,
     ListItemText,
-    IconButton,
-    createTheme,
-    ThemeProvider,
 } from '@mui/material';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
@@ -45,11 +42,9 @@ function Move() {
     const currentDirectory = useSelector((state) => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id');
     
-    // Toggle between light and dark mode
     const [darkMode, setDarkMode] = useState(false);
 
     useEffect(() => {
-        // Check if dark mode preference is stored in localStorage
         const storedDarkMode = localStorage.getItem('darkMode') === 'true';
         setDarkMode(storedDarkMode);
     }, []);
@@ -58,12 +53,10 @@ function Move() {
         dispatch(getAllFolders({ reference_Id }));
     }, [dispatch, reference_Id]);
 
-    // Filter folders or files based on type
     const filterFoldersByType = (folders, condition) => {
         return folders.filter(condition);
     };
 
-    // Filter out selected items to move
     useEffect(() => {
         const foldersToMove = moveItemsArray?.filter(
             (folder) => !selectedFolderList.includes(folder.path)
@@ -71,7 +64,6 @@ function Move() {
         setSelectedMoveFiles(foldersToMove);
     }, [moveItemsArray, selectedFolderList]);
 
-    // Separate selected files and folders based on mimetype
     useEffect(() => {
         const onlyFiles = filterFoldersByType(folders, (folder) =>
             selectedFolderList.includes(folder._id) &&
@@ -91,7 +83,6 @@ function Move() {
         setSelectedFolders(onlyFolders);
     }, [folders, selectedFolderList]);
 
-    // Move items (files and folders)
     const moveItems = (folderId, files, folders) => {
         const promises = [];
 
@@ -178,7 +169,12 @@ function Move() {
                                                     </Avatar>
                                                 </ListItemAvatar>
                                                 <ListItemText 
-                                                sx={{color:darkMode ? '#000':''}}
+                                                sx={{
+                                                    color:darkMode ? '#000':'',
+                                                    maxWidth:'300px',
+                                                    width:'300px',
+                                                    overflowY:'scroll'
+                                                }}
                                                 primary={folder.label} />
                                             </ListItem>
                                         ))}

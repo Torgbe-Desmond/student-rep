@@ -152,8 +152,8 @@ const UploadFileDetails = () => {
                         )}
                     </div>
                     {isUploading && <LinearProgress />}
-                    <div className="file-list">
-                        <List>
+                    {/* <div className="file-list"> */}
+                        <List className='file-list'>
                             {uploadedFiles.map((file, index) => {
                                 const fileSizeKB = (file.size / 1024).toFixed(2);
                                 const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
@@ -184,7 +184,7 @@ const UploadFileDetails = () => {
                                 );
                             })}
                         </List>
-                    </div>
+                    {/* </div> */}
                     <p>Total selected size: {totalSize > 1000 ? `${(totalSize / (1024 * 1024)).toFixed(2)} MB` : `${(totalSize / 1024).toFixed(2)} KB`}</p>
                 </div>
 

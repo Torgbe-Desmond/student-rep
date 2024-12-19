@@ -5,10 +5,10 @@
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  max-width: 830px;
+  max-width: 900px;
   margin: 0 auto;
   box-sizing: border-box;
-  overflow-y: scroll;
+  overflow: scroll;
 }
 
 .search-input { 
@@ -28,7 +28,6 @@
 
 
 @media screen and (min-width:600px) {
-
 .app-container{
   padding: 25px;
 }

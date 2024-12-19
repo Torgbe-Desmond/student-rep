@@ -11,9 +11,8 @@
     border-radius: 4px;
     margin-bottom: 0.2rem;
     padding:5px;
+    border-bottom:1px solid #ccc;
     z-index: 100;
-    box-shadow: 0 0 5px rgba(161, 167, 204, 0.5);
-    /* margin-bottom: 200px; */
 
 }
 
@@ -23,7 +22,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;  
-  width: 860px;
+  width: 900px;
   max-width: 100%;
   flex-direction: column;
   background-color: #fff;
@@ -77,11 +76,14 @@
   @media (min-width: 600px) {
     .search-options {
       display: flex;
-      max-width: 770px;
+      max-width: 840px;
       width: 100%;
       flex-direction: row; 
       border-color: #CCC;
       border-width: 1px;
+      margin:0px 20px;
+      border: 1px solid #CCC;
+
     }
     
     .position{ 

@@ -50,6 +50,7 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
 /* Individual folder item styling */
