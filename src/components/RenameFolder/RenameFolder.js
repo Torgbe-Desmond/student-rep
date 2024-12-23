@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, TextField, CircularProgress, LinearProgress } from '@mui/material';
 import './RenameFolder.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearStack } from '../../Features/StackSlice';
 import { handleStackClear } from '../HandleStack/HandleStack';
 import { renameFolder } from '../../Features/WorkSpace';
-import { useParams } from 'react-router-dom';
 
 function RenameFolder({ initialFolderName }) {
     const dispatch = useDispatch();

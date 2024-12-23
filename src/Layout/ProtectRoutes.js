@@ -21,7 +21,6 @@ const ProtectRoutes = () => {
   const { reference_Id, directoryId } = useParams();
   const dispatch = useDispatch();
 
-  // Shared state
   const [selectedItems, setSelectedItems] = useState([]);
   const { folders } = useSelector((state) => state.work);
   const [filteredData, setFilteredData] = useState(null);
@@ -34,7 +33,6 @@ const ProtectRoutes = () => {
   );
   const isDarkMode = useSelector((state) => state.theme.darkMode);
 
-  // Restore breadcrumbs and load folders
   const handleReload = useCallback(() => {
     dispatch(restoreBreadCrumbs());
     dispatch(getAllFolders({ reference_Id }));
@@ -73,7 +71,6 @@ const ProtectRoutes = () => {
     setFilteredData(folders);
   }, [folders]);
 
-  // Pass shared state and handlers to Outlet
   const sharedProps = {
     isDarkMode,
     selectedItems,
@@ -94,6 +91,7 @@ const ProtectRoutes = () => {
   if(token){
       component = (
         <Box className="app">
+
           <Box className='header'>
              <SearchBarWithActions
                 folderData={filteredData}
@@ -103,7 +101,6 @@ const ProtectRoutes = () => {
                 selectedFoldersForOptions={selectedFoldersForOptions}
                />
           </Box>
-
 
            <Box className='main'>
               <Outlet context={sharedProps} />

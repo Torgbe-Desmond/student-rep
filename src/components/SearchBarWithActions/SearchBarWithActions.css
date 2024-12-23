@@ -8,7 +8,6 @@
     max-width: 100%;
     flex-direction: column;
     background-color: #fff;
-    border-radius: 4px;
     margin-bottom: 0.2rem;
     padding:5px;
     border-bottom:1px solid #ccc;
@@ -26,7 +25,6 @@
   max-width: 100%;
   flex-direction: column;
   background-color: #fff;
-  border-radius: 4px;
   border-bottom: #ccc;
   border-width: 1px;
   box-sizing: border-box;
@@ -83,7 +81,6 @@
       border-width: 1px;
       margin:0px 20px;
       border: 1px solid #CCC;
-
     }
     
     .position{ 

@@ -15,17 +15,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedFolders } from '../../Features/WorkSpace';
 import handleStack from '../HandleStack/HandleStack';
 import { useParams } from 'react-router-dom';
-import SlideshowIcon from '@mui/icons-material/Slideshow';
 import { toggleBottomTab } from '../../Features/PathSlice';
+import SmartDisplayIcon from '@mui/icons-material/SmartDisplay';
+import SlideshowIcon from '@mui/icons-material/Slideshow';
 
-function SearchBarWithActions({ folderData, setFilteredData, selectedItems, selectedFilesForOptions, selectedFoldersForOptions,getCellStyles }) {
+function SearchBarWithActions({
+  folderData,
+  setFilteredData,
+  selectedItems,
+  selectedFilesForOptions,
+  selectedFoldersForOptions,
+  getCellStyles,
+}) {
   const [searchTerm, setSearchTerm] = useState('');
   const { directoryId } = useParams();
   const dispatch = useDispatch();
   const [isValid, setIsValid] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
+  const [validForDisplay, setValidForDisplay] = useState(null);
   const isDarkMode = useSelector((state) => state.theme.darkMode);
-
 
   useEffect(() => {
     setIsValid(!directoryId);
@@ -40,6 +48,14 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     setFilteredData(filteredFolderData);
     dispatch(setSelectedFolders(selectedItems));
   }, [searchTerm, folderData, selectedItems, setFilteredData, dispatch]);
+
+  useEffect(() => {
+    const onlyPdfFiles = folderData?.filter(
+      (folder) =>
+        folder.mimetype === 'application/pdf' && selectedItems.includes(folder._id)
+    );
+    setValidForDisplay(onlyPdfFiles);
+  }, [folderData, selectedItems]);
 
   const handleAction = useCallback(
     (actionType) => handleStack(actionType, dispatch),
@@ -56,14 +72,19 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
     { iconType: <DriveFileMoveIcon />, color: 'primary', disabled: selectedItems?.length === 0 || isValid, action: () => handleAction('Move'), label: 'Move' },
     { iconType: <FileDownloadIcon />, color: 'primary', disabled: selectedFilesForOptions?.length !== 1 || isValid, action: () => handleAction('Download'), label: 'Download' },
     { iconType: <FileUploadOutlinedIcon />, color: 'primary', disabled: selectedFilesForOptions?.length == 0 || isValid, action: () => handleAction('GenerateSecretCode'), label: 'Share Files' },
-    // { iconType: <SlideshowIcon />, color: 'primary',   disabled: selectedItems?.length === 0 || isValid, action: () =>{
-    //    handleAction('Settings')
-    //    dispatch(toggleBottomTab());
-    //   }, label: 'Settings' },
+    {
+      iconType: <SlideshowIcon />,
+      color: 'primary',
+      disabled: !validForDisplay?.length,
+      action: () => {
+        handleAction('Settings');
+        dispatch(toggleBottomTab());
+      },
+      label: 'Settings',
+    },
     { iconType: <FileDownloadOutlinedIcon />, color: 'primary', disabled: isValid, action: () => handleAction('ReceiveFiles'), label: 'Received Shared Files' },
     { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('CreateFolder'), label: 'Create Folder' },
     { iconType: <UploadFileOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('UploadFileDetails'), label: 'Upload File' },
-
   ];
 
   useEffect(() => {
@@ -72,12 +93,11 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       const scrollPercentage = (scrollPosition / totalHeight) * 100;
 
-        if (scrollPercentage > 1) {
-          setShowSearch(true);
-        } else {
-          setShowSearch(false);
-        }
-    
+      if (scrollPercentage > 1) {
+        setShowSearch(true);
+      } else {
+        setShowSearch(false);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -88,27 +108,24 @@ function SearchBarWithActions({ folderData, setFilteredData, selectedItems, sele
   }, []);
 
   return (
-    
-
     <div className={`search-options ${isDarkMode ? 'dark-mode' : ''}`}>
-        <TextField
+      <TextField
         sx={{
-          color: isDarkMode ? '#FFF' : '', 
+          color: isDarkMode ? '#FFF' : '',
           '& .MuiInputBase-input': {
-            color: isDarkMode ? '#FFF' : '', 
-            background: isDarkMode ? '#555':''
+            color: isDarkMode ? '#FFF' : '',
+            background: isDarkMode ? '#555' : '',
           },
           '& .MuiInputBase-input::placeholder': {
-            color: isDarkMode ? '#FFF' : '',  
+            color: isDarkMode ? '#FFF' : '',
           },
         }}
         className="search-input"
-        placeholder='Search files by name'
+        placeholder="Search files by name"
         variant="outlined"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
-      
 
       <div className="button-group">
         {buttonConfigs.map((config, index) => (

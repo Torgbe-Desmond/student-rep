@@ -25,7 +25,7 @@
 
   .video-footer{
     position: absolute;
-    bottom: 0 ;
+    bottom: 20px ;
     left: 0;
     cursor: pointer;
     width: 100%;

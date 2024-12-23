@@ -36,7 +36,6 @@ function Main() {
         handleReload={handleReload}
       />
 
-      <UploadStatus authorizeStatus={authorizeStatus} />
 
        </div>
   );

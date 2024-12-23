@@ -7,7 +7,7 @@ import { updateFile } from '../../Features/WorkSpace';
 export default function UploadStatus({ reference_Id }) {
   const [step, setStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(5);
-  const [error, setError] = useState(null); // State for tracking errors
+  const [error, setError] = useState(null); 
   const [socket, setSocket] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -37,15 +37,15 @@ export default function UploadStatus({ reference_Id }) {
   useEffect(() => {
     if (!socket) return;
     const onUploading = (data) => {
-      dispatch(updateFile(data.file)); // Update file in Redux
+      dispatch(updateFile(data.file));
       setSnackbarMessage(`${data?.process} for ${data?.file?.name}`);
-      setOpenSnackbar(true); // Open snackbar when a message is received
+      setOpenSnackbar(true); 
     };
 
     socket.on('uploading', onUploading);
 
     return () => {
-      socket.off('uploading', onUploading); // Cleanup listener
+      socket.off('uploading', onUploading); 
     };
   }, [socket, dispatch]);
 
@@ -56,7 +56,6 @@ export default function UploadStatus({ reference_Id }) {
 
   return (
     <>
-      {/* Snackbar for showing messages */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}

@@ -3,7 +3,8 @@ import './AutoplayVideo.css';
 import Footer from '../Footer/Footer';
 
 const AutoplayVideo = ({currentTime, duration, index, videoRef, onVideoPress, url, isMuted, seekVideo, isVideoPlaying, pauseAllVideos}) => {
-  
+  console.log(url)
+
   const handleClick = () => {
     pauseAllVideos(videoRef);
     onVideoPress();
