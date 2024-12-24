@@ -66,10 +66,12 @@ const Settings = () => {
                 />
               </div>
             )}
-            {['video', 'image'].includes(file.mimetype.split('/')[0]) && (
+            {['video', 'image','Folder','Shared'].includes(file.mimetype.split('/')[0]) && (
               <div className='support'>
                 <div>Unsupported file type: {file.mimetype}</div>
-                <Button onClick={handleToggleDialog}>Go Back</Button>
+                <Button
+                variant='contained'
+                onClick={handleToggleDialog}>Go Back</Button>
               </div>
             )}
           </div>

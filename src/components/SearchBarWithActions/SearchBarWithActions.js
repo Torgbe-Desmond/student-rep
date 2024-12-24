@@ -75,12 +75,12 @@ function SearchBarWithActions({
     {
       iconType: <SlideshowIcon />,
       color: 'primary',
-      disabled: !validForDisplay?.length,
+      disabled: selectedFilesForOptions?.length !== 1 || isValid,
       action: () => {
         handleAction('Settings');
         dispatch(toggleBottomTab());
       },
-      label: 'Settings',
+      label: 'Display',
     },
     { iconType: <FileDownloadOutlinedIcon />, color: 'primary', disabled: isValid, action: () => handleAction('ReceiveFiles'), label: 'Received Shared Files' },
     { iconType: <CreateNewFolderOutlinedIcon />, color: 'secondary', disabled: isValid, action: () => handleAction('CreateFolder'), label: 'Create Folder' },

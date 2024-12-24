@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import "@cyntler/react-doc-viewer/dist/index.css";
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 export default function ViewPDF({ uri, handleToggleDialog }) {
     const [docs, setDocs] = useState([]);
@@ -18,19 +19,31 @@ export default function ViewPDF({ uri, handleToggleDialog }) {
         return () => setDocs([]);
     }, [uri]);
 
+
+    console.log(docs)
+
     return (
       <>
-     <Button 
+     <Box
         sx={{
+          display:'flex',
+          justifyContent:'center',
+          alignItems:'center',
           position:'fixed',
           background:'#FFF',
+          borderRadius:'40px',
+          height:'0.1px',
+          width:'0.05%',
           color:'#000',
-          top:{xs:9.5,md:10,lg:14.5},
+          top:{xs:2,md:3,lg:3},
           left:{xs:4,md:2,lg:5},
-          paddingLeft:2,
+          padding:0,
+          padding:2,
           zIndex:999
         }}
-        onClick={handleToggleDialog}>Go Back</Button>
+        onClick={handleToggleDialog}>
+          <HighlightOffIcon/>
+        </Box>
        <div className='pdf-container'>
          <DocViewer 
             documents={docs} 

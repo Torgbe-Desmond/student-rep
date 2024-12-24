@@ -102,7 +102,28 @@ code {
   display: none;
 }
 
+.kiJKRu,.sc-fUnNpA{
+  position: fixed !important;
+  top:none !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  z-index: 800 !important;
+  justify-content: center !important;
+  padding: 8px;
+  background-color: #ffffff99;
+  box-shadow: 0px 2px 3px #00000033;
+  width: 100vw !important;
+  height: 25px !important;
+  align-items: center !important;
+}
 
+
+#pdf-pagination{
+}
+
+#pdf-renderer{
+  margin-top: 40px;
+}
 @media screen and (min-width:600px) {
   .header{
     display: flex;
@@ -112,6 +133,10 @@ code {
     width: 100%;
     z-index: 100;
     margin-top: -50px;
+  }
+
+  #pdf-renderer{
+    margin-top:50px;
   }
 
   .main {
