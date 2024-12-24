@@ -20,7 +20,6 @@ export default function ViewPDF({ uri, handleToggleDialog }) {
     }, [uri]);
 
 
-    console.log(docs)
 
     return (
       <>

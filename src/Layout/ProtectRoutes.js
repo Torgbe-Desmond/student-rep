@@ -20,7 +20,6 @@ const ProtectRoutes = () => {
   const token = localStorage.getItem('token');
   const { reference_Id, directoryId } = useParams();
   const dispatch = useDispatch();
-
   const [selectedItems, setSelectedItems] = useState([]);
   const { folders } = useSelector((state) => state.work);
   const [filteredData, setFilteredData] = useState(null);
