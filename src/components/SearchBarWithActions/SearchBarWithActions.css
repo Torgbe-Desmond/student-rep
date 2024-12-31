@@ -11,8 +11,7 @@
     margin-bottom: 0.2rem;
     padding:5px;
     border-bottom:1px solid #ccc;
-    z-index: 100;
-
+    z-index: 999;
 }
 
 .position{

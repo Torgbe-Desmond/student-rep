@@ -93,7 +93,7 @@ const ProtectRoutes = () => {
 
           <Box className='header'>
              <SearchBarWithActions
-                folderData={filteredData}
+                folderData={folders}
                 setFilteredData={setFilteredData}
                 selectedItems={selectedItems}
                 selectedFilesForOptions={selectedFilesForOptions}

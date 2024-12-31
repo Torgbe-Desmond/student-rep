@@ -87,6 +87,7 @@ code {
   position: fixed;
   width: 100%;
   margin-top: -100px;
+  z-index: 999;
 }
 
 .main {

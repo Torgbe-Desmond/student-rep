@@ -40,14 +40,14 @@ function SearchBarWithActions({
   }, [directoryId]);
 
   useEffect(() => {
-    const filteredFolderData = searchTerm
-      ? folderData?.filter((folder) =>
+    const filteredFolderData = searchTerm ? folderData?.filter((folder) =>
           folder?.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      : folderData;
+        ) : folderData;
+
     setFilteredData(filteredFolderData);
     dispatch(setSelectedFolders(selectedItems));
   }, [searchTerm, folderData, selectedItems, setFilteredData, dispatch]);
+  
 
   useEffect(() => {
     const onlyPdfFiles = folderData?.filter(
