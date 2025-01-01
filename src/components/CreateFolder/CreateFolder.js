@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, LinearProgress, TextField } from '@mui/material';
+import { Button, LinearProgress, TextField, useMediaQuery } from '@mui/material';
 import './CreateFolder.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -12,6 +12,7 @@ function CreateFolder() {
     const [isLoading, setIsLoading] = useState(false);
     const directoryId = useSelector(state => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id');  
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
     const handleCreateFolder = () => {
         if (folderData.name && directoryId && reference_Id) {
@@ -39,7 +40,7 @@ function CreateFolder() {
 
     return (
         <div className="create-folder-overlay">
-            <div className="create-folder-modal">
+            <div className={`create-folder-modal ${isDarkMode ? 'switch' :'light'}`}>
                 <div className="create-folder-body">
                     <div className="button-container">
                         <Button 
@@ -64,6 +65,16 @@ function CreateFolder() {
                             <LinearProgress />
                         ) : (
                             <TextField
+                              sx={{
+                                  color: isDarkMode ? '#FFF' : '',
+                                  '& .MuiInputBase-input': {
+                                    color: isDarkMode ? '#FFF' : '',
+                                    background: isDarkMode ? '' : '',
+                                  },
+                                  '& .MuiInputBase-input::placeholder': {
+                                    color: isDarkMode ? '#FFF' : '',
+                                  },
+                                }}
                                 type="text"
                                 name="name"
                                 className="create-input"

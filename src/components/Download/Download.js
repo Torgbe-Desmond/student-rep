@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, useMediaQuery } from '@mui/material';
 import './Download.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -10,6 +10,7 @@ function Download() {
     const reference_Id = localStorage.getItem('reference_Id')
     const { selectedFolders: selectedFolderList,folders, error: workspaceError } = useSelector(state => state.work);
     const [selectedFiles, setSelectedFiles] = useState([]);
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
 
     useEffect(() => {
@@ -54,8 +55,8 @@ function Download() {
 
     return (
         <div className="download-folder-overlay">
-            <div className="download-folder-modal">
-                <div className="download-folder-body">
+            <div className={`download-folder-modal ${isDarkMode ? 'switch' :'light'}`}>
+            <div className="download-folder-body">
                     <div className='button-container'>
                         <Button variant='contained' className='download-btn' onClick={() => handleDownloadFile()}>Download</Button>
                         <Button variant='contained' className='download-btn' onClick={() => handleStackClear(dispatch)}>Cancel</Button>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Button, Container, Typography, Box, Snackbar, Alert, LinearProgress } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, Snackbar, Alert, LinearProgress, useMediaQuery } from '@mui/material';
 import { verifyEmail } from '../../Features/AuthSlice';
 import './ForgotPassword.css'
 import { Link } from 'react-router-dom';
@@ -10,7 +10,7 @@ const ForgotPasswordPage = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const isDarkMode = useSelector((state) => state.theme.darkMode);
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
 
   const dispatch = useDispatch();
@@ -97,7 +97,7 @@ const ForgotPasswordPage = () => {
         </form>
         <Typography align="center" sx={{marginTop:3}} >
           Go back {' '}
-          <Link to="/" variant="body2">
+          <Link to="/" variant="body2" sx={{ml:2}}  className={`${isDarkMode ? 'switch' : ''}`}>
             Login here
           </Link>
         </Typography>

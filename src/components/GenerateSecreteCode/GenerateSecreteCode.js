@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, LinearProgress, TextField, Snackbar, Alert } from '@mui/material';
+import { Button, LinearProgress, TextField, Snackbar, Alert, useMediaQuery } from '@mui/material';
 import './GenerateSecretCode.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -15,6 +15,8 @@ function GenerateSecretCode() {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [folderData, setFolderData] = useState({ name: '' });
     const { selectedFolders: selectedFolderList, folders, error: workspaceError } = useSelector(state => state.work);
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+    
 
     const filteredSelectedDataByMimetypeForOnlyFilesOrFolders = () => {
         const onlyFileIds = folders
@@ -66,8 +68,8 @@ function GenerateSecretCode() {
 
     return (
         <div className="generate-secret-code-overlay">
-            <div className="generate-secret-code-modal">
-                <div className="button-container">
+            <div className={`generate-secret-code-modal ${isDarkMode ? 'switch' :'light'}`}>
+            <div className="button-container">
                     <Button 
                         variant="contained" 
                         className="generate-btn" 
@@ -97,7 +99,7 @@ function GenerateSecretCode() {
                 />
                 </div>
                 <div className="generate-secrete-selected-ids">
-                    <h4>{isLoading ? 'Generating Secret Code' : 'Files to be shared:'}</h4>
+                    <h3>{isLoading ? 'Generating Secret Code' : 'Files to be shared:'}</h3>
                     {isLoading ? (
                         <LinearProgress />
                     ) : (

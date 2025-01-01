@@ -11,6 +11,7 @@ import {
     ListItemAvatar,
     Avatar,
     ListItemText,
+    useMediaQuery,
 } from '@mui/material';
 import FolderOpenOutlinedIcon from '@mui/icons-material/FolderOpenOutlined';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
@@ -41,13 +42,8 @@ function Move() {
     );
     const currentDirectory = useSelector((state) => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id');
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
     
-    const [darkMode, setDarkMode] = useState(false);
-
-    useEffect(() => {
-        const storedDarkMode = localStorage.getItem('darkMode') === 'true';
-        setDarkMode(storedDarkMode);
-    }, []);
 
     useEffect(() => {
         dispatch(getAllFolders({ reference_Id }));
@@ -145,14 +141,24 @@ function Move() {
         : [];
 
     return (
-            <div className={`${darkMode ? 'dark-mode':''} move-overlay `}>
-                <div className="move-modal">
+            <div className={`$ move-overlay `}>
+                <div className={`move-modal ${isDarkMode ? 'switch':'light'}`}>
                     {isLoading ? (
                         <LinearProgress />
                     ) : (
                         <>
-                            <div className="top-move-modal">
+                            <div className={`top-move-modal ${isDarkMode ? 'switch':'light'}`}>
                                 <TextField
+                                       sx={{
+                                        color: isDarkMode ? '#FFF' : '',
+                                        '& .MuiInputBase-input': {
+                                          color: isDarkMode ? '#FFF' : '',
+                                          background: isDarkMode ? '' : '',
+                                        },
+                                        '& .MuiInputBase-input::placeholder': {
+                                          color: isDarkMode ? '#FFF' : '',
+                                        },
+                                      }}
                                     type="text"
                                     className="move-search-input"
                                     placeholder="Search folders"
@@ -170,7 +176,7 @@ function Move() {
                                                 </ListItemAvatar>
                                                 <ListItemText 
                                                 sx={{
-                                                    color:darkMode ? '#000':'',
+                                                    color:isDarkMode ? 'switch':'light',
                                                     maxWidth:'300px',
                                                     width:'300px',
                                                     overflowY:'scroll'
@@ -183,6 +189,16 @@ function Move() {
                             </div>
                             <div className="input-vv">
                                 <TextField
+                                   sx={{
+                                    color: isDarkMode ? '#FFF' : '',
+                                    '& .MuiInputBase-input': {
+                                      color: isDarkMode ? '#FFF' : '',
+                                      background: isDarkMode ? '' : '',
+                                    },
+                                    '& .MuiInputBase-input::placeholder': {
+                                      color: isDarkMode ? '#FFF' : '',
+                                    },
+                                  }}
                                     type="text"
                                     className="move-search"
                                     placeholder="Type folder name to move"

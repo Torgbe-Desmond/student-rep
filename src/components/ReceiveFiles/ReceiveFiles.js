@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, LinearProgress, TextField, Snackbar, Alert } from '@mui/material';
+import { Button, LinearProgress, TextField, Snackbar, Alert, useMediaQuery } from '@mui/material';
 import './ReceiveFiles.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -12,6 +12,7 @@ function ReceiveFiles() {
     const [openSnackbar, setOpenSnackbar] = useState(false);  // Snackbar state
     const currentDirectory = useSelector(state => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id');  
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
     const handleReceiveFile = () => {
         if (fileData.secreteCode && currentDirectory && reference_Id) {
@@ -45,8 +46,8 @@ function ReceiveFiles() {
 
     return (
         <div className="receive-files-overlay">
-            <div className="receive-files-modal">
-                <div className="receive-files-body">
+            <div className={`create-folder-modal ${isDarkMode ? 'switch' :'light'}`}>
+            <div className="receive-files-body">
                     <div className="button-container">
                         <Button 
                             variant="contained" 

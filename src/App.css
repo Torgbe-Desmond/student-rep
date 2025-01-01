@@ -26,29 +26,38 @@ body, html {
 }
 
 
-
 @media screen and (min-width:600px) {
   body, html {
     position: relative;
   }
 
   .dark-mode {
-    background-color: #333;
+    background-color: rgb(33,37,39);;
     color: white;
   } 
+}
+
+.switch {
+  background:rgb(33,37,39);
+  color: #7e7d7d;
+  border:'1px solid #ccc'
+}
+
+.light { 
+  background:#FFF;
 }
 
 
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   .dark-mode {
-    background-color: #333;
+    background-color: rgb(33,37,39);
     color: white;
   } 
 }
 
 .dark-mode {
-  background-color: #333;
+  background-color: rgb(33,37,39);
   color: white;
 } 
 

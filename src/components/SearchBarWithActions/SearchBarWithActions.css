@@ -1,5 +1,6 @@
 .search-options {
-    position: relative;
+    position: fixed;
+    top: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -10,7 +11,6 @@
     background-color: #fff;
     margin-bottom: 0.2rem;
     padding:5px;
-    border-bottom:1px solid #ccc;
     z-index: 999;
 }
 
@@ -112,29 +112,29 @@
 
   
   .search-options.dark-mode {
-    background-color: #343232; /* Dark background */
+    background-color:rgb(33,37,39); /* Dark background */
     color: #fff; /* White text */
     box-shadow: 0 0 3px rgba(161, 167, 204, 0.5);
   }
   
   .search-options.dark-mode .search-input {
-    background-color: #333; /* Darker input field */
+    background-color: rgb(33,37,39); /* Darker input field */
     color: #fff; /* White text in input field */
     border: 1px solid #444; /* Subtle border */
   }
   
   .search-options.dark-mode .button-group button {
-    background-color: #444; /* Dark button background */
+    background-color: rgb(33,37,39); /* Dark button background */
     color: #fff; /* White text on buttons */
   }
   
   .search-options.dark-mode .logout button {
-    background-color: #444; /* Dark button background */
+    background-color: rgb(33,37,39); /* Dark button background */
     color: #fff; /* White text */
   }
   
   .search-options.dark-mode .button-group button:disabled {
-    background-color: #666; /* Disabled button background */
+    background-color: rgb(33,37,39); /* Disabled button background */
     color: #aaa; /* Disabled button text */
   }
   

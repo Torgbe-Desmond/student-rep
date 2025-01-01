@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Button, Container, Typography, Box, CircularProgress, Snackbar, Alert } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, CircularProgress, Snackbar, Alert, useMediaQuery } from '@mui/material';
 import { clearError, register } from '../../Features/AuthSlice';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
@@ -22,7 +22,7 @@ const Register = () => {
   const error = useSelector((state) => state.auth.error);
   const navigate = useNavigate();
   const reference_Id = localStorage.getItem('reference_Id');
-  const isDarkMode = useSelector((state) => state.theme.darkMode);
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
   useEffect(() => {
     if (registerStatus === 'succeeded' && reference_Id) {
@@ -159,7 +159,7 @@ useEffect(() => {
         </Box>
         <Typography align="center">
           Already have an account?{' '}
-          <Link sx={{color:'blue'}}  to="/" variant="body2">
+          <Link sx={{color:'blue', ml:2}}  to="/" variant="body2" className={`${isDarkMode ? 'switch' : ''}`}>
             Login here
           </Link>
         </Typography>

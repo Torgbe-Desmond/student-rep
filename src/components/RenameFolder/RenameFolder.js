@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField, CircularProgress, LinearProgress } from '@mui/material';
+import { Button, TextField, CircularProgress, LinearProgress, useMediaQuery } from '@mui/material';
 import './RenameFolder.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { handleStackClear } from '../HandleStack/HandleStack';
@@ -12,6 +12,7 @@ function RenameFolder({ initialFolderName }) {
     const [isLoading, setIsLoading] = useState(false);
     const { folders, selectedFolders: selectedFolderList } = useSelector(state => state.work);
     const reference_Id = localStorage.getItem('reference_Id');
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
     useEffect(() => {
         if (folders.length > 0 && selectedFolderList.length > 0) {
@@ -35,8 +36,8 @@ function RenameFolder({ initialFolderName }) {
 
     return (
         <div className="rename-folder-overlay">
-            <div className="rename-folder-modal">
-                <div className="rename-folder-body">
+            <div className={`rename-folder-modal ${isDarkMode ? 'switch' :'light'}`}>
+            <div className="rename-folder-body">
                     <div className="button-container">
                         <Button
                             variant="contained"

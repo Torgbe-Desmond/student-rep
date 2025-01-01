@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Button, LinearProgress, List, ListItem, ListItemAvatar, ListItemText, Avatar, IconButton } from '@mui/material';
+import { Button, LinearProgress, List, ListItem, ListItemAvatar, ListItemText, Avatar, IconButton, useMediaQuery } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,6 +21,7 @@ function Delete() {
   const [currentDirectory, setCurrentDirectory] = useState(null);
   const { folders, selectedFolders: selectedFolderList } = useSelector(state => state.work);
   const [files, setFiles] = useState(selectedFolderList);
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
   useEffect(() => {
     setCurrentDirectory(reduxCurrentDirectory);
@@ -115,8 +116,8 @@ function Delete() {
 
   return (
     <div className="delete-overlay">
-      <div className="delete-modal">
-        <div className="delete-button-container">
+            <div className={`delete-modal ${isDarkMode ? 'switch' :'light'}`}>
+            <div className="delete-button-container">
           <Button
             variant="contained"
             onClick={handleDelete}
@@ -137,13 +138,15 @@ function Delete() {
           {isLoading ? (
             <LinearProgress />
           ) : (
-            <List>
+            <List  className={`${isDarkMode ? 'switch' :'light'}`}>
               {files.map((id, index) => (
                 <ListItem
-                 
+                className={`${isDarkMode ? 'switch' :'light'}`}
                   key={id}
                   secondaryAction={
                     <IconButton 
+                      className={`${isDarkMode ? 'switch' :'light'}`}
+                      color={`${isDarkMode ? 'secondary' :''}`}
                       edge="end" 
                       aria-label="delete"
                       onClick={() => handleRemoveFile(index)}

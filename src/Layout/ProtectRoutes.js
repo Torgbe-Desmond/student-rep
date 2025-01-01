@@ -11,7 +11,7 @@ import { restoreBreadCrumbs, setCurrentDirectory } from '../Features/PathSlice';
 import handleStack from '../components/HandleStack/HandleStack';
 import SearchBarWithActions from '../components/SearchBarWithActions/SearchBarWithActions';
 import '../index.css'
-import { Box } from '@mui/material';
+import { Box, useMediaQuery } from '@mui/material';
 import BasicSpeedDial from '../components/SpeedDial/SpeedDial';
 import Breadcrumb from '../components/BreadCrumb/BreadCrumb';
 import UploadStatus from '../components/UploadStatus/UploadStatus';
@@ -30,7 +30,7 @@ const ProtectRoutes = () => {
   const [authorizeStatus, setAuthorizeStatus] = useState(
     JSON.parse(localStorage.getItem('Unauthorized'))?.status
   );
-  const isDarkMode = useSelector((state) => state.theme.darkMode);
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
   const handleReload = useCallback(() => {
     dispatch(restoreBreadCrumbs());

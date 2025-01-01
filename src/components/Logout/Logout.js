@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, LinearProgress } from '@mui/material';
+import { Button, LinearProgress, useMediaQuery } from '@mui/material';
 import './Logout.css';
 import { handleStackClear } from '../HandleStack/HandleStack';
 import { useDispatch } from 'react-redux';
@@ -10,13 +10,8 @@ function Logout() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
-    const [darkMode, setDarkMode] = useState(false);
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
-    useEffect(() => {
-        // Check if dark mode preference is stored in localStorage
-        const storedDarkMode = localStorage.getItem('darkMode') === 'true';
-        setDarkMode(storedDarkMode);
-    }, []);
 
     const handleLogout = () => {
         setIsLoading(true);
@@ -29,17 +24,11 @@ function Logout() {
             });
     };
 
-    const toggleDarkMode = () => {
-        setDarkMode(prevState => {
-            const newDarkMode = !prevState;
-            localStorage.setItem('darkMode', newDarkMode); // Save dark mode setting
-            return newDarkMode;
-        });
-    };
 
+    
     return (
-        <div className={`logout-overlay ${darkMode ? 'dark-mode' : ''}`}>
-            <div className="logout-modal">
+        <div className={`logout-overlay`}>
+            <div className={`logout-modal ${isDarkMode ? 'switch' : 'light'}`}>
                 <div className="logout-button-container">
                     <Button 
                         onClick={handleLogout} 
@@ -63,7 +52,7 @@ function Logout() {
                 {isLoading ? (
                     <LinearProgress />
                 ) : (
-                    <p className="logout-info">Are you sure you want to logout?</p>
+                    <p className={`logout-info`}>Are you sure you want to logout?</p>
                 )}
             </div>
         </div>

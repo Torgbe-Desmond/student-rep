@@ -26,9 +26,12 @@ function Main() {
   return (
     <div className={`app-container ${isDarkMode ? 'dark-mode' : ''}`}>
      
-      <Breadcrumb breadcrumbs={breadCrumbs} />
+      <Breadcrumb 
+      isDarkMode={isDarkMode}
+      breadcrumbs={breadCrumbs} />
 
       <NewList
+        isDarkMode={isDarkMode}
         initialFolderData={filteredData}
         selectedFoldersState={setSelectedItems}
         setSelectedFilesForOptions={setSelectedFilesForOptions}

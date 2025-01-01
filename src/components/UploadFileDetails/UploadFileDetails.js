@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import './UploadFileDetails.css';
-import { Button, TextField, Snackbar, Alert, LinearProgress, Box, List } from '@mui/material';
+import { Button, TextField, Snackbar, Alert, LinearProgress, Box, List, useMediaQuery } from '@mui/material';
 import { handleStackClear } from '../HandleStack/HandleStack';
 import { useDispatch, useSelector } from 'react-redux';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
@@ -23,7 +23,7 @@ const UploadFileDetails = () => {
     const dispatch = useDispatch();
     const reference_Id = localStorage.getItem('reference_Id');
     const { currentDirectory } = useSelector(state => state.path);
-    const isDarkMode = useSelector(state => state.theme.darkMode); 
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
     const handleClose = useCallback(() => {
         handleStackClear(dispatch);
@@ -123,7 +123,7 @@ const UploadFileDetails = () => {
     return (
         open && (
             <div className={`upload-file-details-overlay ${isDarkMode ? 'dark-mode' : ''}`}>
-                <div className={`upload-file-details-content ${isDarkMode ? 'dark-mode' : ''}`}>
+                <div className={`upload-file-details-content ${isDarkMode ? 'switch' : 'light'}`}>
                     <div className="button-container">
                         <Button
                             variant="contained"
@@ -151,7 +151,7 @@ const UploadFileDetails = () => {
                             </Button>
                         )}
                     </div>
-                    {isUploading && <LinearProgress />}
+                    {isUploading && <Box sx={{mb:2}}> <LinearProgress /></Box>}
                     {/* <div className="file-list"> */}
                         <List className='file-list'>
                             {uploadedFiles.map((file, index) => {

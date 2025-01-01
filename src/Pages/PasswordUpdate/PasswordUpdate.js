@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, Button, Container, Box, Typography, Snackbar, Alert } from '@mui/material';
+import { TextField, Button, Container, Box, Typography, Snackbar, Alert, useMediaQuery } from '@mui/material';
 import './PasswordUpdate.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { getVerificationToken, updatePassword } from '../../Features/AuthSlice';
@@ -14,7 +14,7 @@ const PasswordUpdate = () => {
   const dispatch = useDispatch();
   const { reference_Id } = useParams();
   const verificationTokenStatus = useSelector((state) => state.auth.verificationTokenStatus);
-  const isDarkMode = useSelector((state) => state.theme.darkMode);
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
   useEffect(() => {
     if (reference_Id) {

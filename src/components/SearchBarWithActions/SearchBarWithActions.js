@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Box, TextField } from '@mui/material';
+import { Box, TextField, useMediaQuery } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -33,7 +33,8 @@ function SearchBarWithActions({
   const [isValid, setIsValid] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
   const [validForDisplay, setValidForDisplay] = useState(null);
-  const isDarkMode = useSelector((state) => state.theme.darkMode);
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+     
 
   useEffect(() => {
     setIsValid(!directoryId);
@@ -114,7 +115,7 @@ function SearchBarWithActions({
           color: isDarkMode ? '#FFF' : '',
           '& .MuiInputBase-input': {
             color: isDarkMode ? '#FFF' : '',
-            background: isDarkMode ? '#555' : '',
+            background: isDarkMode ? '' : '',
           },
           '& .MuiInputBase-input::placeholder': {
             color: isDarkMode ? '#FFF' : '',

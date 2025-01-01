@@ -14,7 +14,6 @@
 
 /* Modal styling */
 .rename-folder-modal {
-    background:#FFF;
     border-radius: 8px;
     padding: 24px;
     width: 400px;
@@ -83,7 +82,6 @@
         flex-direction: column;
         justify-content: space-between;
         gap: 20px;
-        background: #FFF;
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

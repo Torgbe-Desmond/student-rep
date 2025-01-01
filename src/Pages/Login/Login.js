@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError, login } from '../../Features/AuthSlice';
-import { TextField, Button, Container, Box, CircularProgress, Snackbar, Alert, Typography } from '@mui/material';
+import { TextField, Button, Container, Box, CircularProgress, Snackbar, Alert, Typography, useMediaQuery } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { getAllFolders } from '../../Features/WorkSpace';
@@ -18,7 +18,7 @@ const Login = () => {
   const error = useSelector((state) => state.auth.error);
   const reference_Id = localStorage.getItem('reference_Id');
   const navigate = useNavigate();
-  const isDarkMode = useSelector((state) => state.theme.darkMode);
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const location = useLocation();
 
   useEffect(() => {
@@ -130,7 +130,7 @@ const Login = () => {
               disabled={status === 'loading'}
             />
             <Typography align="right" sx={{ margin: 2 }}>
-              <Link to="/forgot-password" variant="body2">
+              <Link to="/forgot-password" variant="body2" className={`${isDarkMode ? 'switch' : ''}`}>
                 Forgot Password?
               </Link>
             </Typography>
@@ -152,7 +152,7 @@ const Login = () => {
         </Box>
 
            <Typography align="center">
-              <Link to="/register" variant="body2">
+              <Link to="/register" variant="body2" className={`${isDarkMode ? 'switch' : ''}`}>
                 Register
               </Link>
             </Typography>
