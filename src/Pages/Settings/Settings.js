@@ -13,6 +13,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+
 const Settings = () => {
   const open = useSelector((state) => state.path.bottomTab);
   const { selectedFolders: selectedFolderList, folders } = useSelector(

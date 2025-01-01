@@ -13,6 +13,7 @@ function ImageHeader({ handleToggleDialog, file }) {
           role="button"
         />
       </div>
+      
       <div className="image-name">{file?.name || "Untitled Image"}</div>
     </div>
   );

@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import './App.css';
-import Main from './Pages/Main/Main';
-import Login from './Pages/Login/Login';
-import { useDispatch, useSelector } from 'react-redux';
-import { componentMap } from './components/HandleStack/HandleStack';
-import Register from './Pages/Register/Register';
-import ForgotPasswordPage from './Pages/ForgotPassword/ForgotPassword';
-import PasswordUpdate from './Pages/PasswordUpdate/PasswordUpdate';
-import ProtectRoutes from './Layout/ProtectRoutes';
-import { storeBreadCrumbs } from './Features/PathSlice';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import { AppLightTheme, AppDarkTheme } from './components/Theme/Theme';
-import { ThemeContext } from '@emotion/react';
-import { useMediaQuery, ThemeProvider } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./App.css";
+import Main from "./Pages/Main/Main";
+import Login from "./Pages/Login/Login";
+import { useDispatch, useSelector } from "react-redux";
+import { componentMap } from "./components/HandleStack/HandleStack";
+import Register from "./Pages/Register/Register";
+import ForgotPasswordPage from "./Pages/ForgotPassword/ForgotPassword";
+import PasswordUpdate from "./Pages/PasswordUpdate/PasswordUpdate";
+import ProtectRoutes from "./Layout/ProtectRoutes";
+import { storeBreadCrumbs } from "./Features/PathSlice";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import { AppLightTheme, AppDarkTheme } from "./components/Theme/Theme";
+import { ThemeContext } from "@emotion/react";
+import { useMediaQuery, ThemeProvider } from "@mui/material";
 
 const IThemeMode = {
-  LIGHT: 'light',
-  DARK: 'dark',
-  SYSTEM: 'system',
+  LIGHT: "light",
+  DARK: "dark",
+  SYSTEM: "system",
 };
 
 function App() {
@@ -29,12 +29,11 @@ function App() {
   const [theme, setTheme] = useState(AppLightTheme);
   const [themeMode, setThemeMode] = useState(IThemeMode.SYSTEM);
 
-  const SYSTEM_THEME = useMediaQuery('(prefers-color-scheme: dark)')
+  const SYSTEM_THEME = useMediaQuery("(prefers-color-scheme: dark)")
     ? IThemeMode.DARK
     : IThemeMode.LIGHT;
 
-
-    console.log('SYSTEM_THEME',SYSTEM_THEME)
+  console.log("SYSTEM_THEME", SYSTEM_THEME);
 
   const switchThemeMode = (mode) => {
     setThemeMode(mode);
@@ -65,12 +64,12 @@ function App() {
   }, [themeMode, SYSTEM_THEME]);
 
   useEffect(() => {
-    if (theme.palette.mode === 'dark') {
-      document.body.classList.add('dark-mode');
-      document.body.classList.remove('light-mode');
+    if (theme.palette.mode === "dark") {
+      document.body.classList.add("dark-mode");
+      document.body.classList.remove("light-mode");
     } else {
-      document.body.classList.add('light-mode');
-      document.body.classList.remove('dark-mode');
+      document.body.classList.add("light-mode");
+      document.body.classList.remove("dark-mode");
     }
   }, [theme]);
 
@@ -84,10 +83,16 @@ function App() {
         <Routes>
           <Route element={<ProtectRoutes />}>
             <Route path="/:reference_Id/directories" element={<Main />} />
-            <Route path="/:reference_Id/directories/:directoryId" element={<Main />} />
+            <Route
+              path="/:reference_Id/directories/:directoryId"
+              element={<Main />}
+            />
           </Route>
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/:reference_Id/update-password" element={<PasswordUpdate />} />
+          <Route
+            path="/:reference_Id/update-password"
+            element={<PasswordUpdate />}
+          />
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
