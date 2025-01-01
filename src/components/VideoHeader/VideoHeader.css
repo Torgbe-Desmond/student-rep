@@ -1,22 +1,41 @@
+.video-header-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-color: transparent;
+    top: 0;
+    left: 0;
+    right: 0;
+    position:sticky;
+    width: 100%;
+    z-index: 999;
+}
+
 .videoHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position:absolute;
-    width: 100%;
     color: #FFF;
     background-color: transparent;
     z-index: 100;
-    /* background-color: #000; */
     box-sizing: content-box;
+    width: 100%;
 }
+
+.video-header-container .MuiSvgIcon-root:hover {
+    color: #007bff;
+    transform: scale(1.1);
+  }
+
 
 .videoHeader > * {
     padding: 20px;
 }
 
-@media (min-width:375px) and (max-width:667px) {
+@media  screen and (min-width:640px) {
     .videoHeader {
-        /* border-top: 10px solid #000; */
+        width: 80%;
+        background-color: transparent;
     }
 }

@@ -1,11 +1,8 @@
-import React from 'react';
-import './Main.css';
-import NewList from '../../components/NewList/NewList';
-import { useOutletContext } from 'react-router-dom';
-import Breadcrumb from '../../components/BreadCrumb/BreadCrumb';
-import UploadStatus from '../../components/UploadStatus/UploadStatus';
-import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
-import SimpleBottomNavigation from '../../components/SimpleBottomNavigation/SimpleBottomNavigation';
+import React from "react";
+import "./Main.css";
+import NewList from "../../components/NewList/NewList";
+import { useOutletContext } from "react-router-dom";
+import Breadcrumb from "../../components/BreadCrumb/BreadCrumb";
 
 function Main() {
   const {
@@ -24,11 +21,8 @@ function Main() {
   } = useOutletContext();
 
   return (
-    <div className={`app-container ${isDarkMode ? 'dark-mode' : ''}`}>
-     
-      <Breadcrumb 
-      isDarkMode={isDarkMode}
-      breadcrumbs={breadCrumbs} />
+    <div className={`app-container ${isDarkMode ? "dark-mode" : ""}`}>
+      <Breadcrumb isDarkMode={isDarkMode} breadcrumbs={breadCrumbs} />
 
       <NewList
         isDarkMode={isDarkMode}
@@ -38,9 +32,7 @@ function Main() {
         setSelectedFoldersForOptions={setSelectedFoldersForOptions}
         handleReload={handleReload}
       />
-
-
-       </div>
+    </div>
   );
 }
 

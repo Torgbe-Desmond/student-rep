@@ -18,6 +18,7 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode }) => {
       history?.path.includes(directoryId)
     );
     dispatch(addBreadCrumb(historyData));
+    // dispatch(storeBreadCrumbs())
   }, [directoryId, moveItemsArray, dispatch]);
 
   const handleBreadcrumbClick = (event, path) => {

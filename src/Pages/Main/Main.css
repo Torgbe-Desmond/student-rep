@@ -9,6 +9,7 @@
   margin: 0 auto;
   box-sizing: border-box;
   overflow: scroll;
+  overflow-x: hidden;
 }
 
 .search-input { 
@@ -30,6 +31,7 @@
 @media screen and (min-width:600px) {
 .app-container{
   padding: 25px;
+  overflow-x: hidden;
 }
 .search-input {
   width: 300px;

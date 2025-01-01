@@ -1,10 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
-import AutoplayVideo from '../../components/AutoplayVideo/AutoplayVideo';
-import CircularProgress from '@mui/material/CircularProgress';
-import { List } from '@mui/material';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef, useState } from "react";
+import AutoplayVideo from "../../components/AutoplayVideo/AutoplayVideo";
+import CircularProgress from "@mui/material/CircularProgress";
+import { List } from "@mui/material";
+import { useSelector } from "react-redux";
+import VideoHeader from "../VideoHeader/VideoHeader";
+import Footer from "../Footer/Footer";
+import './Video.css'
 
-const Video = ({ file }) => {
+const Video = ({ file, handleToggleDialog, selectedFiles, index }) => {
   const videoRef = useRef(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
@@ -16,7 +19,6 @@ const Video = ({ file }) => {
   const [isMuted, setIsMuted] = useState(true);
   const isDarkMode = useSelector((state) => state.theme.darkMode);
 
-
   useEffect(() => {
     const videoElement = videoRef.current;
 
@@ -25,6 +27,7 @@ const Video = ({ file }) => {
         ...prevState,
         duration: videoElement.duration,
       }));
+      setIsVideoLoading(false);
     };
 
     const handleTimeUpdate = () => {
@@ -37,27 +40,31 @@ const Video = ({ file }) => {
     const handleWaiting = () => setIsVideoBuffering(true);
     const handleCanPlay = () => setIsVideoBuffering(false);
 
-    videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
-    videoElement.addEventListener('timeupdate', handleTimeUpdate);
-    videoElement.addEventListener('waiting', handleWaiting);
-    videoElement.addEventListener('canplay', handleCanPlay);
+    videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+    videoElement.addEventListener("timeupdate", handleTimeUpdate);
+    videoElement.addEventListener("waiting", handleWaiting);
+    videoElement.addEventListener("canplay", handleCanPlay);
 
     return () => {
-      videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      videoElement.removeEventListener('timeupdate', handleTimeUpdate);
-      videoElement.removeEventListener('waiting', handleWaiting);
-      videoElement.removeEventListener('canplay', handleCanPlay);
+      videoElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      videoElement.removeEventListener("waiting", handleWaiting);
+      videoElement.removeEventListener("canplay", handleCanPlay);
     };
   }, []);
 
-  const togglePlayPause = () => {
+  const togglePlayPause = async () => {
     const videoElement = videoRef.current;
-    if (isVideoPlaying) {
-      videoElement.pause();
-    } else {
-      videoElement.play();
+    try {
+      if (isVideoPlaying) {
+        videoElement.pause();
+      } else {
+        await videoElement.play();
+      }
+      setIsVideoPlaying(!isVideoPlaying);
+    } catch (error) {
+      console.error("Error playing video:", error);
     }
-    setIsVideoPlaying(!isVideoPlaying);
   };
 
   const toggleMute = () => {
@@ -73,16 +80,31 @@ const Video = ({ file }) => {
     }));
   };
 
- 
+  const pauseAllVideos = (currentRef) => {
+    const videos = document.querySelectorAll("video");
+    videos.forEach((video) => {
+      if (video !== currentRef.current) {
+        video.pause();
+      }
+    });
+  };
+
   return (
     <List
-    sx={{
-      backgroundColor: isDarkMode ? '#444' : '#000',
-      overflowY: 'auto',
-     }}
-    className="list-container"
-  >
-    <div className="video-player">
+      sx={{
+        backgroundColor: isDarkMode ? "rgb(33,37,39)" : "#000",
+        overflowY: "auto",
+      }}
+      className="list-container"
+    >
+      <VideoHeader
+        toggleMute={toggleMute}
+        isMuted={isMuted}
+        handleToggleDialog={handleToggleDialog}
+        selectedFiles={selectedFiles}
+        file={file}
+      />
+      <div className="video-player">
         <AutoplayVideo
           videoRef={videoRef}
           onVideoPress={togglePlayPause}
@@ -92,17 +114,22 @@ const Video = ({ file }) => {
           currentTime={videoState.currentTime}
           duration={videoState.duration}
           seekVideo={seekVideo}
+          pauseAllVideos={pauseAllVideos}
         />
-     {(isVideoLoading || isVideoBuffering) && (
-       <div className="video-loading">
-         <CircularProgress size={75} color="inherit" />
-       </div>
-     )}
-     </div>
-  
-  </List>
+        {(isVideoLoading || isVideoBuffering) && (
+          <div className="video-loading">
+            <CircularProgress size={75} color="inherit" />
+          </div>
+        )}
+      </div>
+      <Footer
+        currentTime={videoState.currentTime}
+        duration={videoState.duration}
+        seekVideo={seekVideo}
+        index={index}
+      />
+    </List>
   );
 };
 
 export default Video;
-

@@ -1,11 +1,19 @@
-import React from 'react';
-import './Image.css';
+import React from "react";
+import "./Image.css";
+import ImageHeader from "../ImageHeader/ImageHeader";
 
-const Image = ({ file }) => {
+const Image = ({ file, handleToggleDialog }) => {
   return (
-    <div className="image-holder">
-      <img src={file.url} alt={file.name || 'Selected file'} className="image-item" />
-    </div>
+    <>
+      <ImageHeader file={file} handleToggleDialog={handleToggleDialog} />
+      <div className="image-holder">
+        <img
+          src={file.url}
+          alt={file.name || "Selected file"}
+          className="image-item"
+        />
+      </div>
+    </>
   );
 };
 
