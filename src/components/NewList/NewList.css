@@ -4,9 +4,9 @@
     height: 100%;
     justify-content: flex-start;
     align-items: flex-start;
-    padding:0rem;
     box-sizing: border-box;
     flex-direction: column;
+    margin-top: -5px;
   }
 
   .files { 

@@ -1,4 +1,11 @@
-@media (min-width: 600px) {
+.basic-speed-dial{
+   z-index: 999;
+   background: red;
+}
+
+
+
+@media (min-width: 640px) {
    .basic-speed-dial{
       display: none;
    }

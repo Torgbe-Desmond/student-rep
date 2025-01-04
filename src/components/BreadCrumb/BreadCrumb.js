@@ -50,7 +50,7 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode }) => {
       <Breadcrumbs
         sx={{
           "& .MuiBreadcrumbs-separator": {
-            color: isDarkMode ? "#FFF" : "'rgb(33,37,39)'",
+            color: isDarkMode ? "#FFF" : "rgb(33,37,39)",
           },
         }}
         aria-label="breadcrumb"
@@ -63,13 +63,18 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode }) => {
               onClick={(e) => handleBreadcrumbClick(e, breadcrumb?.path)}
               style={{
                 textDecoration: "none",
-                color: isDarkMode ? "#FFF" : "'rgb(33,37,39)'",
+                color: isDarkMode ? "#FFF" : "rgb(33,37,39)",
               }}
             >
               {breadcrumb?.label}
             </RouterLink>
           ) : (
-            <Typography key={index} color="text.primary">
+            <Typography 
+            sx={{
+              textDecoration: "none",
+              color: isDarkMode ? "#FFF" : "rgb(33,37,39)",
+            }} 
+            key={index}>
               {breadcrumb?.label}
             </Typography>
           )

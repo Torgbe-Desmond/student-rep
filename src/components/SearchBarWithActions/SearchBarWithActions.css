@@ -12,6 +12,7 @@
     margin-bottom: 0.2rem;
     padding:5px;
     z-index: 999;
+    border-bottom: 1px solid #ccc;
 }
 
 .position{
@@ -70,6 +71,24 @@
   max-width: 100%;
 }
 
+  
+.search-options.dark-mode {
+  background-color:#3181d6; /* Dark background */
+  color: #fff; /* White text */
+  box-shadow: 0 0 3px rgba(161, 167, 204, 0.5);
+}
+
+.search-options.dark-mode .search-input {
+  background-color: #007bff; /* Darker input field */
+  color: #fff; /* White text in input field */
+  border: 1px solid #444; /* Subtle border */
+}
+
+.search-options.dark-mode .logout button {
+  background-color: #007bff; /* Dark button background */
+  color: #fff; /* White text */
+}
+
   @media (min-width: 600px) {
     .search-options {
       display: flex;
@@ -105,12 +124,6 @@
     max-width: 400px;
   }
   
-
-  }
-  
-
-
-  
   .search-options.dark-mode {
     background-color:rgb(33,37,39); /* Dark background */
     color: #fff; /* White text */
@@ -122,16 +135,21 @@
     color: #fff; /* White text in input field */
     border: 1px solid #444; /* Subtle border */
   }
+
+  .search-options.dark-mode .logout button {
+    background-color: rgb(33,37,39); /* Dark button background */
+    color: #fff; /* White text */
+  }
   
+  }
+  
+
   .search-options.dark-mode .button-group button {
     background-color: rgb(33,37,39); /* Dark button background */
     color: #fff; /* White text on buttons */
   }
   
-  .search-options.dark-mode .logout button {
-    background-color: rgb(33,37,39); /* Dark button background */
-    color: #fff; /* White text */
-  }
+
   
   .search-options.dark-mode .button-group button:disabled {
     background-color: rgb(33,37,39); /* Disabled button background */

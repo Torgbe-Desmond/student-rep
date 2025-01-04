@@ -105,7 +105,7 @@ const ProtectRoutes = () => {
               <Outlet context={sharedProps} />
            </Box>
 
-          <Box>
+          <Box >
             <BasicSpeedDial
               selectedItems={selectedItems}
               selectedFilesForOptions={selectedFilesForOptions}

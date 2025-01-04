@@ -30,7 +30,7 @@
 
 @media screen and (min-width:600px) {
 .app-container{
-  padding: 25px;
+  padding: 0px 25px;
   overflow-x: hidden;
 }
 .search-input {
