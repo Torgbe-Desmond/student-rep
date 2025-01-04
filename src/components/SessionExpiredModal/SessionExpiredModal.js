@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Typography,
   Button,
+  useMediaQuery,
 } from '@mui/material';
 import './SessionExpiredModal.css'
 import { useNavigate } from 'react-router-dom';
@@ -12,13 +13,7 @@ const SessionExpiredModal = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [darkMode, setDarkMode] = useState(false);
-  const isDarkMode = useSelector((state) => state.theme.darkMode);
-
-  // useEffect(() => {
-  //     const storedDarkMode = localStorage.getItem('darkMode') === 'true';
-  //     setDarkMode(storedDarkMode);
-  // }, []);
-
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
   const moveToLogin = () => {
     localStorage.clear()
@@ -28,7 +23,7 @@ const SessionExpiredModal = () => {
 
   return (
    <div className={`session-expired-overlay ${isDarkMode ? 'session-dark-mode' :''}`}>
-        <div className='session-expired-modal'>
+            <div className={`session-expired-modal ${isDarkMode ? 'switch' :'light'}`}>
             <div className='session-expired-body'>
                    <Typography
                    sx={{ color: isDarkMode ? 'session-dark-mode' :''}}
