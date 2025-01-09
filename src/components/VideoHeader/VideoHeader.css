@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    background-color: transparent;
+    background: rgba(0, 0, 0, 0.2);
     top: 0;
     left: 0;
     right: 0;
@@ -11,6 +11,11 @@
     width: 100%;
     z-index: 999;
 }
+
+.light{
+    background:transparent;
+}
+   
 
 .videoHeader {
     display: flex;
@@ -21,6 +26,7 @@
     z-index: 100;
     box-sizing: content-box;
     width: 100%;
+
 }
 
 .video-header-container .MuiSvgIcon-root:hover {

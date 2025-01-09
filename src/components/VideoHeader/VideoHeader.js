@@ -2,7 +2,7 @@ import React from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
-import { Typography } from "@mui/material";
+import { Typography, useMediaQuery } from "@mui/material";
 import "./VideoHeader.css";
 
 function VideoHeader({
@@ -12,9 +12,13 @@ function VideoHeader({
   selectedFiles,
   file,
 }) {
+
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  
+
   return (
     <div className="video-header-container">
-      <div className="videoHeader">
+      <div className={`videoHeader ${isDarkMode ? 'switch':'light'}`}>
         {/* Back Arrow */}
         <ArrowBackIosIcon
           onClick={handleToggleDialog}

@@ -1,11 +1,14 @@
 import React from "react";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import "./ImageHeader.css";
+import { useMediaQuery } from "@mui/material";
 
 function ImageHeader({ handleToggleDialog, file }) {
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  
   return (
     <div className="image-header-container">
-      <div className="image-header">
+      <div className={ `image-header ${isDarkMode ? 'switch':'light'} `}>
         <ArrowBackIosIcon
           onClick={handleToggleDialog}
           sx={{ fontSize: "32px", cursor: "pointer" }}
@@ -14,7 +17,7 @@ function ImageHeader({ handleToggleDialog, file }) {
         />
       </div>
       
-      <div className="image-name">{file?.name || "Untitled Image"}</div>
+      <div className={`image-name ${isDarkMode ? 'switch':'light'}`}>{file?.name || "Untitled Image"}</div>
     </div>
   );
 }

@@ -17,6 +17,7 @@ import handleStack from '../HandleStack/HandleStack';
 import { useParams } from 'react-router-dom';
 import './SpeedDial.css'
 import { toggleBottomTab } from '../../Features/PathSlice';
+import { useMediaQuery } from '@mui/material';
 
 export default function BasicSpeedDial({
     selectedItems,
@@ -27,6 +28,7 @@ export default function BasicSpeedDial({
           (state) => state.work
       );
     const [validForDisplay, setValidForDisplay] = useState([]);
+    const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
     const filterFoldersByType = (folders, condition) => {
       return folders.filter(condition);
@@ -77,6 +79,15 @@ export default function BasicSpeedDial({
             label: 'Display',
           },
     ];
+ 
+    const handleSpeedDialColor =(isDarkMode)=>{
+        if(isDarkMode){
+            return {
+                background:'#FFF',
+                color:'#555'
+            }
+        } 
+    }
 
     return (
         <div className='basic-speed-dial'>
@@ -92,11 +103,12 @@ export default function BasicSpeedDial({
             }}>
                 <SpeedDial
                     ariaLabel="SpeedDial basic example"
-                    sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                    sx={{ position: 'absolute', bottom: 16, right: 16,  }}
                     icon={<SpeedDialIcon />}
                 >
                     {buttonConfigs.map((action) => (
                         <SpeedDialAction
+                            sx={handleSpeedDialColor(isDarkMode)}
                             key={action.label}
                             icon={action.iconType}
                             tooltipTitle={action.label}

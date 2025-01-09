@@ -248,10 +248,7 @@ function NewList({
   const handleCloseSnackbar = () => {
     setCopied(false);
   };
-  //   background:{
-  //     default:"rgb(33,37,39)",
-  //     paper:'rgb(41,44,49)'
-  // },
+
   const getCellStyles = (isDarkMode) => ({
     backgroundColor: isDarkMode ? "rgb(33,37,39)" : "#fff",
     color: isDarkMode ? "white" : "black",
@@ -272,7 +269,6 @@ function NewList({
       style={{
         color: isDarkMode ? "tranparent" : "black",
         background: isDarkMode ? "rgb(33,37,39)" : "#fff",
-        border: '0.1px solid #ccc'
       }}
     >
       <div className="files">
@@ -283,7 +279,8 @@ function NewList({
           <Table >
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox" sx={getCellStyles(isDarkMode)}>
+                <TableCell padding="checkbox" sx={{...getCellStyles(isDarkMode)}}
+                >
                   <Checkbox
                     sx={getCellStyles(isDarkMode)}
                     indeterminate={

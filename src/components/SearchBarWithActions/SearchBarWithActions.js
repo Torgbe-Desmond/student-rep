@@ -119,7 +119,7 @@ function SearchBarWithActions({
           },
           '& .MuiInputBase-input::placeholder': {
             color: isDarkMode ? '#FFF' : '',
-          },
+          },  
         }}
         className="search-input"
         placeholder="Search files by name"
