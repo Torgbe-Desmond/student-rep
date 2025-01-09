@@ -18,7 +18,7 @@ function VideoHeader({
 
   return (
     <div className="video-header-container">
-      <div className={`videoHeader ${isDarkMode ? 'switch':'light'}`}>
+      <div  className={`videoHeader ${isDarkMode ? 'switch':'light'}`}>
         {/* Back Arrow */}
         <ArrowBackIosIcon
           onClick={handleToggleDialog}

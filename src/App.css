@@ -39,13 +39,12 @@ body, html {
 
 .switch {
   background:rgb(33,37,39);
-  color: #FFF;
+  color: #7e7d7d;
   border:'1px solid #ccc'
 }
 
 .light { 
   background:#FFF;
-  color:#FFF
 }
 
 
