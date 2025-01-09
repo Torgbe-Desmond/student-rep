@@ -68,7 +68,7 @@ const Settings = () => {
               </div>
             )}
             {file.mimetype.startsWith("video") && (
-              <div className="pdf-holder">
+              <div className="video-holder">
                 <Video
                   selectedFiles={selectedFiles}
                   handleToggleDialog={handleToggleDialog}
@@ -78,7 +78,7 @@ const Settings = () => {
               </div>
             )}
               {file.mimetype.startsWith("image") && (
-              <div className="pdf-holder">
+              <div className="image-holder">
                 <Image
                   handleToggleDialog={handleToggleDialog}
                   file={file}

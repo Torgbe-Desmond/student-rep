@@ -68,7 +68,6 @@
     scroll-snap-type: y mandatory;
     -webkit-overflow-scrolling: touch; 
     overscroll-behavior-y: contain;
-
   }
 
 
@@ -115,6 +114,29 @@
     z-index: 999;
     margin-bottom: 100px;
   }
+
+
+  .video-holder{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width:100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  
+  .image-holder{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width:100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+
 
   .pdf-holder{
     display: flex;

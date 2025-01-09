@@ -41,4 +41,7 @@
     -moz-user-select: none;
     user-select: none; */
   }
+  .newlist-container {
+     border: 1px solid #ccc;
+  }
 }

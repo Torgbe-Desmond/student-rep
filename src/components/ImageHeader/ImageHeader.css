@@ -4,6 +4,7 @@
     align-items: center;
     width: 100%;
     background: rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
 }
 
 .light{
@@ -20,6 +21,7 @@
 
 .image-name{
     padding: 5px  20px 0px 0px;
+    background-color: transparent;
 }
 
 .image-header-container .MuiSvgIcon-root:hover {

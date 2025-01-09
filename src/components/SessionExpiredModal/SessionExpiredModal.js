@@ -30,7 +30,7 @@ const SessionExpiredModal = () => {
                    variant="h6" component="h2" gutterBottom>
                      Your session has expired
                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 2, color:isDarkMode ? '#000':'' }}>
+                    <Typography variant="body2" sx={{ mb: 2, color: isDarkMode ? '#FFF':'' }}>
                       Please log in again to continue.
                     </Typography>
                     <Button
