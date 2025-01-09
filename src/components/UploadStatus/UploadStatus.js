@@ -16,7 +16,7 @@ export default function UploadStatus({ reference_Id }) {
   let url = ['https://file-transfer-app-backend.onrender.com','http://localhost:5000']
 
   useEffect(() => {
-    const newSocket = io(url[1], {
+    const newSocket = io(url[0], {
       query: {
         userData: JSON.stringify({
           reference_Id,
