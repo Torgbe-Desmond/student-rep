@@ -76,6 +76,7 @@ function CreateFolder() {
                                   },
                                 }}
                                 type="text"
+                                autoFocus
                                 name="name"
                                 className="create-input"
                                 placeholder="Folder Name"

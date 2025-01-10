@@ -4,14 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleBottomTab } from "../../Features/PathSlice";
 import ViewPDF from "../../components/ViewPDF/ViewPDF";
 import "./Settings.css";
-import Video from "../../components/Video/Video";
-import VideoHeader from "../../components/VideoHeader/VideoHeader";
 import Image from "../../components/Image/Image";
 import { handleStackClear } from "../../components/HandleStack/HandleStack";
+import VideoCard from "../../components/VideoCard/VideoCard";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
 
 
 const Settings = () => {
@@ -19,6 +19,7 @@ const Settings = () => {
   const { selectedFolders: selectedFolderList, folders } = useSelector(
     (state) => state.work
   );
+  const globalActiveVideoRef = useRef(null); // Shared reference for the currently active video
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.theme.darkMode);
 
@@ -43,6 +44,7 @@ const Settings = () => {
     dispatch(toggleBottomTab());
     handleStackClear(dispatch)
   };
+
 
   return (
     <Dialog
@@ -69,11 +71,12 @@ const Settings = () => {
             )}
             {file.mimetype.startsWith("video") && (
               <div className="video-holder">
-                <Video
-                  selectedFiles={selectedFiles}
-                  handleToggleDialog={handleToggleDialog}
-                  file={file}
-                  index={index}
+                  <VideoCard
+                   id={index}
+                   url={file.url}
+                   fileName = {file.name}
+                   selectedFiles={selectedFiles}
+                   handleToggleDialog={handleToggleDialog}
                 />
               </div>
             )}

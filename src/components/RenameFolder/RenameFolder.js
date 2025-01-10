@@ -61,6 +61,7 @@ function RenameFolder({ initialFolderName }) {
                    <LinearProgress />
                        : <TextField
                             type="text"
+                            autoFocus
                             className="rename-input"
                             placeholder="New Folder Name"
                             value={newFolderName}

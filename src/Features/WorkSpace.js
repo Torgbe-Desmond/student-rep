@@ -386,7 +386,6 @@ const fileFolderSlice = createSlice({
         state.error = action.payload;
       })
 
-      
       .addCase(receiveFile.pending, (state) => {
         state.receiveFileStatus = 'loading'; 
       })

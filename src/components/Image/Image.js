@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Image.css";
 import ImageHeader from "../ImageHeader/ImageHeader";
 
 const Image = ({ file, handleToggleDialog }) => {
+  const [currentFile,setCurrentFile] = useState(null)
+
+  useEffect(()=>{
+    setCurrentFile(file)
+  },[file])
+
+
   return (
     <>
-      <ImageHeader file={file} handleToggleDialog={handleToggleDialog} />
+      <ImageHeader file={currentFile} handleToggleDialog={handleToggleDialog} />
       <div className="image-holder">
         <img
-          src={file.url}
-          alt={file.name || "Selected file"}
+          src={currentFile?.url}
+          alt={currentFile?.name || "Selected file"}
           className="image-item"
         />
       </div>

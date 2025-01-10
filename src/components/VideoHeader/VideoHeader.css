@@ -1,45 +1,24 @@
-.video-header-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    top: 0;
-    left: 0;
-    right: 0;
-    position:sticky;
-    width: 100%;
-    z-index: 999;
-}
-
-
-   
-
 .videoHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #FFF;
-    background-color: transparent;
-    z-index: 100;
-    box-sizing: content-box;
+    position:absolute;
     width: 100%;
-
+    color: #FFF;
+    z-index: 100;
 }
-
-.video-header-container .MuiSvgIcon-root:hover {
-    color: #007bff;
-    transform: scale(1.1);
+ 
+  .videoHeader-title {
+    font-size: 24px;
+    flex: 1;
+    text-align: center;
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-
+  
 
 .videoHeader > * {
-    padding: 20px;
-}
-
-@media  screen and (min-width:640px) {
-    .videoHeader {
-        width: 80%;
-        background-color: transparent;
-    }
+    padding:20px;
 }

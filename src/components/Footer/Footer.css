@@ -11,7 +11,7 @@
     height: 30px;
     position: fixed;
     border-radius: 2.5px;
-    bottom: 0;
+    bottom: 10px;
     overflow: hidden;
     display: flex;
     justify-content: center;

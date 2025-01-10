@@ -15,11 +15,13 @@
     align-items: center;
     padding: 5px  0px 0px 20px;
     background-color: transparent;
+    color: #FFF;
 }
 
 .image-name{
     padding: 5px  20px 0px 0px;
     background-color: transparent;
+    color: #FFF;
 }
 
 .image-header-container .MuiSvgIcon-root:hover {

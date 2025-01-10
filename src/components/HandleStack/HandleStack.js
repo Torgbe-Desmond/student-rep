@@ -12,7 +12,6 @@ import GenerateSecretCode from '../GenerateSecreteCode/GenerateSecreteCode';
 import Logout from '../Logout/Logout';
 import { clearSelectedIds } from '../../Features/WorkSpace';
 import Settings from '../../Pages/Settings/Settings';
-import DisplayImage from '../DisplayImage/DisplayImage';
 
 
 export const componentMap = {
