@@ -72,19 +72,19 @@
 
   
 .search-options.dark-mode {
-  background-color:#3181d6; /* Dark background */
+  background-color:rgb(33,37,39); /* Dark background */
   color: #fff; /* White text */
   box-shadow: 0 0 3px rgba(161, 167, 204, 0.5);
 }
 
 .search-options.dark-mode .search-input {
-  background-color: #007bff; /* Darker input field */
+  background-color:rgb(33,37,39); /* Dark background */
   color: #fff; /* White text in input field */
   border: 1px solid #444; /* Subtle border */
 }
 
 .search-options.dark-mode .logout button {
-  background-color: #007bff; /* Dark button background */
+  background-color:rgb(33,37,39); /* Dark background */
   color: #fff; /* White text */
 }
 

@@ -13,7 +13,7 @@ export default function UploadStatus({ reference_Id }) {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const dispatch = useDispatch();
 
-  let url = ['https://file-transfer-app-backend.onrender.com','http://localhost:5000']
+  let url = ['https://file-transfer-app-backend.vercel.app','http://localhost:5000']
 
   useEffect(() => {
     const newSocket = io(url[0], {
