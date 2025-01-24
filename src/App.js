@@ -33,7 +33,6 @@ function App() {
     ? IThemeMode.DARK
     : IThemeMode.LIGHT;
 
-  console.log("SYSTEM_THEME", SYSTEM_THEME);
 
   const switchThemeMode = (mode) => {
     setThemeMode(mode);

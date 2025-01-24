@@ -1,24 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
-import './VideoCard.css';
-import VideoHeader from '../VideoHeader/VideoHeader';
-import VideoFooter from '../VideoFooter/VideoFooter';
-import CircularProgress from '@mui/material/CircularProgress';
-import AutoplayVideo from '../AutoplayVideo/AutoplayVideo';
-
-function VideoCard({ url, id,fileName, handleToggleDialog, selectedFiles }) {
+import React, { useEffect, useRef, useState } from "react";
+import "./VideoCard.css";
+import VideoHeader from "../VideoHeader/VideoHeader";
+import VideoFooter from "../VideoFooter/VideoFooter";
+import CircularProgress from "@mui/material/CircularProgress";
+import AutoplayVideo from "../AutoplayVideo/AutoplayVideo";
+import FullscreenIcon from "@mui/icons-material/Fullscreen";
+import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [isVideoBuffering, setIsVideoBuffering] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef(null);
-  const [currentTime, setCurrentTime] = useState(0); // Current time of video
-  const [duration, setDuration] = useState(0); // Duration of the video
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [fullScreen, setFullScreen] = useState(false);
 
   useEffect(() => {
     const videoElement = videoRef.current;
     if (!videoElement) return;
 
-    // Loading state handlers
     const handleWaiting = () => {
       setIsVideoBuffering(true);
     };
@@ -48,14 +49,14 @@ function VideoCard({ url, id,fileName, handleToggleDialog, selectedFiles }) {
         await videoElement.play();
         setIsVideoPlaying(true);
       } catch (error) {
-        console.log('Autoplay was prevented', error);
+        console.log("Autoplay was prevented", error);
         setIsVideoPlaying(false);
       }
     };
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
             if (videoElement) {
               safePlay();
@@ -70,16 +71,16 @@ function VideoCard({ url, id,fileName, handleToggleDialog, selectedFiles }) {
       },
       {
         threshold: 0.5,
-        rootMargin: '0px'
+        rootMargin: "0px",
       }
     );
 
     // Add event listeners
-    videoElement.addEventListener('waiting', handleWaiting);
-    videoElement.addEventListener('canplay', handleCanPlay);
-    videoElement.addEventListener('loadstart', handleLoadStart);
-    videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
-    videoElement.addEventListener('timeupdate', handleTimeUpdate); // Update current time
+    videoElement.addEventListener("waiting", handleWaiting);
+    videoElement.addEventListener("canplay", handleCanPlay);
+    videoElement.addEventListener("loadstart", handleLoadStart);
+    videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+    videoElement.addEventListener("timeupdate", handleTimeUpdate); // Update current time
 
     if (videoElement) {
       observer.observe(videoElement);
@@ -88,11 +89,14 @@ function VideoCard({ url, id,fileName, handleToggleDialog, selectedFiles }) {
     // Cleanup
     return () => {
       if (videoElement) {
-        videoElement.removeEventListener('waiting', handleWaiting);
-        videoElement.removeEventListener('canplay', handleCanPlay);
-        videoElement.removeEventListener('loadstart', handleLoadStart);
-        videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+        videoElement.removeEventListener("waiting", handleWaiting);
+        videoElement.removeEventListener("canplay", handleCanPlay);
+        videoElement.removeEventListener("loadstart", handleLoadStart);
+        videoElement.removeEventListener(
+          "loadedmetadata",
+          handleLoadedMetadata
+        );
+        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
         observer.unobserve(videoElement);
       }
     };
@@ -111,7 +115,7 @@ function VideoCard({ url, id,fileName, handleToggleDialog, selectedFiles }) {
         setIsVideoPlaying(true);
       }
     } catch (error) {
-      console.log('Error playing/pausing video', error);
+      console.log("Error playing/pausing video", error);
       setIsVideoPlaying(false);
     }
   };
@@ -124,18 +128,9 @@ function VideoCard({ url, id,fileName, handleToggleDialog, selectedFiles }) {
     }
   };
 
-  const renderLoadingIndicator = () => {
-    if (isVideoLoading || isVideoBuffering) {
-      return (
-        <div className='video-loading'>
-          <CircularProgress size={75} color="inherit" />
-        </div>
-      );
-    }
-    return null;
+  const toggleFullScreen = () => {
+    setFullScreen(!fullScreen);
   };
-
-  console.log('isMuted',isMuted)
 
   const videoProgress = (currentTime / duration) * 100;
 
@@ -148,23 +143,24 @@ function VideoCard({ url, id,fileName, handleToggleDialog, selectedFiles }) {
         handleToggleDialog={handleToggleDialog}
       />
 
-      {renderLoadingIndicator()}
-        <AutoplayVideo
-          videoRef={videoRef}
-          onVideoPress={onVideoPress}
-          url={url}
-          isMuted={isMuted}
-          isVideoPlaying={isVideoPlaying}
-        />
+      <AutoplayVideo
+        videoRef={videoRef}
+        onVideoPress={onVideoPress}
+        url={url}
+        isMuted={isMuted}
+        fullScreen={fullScreen}
+        isVideoBuffering={isVideoBuffering}
+        isVideoLoading={isVideoLoading}
+        isVideoPlaying={isVideoPlaying}
+      />
 
+      <div className="video-actions" onClick={()=>toggleFullScreen()}>
+        {fullScreen ? <FullscreenIcon sx={{fontSize:'32px'}} /> : <FullscreenExitIcon sx={{fontSize:'32px'}} />}
+      </div>
 
       <div className="video-progress-bar">
-        <div
-          className="progress"
-          style={{ width: `${videoProgress}%` }}
-        />
+        <div className="progress" style={{ width: `${videoProgress}%` }} />
       </div>
-      
     </div>
   );
 }

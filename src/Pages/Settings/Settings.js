@@ -12,8 +12,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
-
 const Settings = () => {
   const open = useSelector((state) => state.path.bottomTab);
   const { selectedFolders: selectedFolderList, folders } = useSelector(
@@ -42,9 +40,8 @@ const Settings = () => {
 
   const handleToggleDialog = () => {
     dispatch(toggleBottomTab());
-    handleStackClear(dispatch)
+    handleStackClear(dispatch);
   };
-
 
   return (
     <Dialog
@@ -62,7 +59,7 @@ const Settings = () => {
         }}
         className="list-container"
       >
-        {selectedFiles.map((file,index) => (
+        {selectedFiles.map((file, index) => (
           <div key={file._id} className="file-item">
             {file.mimetype.startsWith("application") && (
               <div className="pdf-holder">
@@ -71,21 +68,18 @@ const Settings = () => {
             )}
             {file.mimetype.startsWith("video") && (
               <div className="video-holder">
-                  <VideoCard
-                   id={index}
-                   url={file.url}
-                   fileName = {file.name}
-                   selectedFiles={selectedFiles}
-                   handleToggleDialog={handleToggleDialog}
+                <VideoCard
+                  id={index}
+                  url={file.url}
+                  fileName={file.name}
+                  selectedFiles={selectedFiles}
+                  handleToggleDialog={handleToggleDialog}
                 />
               </div>
             )}
-              {file.mimetype.startsWith("image") && (
+            {file.mimetype.startsWith("image") && (
               <div className="image-holder">
-                <Image
-                  handleToggleDialog={handleToggleDialog}
-                  file={file}
-                />
+                <Image handleToggleDialog={handleToggleDialog} file={file} />
               </div>
             )}
             {["Folder", "Shared"].includes(file.mimetype.split("/")[0]) && (
