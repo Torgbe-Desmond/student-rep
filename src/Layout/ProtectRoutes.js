@@ -1,35 +1,37 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Navigate, Outlet, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from "react";
+import { Navigate, Outlet, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   clearFilesAndFolders,
   getAdirectory,
   getAllFolders,
   getMainDirectories,
-} from '../Features/WorkSpace';
-import { restoreBreadCrumbs, setCurrentDirectory } from '../Features/PathSlice';
-import handleStack from '../components/HandleStack/HandleStack';
-import SearchBarWithActions from '../components/SearchBarWithActions/SearchBarWithActions';
-import '../index.css'
-import { Box, useMediaQuery } from '@mui/material';
-import BasicSpeedDial from '../components/SpeedDial/SpeedDial';
-import UploadStatus from '../components/UploadStatus/UploadStatus';
+} from "../Features/WorkSpace";
+import { restoreBreadCrumbs, setCurrentDirectory } from "../Features/PathSlice";
+import handleStack from "../components/HandleStack/HandleStack";
+import SearchBarWithActions from "../components/SearchBarWithActions/SearchBarWithActions";
+import "../index.css";
+import { Box, useMediaQuery } from "@mui/material";
+import BasicSpeedDial from "../components/SpeedDial/SpeedDial";
+import UploadStatus from "../components/UploadStatus/UploadStatus";
 
 const ProtectRoutes = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   const { reference_Id, directoryId } = useParams();
   const dispatch = useDispatch();
   const [selectedItems, setSelectedItems] = useState([]);
   const { folders } = useSelector((state) => state.work);
   const [filteredData, setFilteredData] = useState(null);
   const [selectedFilesForOptions, setSelectedFilesForOptions] = useState([]);
-  const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState([]);
+  const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState(
+    []
+  );
   const breadCrumb = useSelector((state) => state.path.breadCrumbs);
   const [breadCrumbs, setBreadCrumbs] = useState([]);
   const [authorizeStatus, setAuthorizeStatus] = useState(
-    JSON.parse(localStorage.getItem('Unauthorized'))?.status
+    JSON.parse(localStorage.getItem("Unauthorized"))?.status
   );
-  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const handleReload = useCallback(() => {
     dispatch(restoreBreadCrumbs());
@@ -41,7 +43,7 @@ const ProtectRoutes = () => {
       dispatch(getMainDirectories({ reference_Id }));
     }
     if (authorizeStatus) {
-      handleAction('SessionExpiredModal');
+      handleAction("SessionExpiredModal");
     }
   }, [dispatch, reference_Id, directoryId, authorizeStatus]);
 
@@ -55,7 +57,9 @@ const ProtectRoutes = () => {
   }, [breadCrumb]);
 
   useEffect(() => {
-    setAuthorizeStatus(JSON.parse(localStorage.getItem('Unauthorized'))?.status);
+    setAuthorizeStatus(
+      JSON.parse(localStorage.getItem("Unauthorized"))?.status
+    );
   }, []);
 
   useEffect(() => {
@@ -84,48 +88,43 @@ const ProtectRoutes = () => {
     handleReload,
   };
 
-
-  let component 
-  if(token){
-      component = (
-        <Box className="app">
-
-          <Box className='header'>
-             <SearchBarWithActions
-                folderData={folders}
-                setFilteredData={setFilteredData}
-                selectedItems={selectedItems}
-                selectedFilesForOptions={selectedFilesForOptions}
-                selectedFoldersForOptions={selectedFoldersForOptions}
-               />
-          </Box>
-
-           <Box className='main'>
-              <Outlet context={sharedProps} />
-           </Box>
-
-          <Box >
-            <BasicSpeedDial
-              selectedItems={selectedItems}
-              selectedFilesForOptions={selectedFilesForOptions}
-              selectedFoldersForOptions={selectedFoldersForOptions}
-            />          
-          </Box>
-
-          <UploadStatus 
-          reference_Id={reference_Id}
-          authorizeStatus={authorizeStatus} />
-           
+  let component;
+  if (token) {
+    component = (
+      <Box className="app">
+        <Box className="header">
+          <SearchBarWithActions
+            folderData={folders}
+            setFilteredData={setFilteredData}
+            selectedItems={selectedItems}
+            selectedFilesForOptions={selectedFilesForOptions}
+            selectedFoldersForOptions={selectedFoldersForOptions}
+          />
         </Box>
-      )
+
+        <Box className="main">
+          <Outlet context={sharedProps} />
+        </Box>
+
+        <Box>
+          <BasicSpeedDial
+            selectedItems={selectedItems}
+            selectedFilesForOptions={selectedFilesForOptions}
+            selectedFoldersForOptions={selectedFoldersForOptions}
+          />
+        </Box>
+
+        {/* <UploadStatus
+          reference_Id={reference_Id}
+          authorizeStatus={authorizeStatus}
+        /> */}
+      </Box>
+    );
   } else {
-     component = (
-        <Navigate to="/" />
-     )
-  } 
+    component = <Navigate to="/" />;
+  }
 
-
-  return component
+  return component;
 };
 
 export default ProtectRoutes;
