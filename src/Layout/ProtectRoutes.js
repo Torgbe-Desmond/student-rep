@@ -114,10 +114,10 @@ const ProtectRoutes = () => {
           />
         </Box>
 
-        <UploadStatus
+        {/* <UploadStatus
           reference_Id={reference_Id}
           authorizeStatus={authorizeStatus}
-        />
+        /> */}
       </Box>
     );
   } else {
