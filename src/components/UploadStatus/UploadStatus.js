@@ -13,8 +13,6 @@ export default function UploadStatus({ reference_Id }) {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const dispatch = useDispatch();
 
-  // Dynamically set the backend URL based on the environment (production or development)
-// Local development URL (change port if needed)
 let url = ['','http://localhost:5000']
 
   useEffect(() => {
@@ -31,7 +29,7 @@ let url = ['','http://localhost:5000']
     return () => {
       newSocket.disconnect();
     };
-  }, [reference_Id, url]);  // Reconnect if reference_Id or URL changes
+  }, [reference_Id, url]); 
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
@@ -41,16 +39,15 @@ let url = ['','http://localhost:5000']
     if (!socket) return;
     
     const onUploading = (data) => {
-      dispatch(updateFile(data.file));  // Update file status in Redux store
-      setSnackbarMessage(`${data?.process} for ${data?.file?.name}`);  // Show message in Snackbar
-      setOpenSnackbar(true);  // Open Snackbar
+      dispatch(updateFile(data.file));  
+      setSnackbarMessage(`${data?.process} for ${data?.file?.name}`);  
+      setOpenSnackbar(true);  
     };
 
-    // Listen for the "uploading" event
     socket.on('uploading', onUploading);
 
     return () => {
-      socket.off('uploading', onUploading);  // Cleanup event listener
+      socket.off('uploading', onUploading); 
     };
   }, [socket, dispatch]);
 
