@@ -17,6 +17,7 @@ let url = ['','http://localhost:5000']
 
   useEffect(() => {
     const newSocket = io("https://file-transfer-app-backend.vercel.app", {
+      transports: ["websocket"],
       query: {
         userData: JSON.stringify({
           reference_Id,
