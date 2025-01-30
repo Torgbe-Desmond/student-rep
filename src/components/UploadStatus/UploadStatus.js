@@ -15,17 +15,15 @@ export default function UploadStatus({ reference_Id }) {
 
   // Dynamically set the backend URL based on the environment (production or development)
 // Local development URL (change port if needed)
-let url = ['https://file-transfer-app-backend.vercel.app','http://localhost:5000']
+let url = ['','http://localhost:5000']
 
   useEffect(() => {
-    const newSocket = io(url[0], {
+    const newSocket = io("https://file-transfer-app-backend.vercel.app", {
       query: {
         userData: JSON.stringify({
           reference_Id,
         }),
       },
-      withCredentials: true,  // Allow credentials for CORS
-      transports: ['websocket'],  // Use WebSocket transport
     });
 
     setSocket(newSocket);
