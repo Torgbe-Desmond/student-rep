@@ -13,7 +13,6 @@ import SearchBarWithActions from '../components/SearchBarWithActions/SearchBarWi
 import '../index.css'
 import { Box, useMediaQuery } from '@mui/material';
 import BasicSpeedDial from '../components/SpeedDial/SpeedDial';
-import Breadcrumb from '../components/BreadCrumb/BreadCrumb';
 import UploadStatus from '../components/UploadStatus/UploadStatus';
 
 const ProtectRoutes = () => {

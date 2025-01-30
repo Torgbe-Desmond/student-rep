@@ -42,17 +42,16 @@
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 100px;
     z-index: 999;
   }
   
-  .progress {
+  /* .progress {
     height: 100%;
     display: flex;
     justify-content: center;
     align-content: center;
-    background-color: #00bcd4;
-  }
+  } */
   
   .sound-icon {
     position: absolute;
@@ -71,7 +70,13 @@
     z-index: 1;
     padding: 1rem;
   }
-  
+
+  .ui-video-seek-slider{
+    top: 0;
+    background: green;
+    z-index: 1;
+  }
+
   
 
 @media screen and (min-width:600px) {

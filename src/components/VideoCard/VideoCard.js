@@ -6,6 +6,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import AutoplayVideo from "../AutoplayVideo/AutoplayVideo";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
+import { VideoSeekSlider } from "react-video-seek-slider";
+import "react-video-seek-slider/styles.css";
+
 function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
@@ -132,7 +135,18 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
     setFullScreen(!fullScreen);
   };
 
-  const videoProgress = (currentTime / duration) * 100;
+  let videoProgress = (currentTime / duration) * 100;
+
+
+  const handleSeek = (time) => {
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      videoElement.currentTime = time / 1000; // Convert to seconds
+      videoProgress = time / 1000
+      setCurrentTime(time);
+    }
+  };
+
 
   return (
     <div className={`videoCard is-stuckToBottom`}>
@@ -154,13 +168,28 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
         isVideoPlaying={isVideoPlaying}
       />
 
-      <div className="video-actions" onClick={()=>toggleFullScreen()}>
-        {fullScreen ? <FullscreenIcon sx={{fontSize:'32px'}} /> : <FullscreenExitIcon sx={{fontSize:'32px'}} />}
+      <div className="video-actions" onClick={() => toggleFullScreen()}>
+        {fullScreen ? (
+          <FullscreenIcon sx={{ fontSize: "32px" }} />
+        ) : (
+          <FullscreenExitIcon sx={{ fontSize: "32px" }} />
+        )}
       </div>
 
       <div className="video-progress-bar">
+        
+      <VideoSeekSlider
+        max={duration}
+        className="video-progress-bar"
+        currentTime={currentTime}
+        onChange={handleSeek}
+        hideThumbTooltip={false}
+      />
+
         <div className="progress" style={{ width: `${videoProgress}%` }} />
+        
       </div>
+     
     </div>
   );
 }

@@ -16,7 +16,7 @@ import { AppLightTheme, AppDarkTheme } from "./components/Theme/Theme";
 import { ThemeContext } from "@emotion/react";
 import { useMediaQuery, ThemeProvider } from "@mui/material";
 
-const IThemeMode = {
+const IThemeMode = {  
   LIGHT: "light",
   DARK: "dark",
   SYSTEM: "system",
@@ -61,6 +61,16 @@ function App() {
         break;
     }
   }, [themeMode, SYSTEM_THEME]);
+
+  useEffect(() => {
+    if (theme.palette.mode === "dark") {
+      document.body.classList.add("dark-mode");
+      document.body.classList.remove("light-mode");
+    } else {
+      document.body.classList.add("light-mode");
+      document.body.classList.remove("dark-mode");
+    }
+  }, [theme]);
 
   useEffect(() => {
     if (theme.palette.mode === "dark") {

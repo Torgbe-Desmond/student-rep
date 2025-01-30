@@ -13,7 +13,9 @@ export default function UploadStatus({ reference_Id }) {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const dispatch = useDispatch();
 
-  let url = ['https://file-transfer-app-backend.vercel.app','http://localhost:5000']
+  // Dynamically set the backend URL based on the environment (production or development)
+// Local development URL (change port if needed)
+let url = ['https://file-transfer-app-backend.vercel.app','http://localhost:5000']
 
   useEffect(() => {
     const newSocket = io(url[0], {
@@ -22,13 +24,16 @@ export default function UploadStatus({ reference_Id }) {
           reference_Id,
         }),
       },
+      withCredentials: true,  // Allow credentials for CORS
+      transports: ['websocket'],  // Use WebSocket transport
     });
+
     setSocket(newSocket);
 
     return () => {
       newSocket.disconnect();
     };
-  }, [reference_Id]);
+  }, [reference_Id, url]);  // Reconnect if reference_Id or URL changes
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
@@ -36,16 +41,18 @@ export default function UploadStatus({ reference_Id }) {
 
   useEffect(() => {
     if (!socket) return;
+    
     const onUploading = (data) => {
-      dispatch(updateFile(data.file));
-      setSnackbarMessage(`${data?.process} for ${data?.file?.name}`);
-      setOpenSnackbar(true); 
+      dispatch(updateFile(data.file));  // Update file status in Redux store
+      setSnackbarMessage(`${data?.process} for ${data?.file?.name}`);  // Show message in Snackbar
+      setOpenSnackbar(true);  // Open Snackbar
     };
 
+    // Listen for the "uploading" event
     socket.on('uploading', onUploading);
 
     return () => {
-      socket.off('uploading', onUploading); 
+      socket.off('uploading', onUploading);  // Cleanup event listener
     };
   }, [socket, dispatch]);
 
