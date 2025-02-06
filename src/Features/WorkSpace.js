@@ -1,41 +1,33 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { FileService } from '../Services/FileService';
-import { FolderService } from '../Services/FolderService';
-import { isFulfilled, isRejected } from '@reduxjs/toolkit';
-
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { FileService } from "../Services/FileService";
+import { FolderService } from "../Services/FolderService";
+import { isFulfilled, isRejected } from "@reduxjs/toolkit";
 
 const initialState = {
   folders: [],
-  downloadData:null,
-  folderStatus:[],
-  fileStatus:[],
+  downloadData: null,
+  folderStatus: [],
+  fileStatus: [],
   sidebarItems: [],
-  moveItemsArray:[],
-  downloadStatus:'idle',
-  receiveFileStatus:'idle',
-  deleteFileStatus:'idle',
-  status: 'idle',
-  moveItemStatus:'idle',
-  generateSecretCodeStatus:'idle',
-  mainFolders:[],
-  selectedFolders:null,
-  secreteCode:'',  
+  moveItemsArray: [],
+  downloadStatus: "idle",
+  receiveFileStatus: "idle",
+  deleteFileStatus: "idle",
+  status: "idle",
+  moveItemStatus: "idle",
+  generateSecretCodeStatus: "idle",
+  mainFolders: [],
+  selectedFolders: null,
+  secreteCode: "",
   error: null,
-  message: '',
+  globalStatus: false,
+  statusCode: null,
+  message: "",
+  workspaceErrorMessage: "",
 };
 
-export const deleteFile = createAsyncThunk('file/deleteFile', async ({directoryId,fileIds}, thunkAPI) => {
-  try {
-    const response = await FileService.deleteFile(directoryId,fileIds);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
-  }
-});
-
 const updateFolderName = (folders, id, newName) => {
-  const folderIndex = folders.findIndex(folder => folder._id === id);
+  const folderIndex = folders.findIndex((folder) => folder._id === id);
   if (folderIndex !== -1) {
     const updatedFolders = [...folders];
     updatedFolders[folderIndex] = {
@@ -45,11 +37,10 @@ const updateFolderName = (folders, id, newName) => {
     return updatedFolders;
   }
   return folders;
-}
-
+};
 
 const updateFileUrl = (folders, id, url) => {
-  const fileIndex = folders.findIndex(folder => folder._id === id);
+  const fileIndex = folders.findIndex((folder) => folder._id === id);
   if (fileIndex !== -1) {
     const updatedFolders = [...folders];
     updatedFolders[fileIndex] = {
@@ -59,12 +50,10 @@ const updateFileUrl = (folders, id, url) => {
     return updatedFolders;
   }
   return folders;
-}
-
-
+};
 
 const updateName = (folders, path, label) => {
-  const folderIndex = folders.findIndex(folder => folder.path === path);
+  const folderIndex = folders.findIndex((folder) => folder.path === path);
   if (folderIndex !== -1) {
     const updatedFolders = [...folders];
     updatedFolders[folderIndex] = {
@@ -74,381 +63,553 @@ const updateName = (folders, path, label) => {
     return updatedFolders;
   }
   return folders;
-}
+};
 
-
-const storeIdsAndNameOfMainFoldersInStorage = (folders)=>{
-  let mainFoldersIdsAndName = []
-  folders.forEach(element => {
-      const { name,_id } = element;
-      mainFoldersIdsAndName.push({name,_id})
+const storeIdsAndNameOfMainFoldersInStorage = (folders) => {
+  let mainFoldersIdsAndName = [];
+  folders.forEach((element) => {
+    const { name, _id } = element;
+    mainFoldersIdsAndName.push({ name, _id });
   });
 
   return mainFoldersIdsAndName;
-}
+};
 
-
-export const moveFile = createAsyncThunk('file/moveFile', async ({reference_Id,DirectoriesToMoveFileTo, FileIds, DirectoryFileIsMoveFrom}, thunkAPI) => {
-  try {
-    const response = await FileService.moveFile(reference_Id,DirectoriesToMoveFileTo, FileIds, DirectoryFileIsMoveFrom);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+const handleAsyncActions = (state, action, statusField, stateField) => {
+  const { success, error } = action.payload || {};
+  if (action.type.endsWith("pending")) {
+    state[statusField] = "loading";
+  } else if (action.type.endsWith("fulfilled")) {
+    const { data, message, status } = action.payload;
+    state[statusField] = "succeeded";
+    state.globalStatus = status;
+    state.message = message;
+    if (Array.isArray(data)) {
+      state[stateField] = [...state[stateField], ...data];
+    } else if (!Array.isArray(data)) {
+      state[stateField] = [...state[stateField], data];
+    }
+  } else if (action.type.endsWith("rejected")) {
+    state[statusField] = "failed";
+    state.globalStatus = success;
+    state.workspaceErrorMessage = error?.message;
+    state.statusCode = error?.code;
   }
-});
+};
 
-export const uploadFile = createAsyncThunk('file/uploadFile', async ({ reference_Id, directoryId, formData }, thunkAPI) => {
-  try {
-    const response = await FileService.uploadFiles(reference_Id, directoryId, formData);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+const handleFolderActions = (state, action, statusField, stateField) => {
+  const { success, error } = action.payload || {};
+  if (action.type.endsWith("pending")) {
+    state[statusField] = "loading";
+  } else if (action.type.endsWith("fulfilled")) {
+    const { data, message, status } = action.payload;
+    state[statusField] = "succeeded";
+    state.globalStatus = status;
+    state.message = message;
+    if (stateField) {
+      if (Array.isArray(data)) {
+        state[stateField] = [...new Set([...data])];
+      } else if (!Array.isArray(data)) {
+        state[stateField] = [...new Set([...state[stateField], data])];
+      }
+    }
+  } else if (action.type.endsWith("rejected")) {
+    state[statusField] = "failed";
+    state.globalStatus = success;
+    state.workspaceErrorMessage = error?.message;
+    state.statusCode = error?.code;
   }
-});
+};
 
+// ---------------------------------------------------------------------------------------------
 
-export const downloadFile = createAsyncThunk('file/downloadFile', async ({reference_Id,fileId}, thunkAPI) => {
-  try {
-    const response = await FileService.downloadFile(reference_Id,fileId);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const deleteFile = createAsyncThunk(
+  "file/deleteFile",
+  async ({ directoryId, fileIds }, thunkAPI) => {
+    try {
+      const response = await FileService.deleteFile(directoryId, fileIds);
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const receiveFile = createAsyncThunk('file/receiveFile', async ({reference_Id,secreteCode}, thunkAPI) => {
-  try {
-    const response = await FileService.receiveFile(reference_Id,secreteCode);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const moveFile = createAsyncThunk(
+  "file/moveFile",
+  async (
+    { reference_Id, DirectoriesToMoveFileTo, FileIds, DirectoryFileIsMoveFrom },
+    thunkAPI
+  ) => {
+    try {
+      const response = await FileService.moveFile(
+        reference_Id,
+        DirectoriesToMoveFileTo,
+        FileIds,
+        DirectoryFileIsMoveFrom
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const generateSecretCode = createAsyncThunk('file/generateSecretCode', async ({reference_Id,fileIds,name}, thunkAPI) => {
-  try {
-    const response = await FileService.generateSecretCode(reference_Id,fileIds,name);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const uploadFile = createAsyncThunk(
+  "file/uploadFile",
+  async ({ reference_Id, directoryId, formData }, thunkAPI) => {
+    try {
+      const response = await FileService.uploadFiles(
+        reference_Id,
+        directoryId,
+        formData
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
+export const downloadFile = createAsyncThunk(
+  "file/downloadFile",
+  async ({ reference_Id, fileId }, thunkAPI) => {
+    try {
+      const response = await FileService.downloadFile(reference_Id, fileId);
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const receiveFile = createAsyncThunk(
+  "file/receiveFile",
+  async ({ reference_Id, secreteCode }, thunkAPI) => {
+    try {
+      const response = await FileService.receiveFile(reference_Id, secreteCode);
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const generateSecretCode = createAsyncThunk(
+  "file/generateSecretCode",
+  async ({ reference_Id, fileIds, name }, thunkAPI) => {
+    try {
+      const response = await FileService.generateSecretCode(
+        reference_Id,
+        fileIds,
+        name
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 // Files <---------------------------------------------------------------------------------->
 
-
-export const getMainDirectories = createAsyncThunk('folder/getMainDirectories', async ({ reference_Id }, thunkAPI) => {
-  try {
-    const response = await FolderService.getMainDirectories(reference_Id);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const getMainDirectories = createAsyncThunk(
+  "folder/getMainDirectories",
+  async ({ reference_Id }, thunkAPI) => {
+    try {
+      const response = await FolderService.getMainDirectories(reference_Id);
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const deleteFolder = createAsyncThunk('folder/deleteFolder', async ({currentDirectory, folderIds }, thunkAPI) => {
-  try {
-    const response = await FolderService.deleteDirectory(currentDirectory,folderIds);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const deleteFolder = createAsyncThunk(
+  "folder/deleteFolder",
+  async ({ currentDirectory, folderIds }, thunkAPI) => {
+    try {
+      const response = await FolderService.deleteDirectory(
+        currentDirectory,
+        folderIds
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const createFolder = createAsyncThunk('folder/createFolder', async ({ reference_Id, directoryId, folderData }, thunkAPI) => {
-  try {
-    const response = await FolderService.createDirectory(reference_Id,directoryId, folderData);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const createFolder = createAsyncThunk(
+  "folder/createFolder",
+  async ({ reference_Id, directoryId, folderData }, thunkAPI) => {
+    try {
+      const response = await FolderService.createDirectory(
+        reference_Id,
+        directoryId,
+        folderData
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const moveFolder = createAsyncThunk('folder/moveFolder', async ({reference_Id,directoriesToMove, directoryToMoveTo}, thunkAPI) => {
-  try {
-    const response = await FolderService.moveDirectories(reference_Id,directoriesToMove, directoryToMoveTo);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const moveFolder = createAsyncThunk(
+  "folder/moveFolder",
+  async ({ reference_Id, directoriesToMove, directoryToMoveTo }, thunkAPI) => {
+    try {
+      const response = await FolderService.moveDirectories(
+        reference_Id,
+        directoriesToMove,
+        directoryToMoveTo
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const renameFolder = createAsyncThunk('folder/renameFolder', async ({reference_Id,_id,name}, thunkAPI) => {
-  try {
-    const response = await FolderService.renameDirectory(reference_Id,_id,name);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const renameFolder = createAsyncThunk(
+  "folder/renameFolder",
+  async ({ reference_Id, _id, name }, thunkAPI) => {
+    try {
+      const response = await FolderService.renameDirectory(
+        reference_Id,
+        _id,
+        name
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const getAllFolders = createAsyncThunk('folder/getAllFolders', async ({reference_Id}, thunkAPI) => {
-  try {
-    const response = await FolderService.getAllDirForMoving(reference_Id);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const getAllFolders = createAsyncThunk(
+  "folder/getAllFolders",
+  async ({ reference_Id }, thunkAPI) => {
+    try {
+      const response = await FolderService.getAllDirForMoving(reference_Id);
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
-export const getAdirectory = createAsyncThunk('folder/getAdirectory', async ({ reference_Id, directoryId }, thunkAPI) => {
-  try {
-    const response = await FolderService.getAdirectory(reference_Id, directoryId);
-    return response;
-  } catch (error) {
-    let message = error?.response?.message?.data;
-    return thunkAPI.rejectWithValue(message);
+export const getAdirectory = createAsyncThunk(
+  "folder/getAdirectory",
+  async ({ reference_Id, directoryId }, thunkAPI) => {
+    try {
+      const response = await FolderService.getAdirectory(
+        reference_Id,
+        directoryId
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
-
+);
 
 const fileFolderSlice = createSlice({
-  name: 'fileFolder',
+  name: "fileFolder",
   initialState,
   reducers: {
-    clearFilesAndFolders:(state)=>{
-      state.folders= []
+    clearFilesAndFolders: (state) => {
+      state.folders = [];
     },
-    clearStudentFilesAndFolders:(state)=>{
+    clearStudentFilesAndFolders: (state) => {
       state.studentFilesAndFoldrs = [];
     },
-    clearMoveItemsArray:(state)=>{
+    clearMoveItemsArray: (state) => {
       state.moveItemsArray = [];
     },
     setSelectedFolders: (state, action) => {
-        const nonDuplicate = Array.from(new Set(action.payload)); 
-        state.selectedFolders = nonDuplicate;    
+      const nonDuplicate = Array.from(new Set(action.payload));
+      state.selectedFolders = nonDuplicate;
     },
-    clearSelectedIds:(state)=>{
+    clearSelectedIds: (state) => {
       state.selectedFolders = [];
-   },
-    updateFile:(state,action)=>{
-      const { id , url } = action.payload;
-        state.folders = updateFileUrl(state.folders,id, url);
-    }
-
+    },
+    updateFile: (state, action) => {
+      const { id, url } = action.payload;
+      state.folders = updateFileUrl(state.folders, id, url);
+    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(deleteFile.pending, (state) => {
-        state.fileStatus = 'loading'; 
-      })
+      // Delete File
+      .addCase(deleteFile.pending, (state) =>
+        handleAsyncActions(
+          state,
+          { type: "file/deleteFile/pending" },
+          "fileStatus"
+        )
+      )
       .addCase(deleteFile.fulfilled, (state, action) => {
-        state.fileStatus = 'succeeded'; 
-         const idsToDelete = new Set([
-          ...action.payload
-         ]);
-        state.folders = state.folders.filter(item => !idsToDelete.has(item._id));
+        const {
+          data,
+          message,
+          status,
+        } = action.payload;
+        const idsToDelete = new Set(data);
+        state.folders = state.folders.filter(
+          (item) => !idsToDelete.has(item._id)
+        );
+        state.globalStatus = status;
+        state.message = message;
       })
-      .addCase(deleteFile.rejected, (state, action) => {
-        state.fileStatus = 'failed'; 
-        state.error = action.payload;
-      })
-      .addCase(moveFile.pending, (state) => {
-        state.fileStatus = 'loading'; 
-      })
+      .addCase(deleteFile.rejected, (state, action) =>
+        handleAsyncActions(state, action, "fileStatus")
+      )
+
+      // Move File
+      .addCase(moveFile.pending, (state) =>
+        handleAsyncActions(
+          state,
+          { type: "file/moveFile/pending" },
+          "fileStatus"
+        )
+      )
       .addCase(moveFile.fulfilled, (state, action) => {
-        state.fileStatus = 'succeeded'; 
-        state.folders = state.folders.filter(file => !action.payload.includes(file._id));
+        handleAsyncActions(state, action, "fileStatus", "folders");
+        const idsToDelete = new Set(action.payload.data);
+        state.folders = state.folders.filter(
+          (item) => !idsToDelete.has(item._id)
+        );
       })
-      .addCase(moveFile.rejected, (state, action) => {
-        state.fileStatus = 'failed'; 
-        state.error = action.payload;
-      })
-      .addCase(uploadFile.pending, (state) => {
-        state.fileStatus = 'loading'; 
-      })
+      .addCase(moveFile.rejected, (state, action) =>
+        handleAsyncActions(state, action, "fileStatus")
+      )
+
+      // Upload File
+      .addCase(uploadFile.pending, (state) =>
+        handleAsyncActions(
+          state,
+          { type: "file/uploadFile/pending" },
+          "fileStatus"
+        )
+      )
       .addCase(uploadFile.fulfilled, (state, action) => {
-        state.fileStatus = 'succeeded';
-        state.folders = [...state.folders, ...action.payload.files];
-        state.fileStatus = 'idle';
+        handleAsyncActions(state, action, "fileStatus", "folders");
       })
-      .addCase(uploadFile.rejected, (state, action) => {
-        state.fileStatus = 'failed'; 
-        state.error = action.payload;
-      })
-      .addCase(downloadFile.pending, (state) => {
-        state.downloadStatus = 'loading'; 
-      })
-      .addCase(downloadFile.fulfilled, (state, action) => {
-        state.downloadStatus = 'succeeded'; 
-        state.downloadData = action.payload;
-      })
-      .addCase(downloadFile.rejected, (state, action) => {
-        state.downloadStatus = 'failed'; 
-        state.error = action.payload;
-      })
-      .addCase(deleteFolder.pending, (state) => {
-        state.folderStatus = 'loading'; 
-      })
-      .addCase(deleteFolder.fulfilled, (state, action) => {
-          state.folderStatus = 'succeeded'; 
-          const { filesAndDirectoriesToDelete } = action.payload;
-                const idsToDelete = new Set([
-              ...filesAndDirectoriesToDelete
-          ]);
-          state.folders = state.folders.filter(item => !idsToDelete.has(item._id));
-       })
-    
-      .addCase(deleteFolder.rejected, (state, action) => {
-        state.folderStatus = 'failed'; 
-        state.error = action.payload;
-        state.message = action.payload;
-        console.log(action.payload);
-      })
-      .addCase(createFolder.pending, (state) => {
-        state.folderStatus = 'loading'; 
-      })
-      .addCase(createFolder.fulfilled, (state, action) => {
-        state.folderStatus = 'succeeded'; 
-        state.folders = [...state.folders, action.payload];
-        const { name, _id } = action.payload
-        const newLabelObject = {label:name,path:_id}
-        state.moveItemsArray = [...state.moveItemsArray, newLabelObject];
-      })
-      .addCase(createFolder.rejected, (state, action) => {
-        state.folderStatus = 'failed'; 
-        state.error = action.payload;
-        state.message = action.payload;
-      })
-      .addCase(moveFolder.pending, (state) => {
-        state.folderStatus = 'loading'; 
-      })
-      .addCase(moveFolder.fulfilled, (state, action) => {
-        state.folderStatus = 'succeeded'; 
-        state.folders = state.folders.filter(folder => !action.payload.includes(folder._id));
-      })
-      .addCase(moveFolder.rejected, (state, action) => {
-        state.folderStatus = 'failed'; 
-        state.error = action.payload;
-      })
-      .addCase(renameFolder.pending, (state) => {
-        state.folderStatus = 'loading'; 
-      })
-      .addCase(renameFolder.fulfilled, (state, action) => {
-        state.folderStatus = 'succeeded'; 
-        const { _id, name } = action.payload;
-        state.folders = updateFolderName(state.folders, _id, name);
-        state.moveItemsArray = updateName(state.moveItemsArray, _id, name);
-        console.log(updateName(state.moveItemsArray, _id, name))
-      })
-      .addCase(renameFolder.rejected, (state, action) => {
-        state.folderStatus = 'failed'; 
-        state.error = action.payload;
-      })
-      .addCase(getAllFolders.pending, (state) => {
-        state.moveItemStatus = 'loading';
-      })
-      .addCase(getAllFolders.fulfilled, (state, action) => {
-        state.moveItemStatus = 'succeeded'; 
-        state.moveItemsArray = [...action.payload];
-      })
-      .addCase(getAllFolders.rejected, (state, action) => {
-        state.moveItemStatus = 'failed'; 
-        state.error = action.payload;
-      })
-      .addCase(getMainDirectories.pending, (state) => {
-        state.status = 'loading'; 
-      })
-      .addCase(getMainDirectories.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        const combinedFolders = [...state.folders, ...action.payload];
-        state.folders = Array.from(new Set(combinedFolders.map(folder => JSON.stringify(folder)))).map(folder => JSON.parse(folder));
-        let keepInStorage = storeIdsAndNameOfMainFoldersInStorage(action.payload);
-        localStorage.setItem('mainFolder', JSON.stringify(keepInStorage));
-      })
-      .addCase(getMainDirectories.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
+      .addCase(uploadFile.rejected, (state, action) =>
+        handleAsyncActions(state, action, "fileStatus")
+      )
 
-      .addCase(getAdirectory.pending, (state) => {
-        state.status = 'loading'; 
-      })
-      .addCase(getAdirectory.fulfilled, (state, action) => {
-        state.status = 'succeeded'; 
-        state.folders = action.payload
-      })
-      .addCase(getAdirectory.rejected, (state, action) => {
-        state.status = 'failed'; 
-        state.error = action.payload;
-      })
-
-      .addCase(receiveFile.pending, (state) => {
-        state.receiveFileStatus = 'loading'; 
-      })
+      // Receive File
+      .addCase(receiveFile.pending, (state) =>
+        handleAsyncActions(
+          state,
+          { type: "file/receiveFile/pending" },
+          "receiveFileStatus"
+        )
+      )
       .addCase(receiveFile.fulfilled, (state, action) => {
-        state.receiveFileStatus = 'succeeded';
+        const {
+          message,
+          status,
+        } = action.payload;
+        state.globalStatus = status;
+        state.message = message;
       })
-      .addCase(receiveFile.rejected, (state, action) => {
-        state.receiveFileStatus = 'failed';
-        state.error = action.payload;
-      })
+      .addCase(receiveFile.rejected, (state, action) =>
+        handleAsyncActions(state, action, "receiveFileStatus")
+      )
 
-      .addCase(generateSecretCode.pending, (state) => {
-        state.generateSecretCodeStatus = 'loading';
-      })
+      // Generate Secret Code
+      .addCase(generateSecretCode.pending, (state) =>
+        handleAsyncActions(
+          state,
+          { type: "file/generateSecretCode/pending" },
+          "generateSecretCodeStatus"
+        )
+      )
       .addCase(generateSecretCode.fulfilled, (state, action) => {
-        state.status = 'succeeded'; 
-        state.generateSecretCodeStatus = action.payload.secreteCode;
+        const {
+          data: { secreteCode },
+          message,
+          status,
+        } = action.payload;
+        state.globalStatus = status;
+        state.secreteCode = secreteCode;
+        state.message = message;
       })
-      .addCase(generateSecretCode.rejected, (state, action) => {
-        state.generateSecretCodeStatus = 'failed';
-        state.error = action.payload;
-      })
+      .addCase(generateSecretCode.rejected, (state, action) =>
+        handleAsyncActions(state, action, "generateSecretCodeStatus")
+      )
 
       // .addCase(downloadFile.pending, (state) => {
-      //   state.downloadStatus = 'loading';
+      //   state.downloadStatus = "loading";
       // })
       // .addCase(downloadFile.fulfilled, (state, action) => {
-      //   state.downloadStatus = 'succeeded'; 
+      //   state.downloadStatus = "succeeded";
+      //   state.downloadData = action.payload;
       // })
       // .addCase(downloadFile.rejected, (state, action) => {
-      //   state.downloadStatus = 'failed';
+      //   state.downloadStatus = "failed";
       //   state.error = action.payload;
-      // });
-
-      // .addMatcher(isFulfilled, (state) => {
-      //   // Reset statuses to idle after successful actions
-      //   state.fileStatus = 'idle';
-      //   state.folderStatus = 'idle';
-      //   state.downloadStatus = 'idle';
-      //   state.moveItemStatus = 'idle';
-      //   state.generateSecretCodeStatus = 'idle';
-      //   state.receiveFileStatus = 'idle';
       // })
-      // .addMatcher(isRejected, (state) => {
-      //   // Reset statuses to idle after rejected actions
-      //   state.fileStatus = 'idle';
-      //   state.folderStatus = 'idle';
-      //   state.downloadStatus = 'idle';
-      //   state.moveItemStatus = 'idle';
-      //   state.generateSecretCodeStatus = 'idle';
-      //   state.receiveFileStatus = 'idle';
-      // });
-  
-    }})
-  
-  export const { 
-    clearFilesAndFolders,
-    clearMoveItemsArray,
-    clearStudentFilesAndFolders,
-    setSelectedFolders,
-    clearSelectedIds,
-    updateFile
-  } = fileFolderSlice.actions;
 
-  export default fileFolderSlice.reducer;
-  
+      // Delete Folder
+      .addCase(deleteFolder.pending, (state) =>
+        handleFolderActions(
+          state,
+          { type: "file/deleteFolder/pending" },
+          "folderStatus"
+        )
+      )
+      .addCase(deleteFolder.fulfilled, (state, action) => {
+        const { data, message, status } = action.payload;
+        const idsToDelete = new Set(data);
+        state.folders = state.folders.filter(
+          (item) => !idsToDelete.has(item._id)
+        );
+        state.globalStatus = status;
+        state.message = message;
+      })
+      .addCase(deleteFolder.rejected, (state, action) =>
+        handleFolderActions(state, action, "folderStatus")
+      )
+
+      // Create Folder
+      .addCase(createFolder.pending, (state) =>
+        handleFolderActions(
+          state,
+          { type: "file/createFolder/pending" },
+          "folderStatus"
+        )
+      )
+      .addCase(createFolder.fulfilled, (state, action) => {
+        handleFolderActions(state, action, "folderStatus", "folders");
+        const newFolder = action.payload.data;
+        const newLabelObject = { label: newFolder?.name, path: newFolder?._id };
+        state.moveItemsArray = [...state.moveItemsArray, newLabelObject];
+      })
+      .addCase(createFolder.rejected, (state, action) =>
+        handleFolderActions(state, action, "folderStatus")
+      )
+
+      // Move Folder
+      .addCase(moveFolder.pending, (state) =>
+        handleFolderActions(
+          state,
+          { type: "file/moveFolder/pending" },
+          "folderStatus"
+        )
+      )
+      .addCase(moveFolder.fulfilled, (state, action) => {
+        handleFolderActions(state, action, "folderStatus", "folders");
+        const { data, message, status } = action.payload;
+        state.folders = state.folders.filter(
+          (folder) => !data.includes(folder._id)
+        );
+      })
+      .addCase(moveFolder.rejected, (state, action) =>
+        handleFolderActions(state, action, "folderStatus")
+      )
+
+      // Rename Folder
+      .addCase(renameFolder.pending, (state) =>
+        handleFolderActions(
+          state,
+          { type: "file/renameFolder/pending" },
+          "folderStatus"
+        )
+      )
+      .addCase(renameFolder.fulfilled, (state, action) => {
+        handleFolderActions(state, action, "folderStatus", "folders");
+        const { data, message, status } = action.payload;
+        state.folders = updateFolderName(state.folders, data._id, data.name);
+        state.moveItemsArray = updateName(
+          state.moveItemsArray,
+          data._id,
+          data.name
+        );
+      })
+      .addCase(renameFolder.rejected, (state, action) =>
+        handleFolderActions(state, action, "folderStatus")
+      )
+
+      // Get All Folders
+      .addCase(getAllFolders.pending, (state) =>
+        handleFolderActions(
+          state,
+          { type: "file/getAllFolders/pending" },
+          "moveItemStatus"
+        )
+      )
+      .addCase(getAllFolders.fulfilled, (state, action) => {
+        handleFolderActions(state, action, "moveItemStatus", "moveItemsArray");
+      })
+      .addCase(getAllFolders.rejected, (state, action) =>
+        handleFolderActions(state, action, "moveItemStatus")
+      )
+
+      // Get Main Directories
+      .addCase(getMainDirectories.pending, (state) =>
+        handleFolderActions(
+          state,
+          { type: "file/getMainDirectories/pending" },
+          "status"
+        )
+      )
+      .addCase(getMainDirectories.fulfilled, (state, action) => {
+        handleFolderActions(state, action, "status", "folders");
+        const combinedFolders = [...state.folders, ...action.payload.data];
+        state.folders = Array.from(
+          new Set(combinedFolders.map((folder) => JSON.stringify(folder)))
+        ).map((folder) => JSON.parse(folder));
+        let keepInStorage = storeIdsAndNameOfMainFoldersInStorage(
+          action.payload.data
+        );
+        localStorage.setItem("mainFolder", JSON.stringify(keepInStorage));
+      })
+      .addCase(getMainDirectories.rejected, (state, action) =>
+        handleFolderActions(state, action, "status")
+      )
+
+      // Get A Directory
+      .addCase(getAdirectory.pending, (state) =>
+        handleFolderActions(
+          state,
+          { type: "file/getAdirectory/pending" },
+          "status"
+        )
+      )
+      .addCase(getAdirectory.fulfilled, (state, action) => {
+        handleFolderActions(state, action, "status", "folders");
+      })
+      .addCase(getAdirectory.rejected, (state, action) =>
+        handleFolderActions(state, action, "status")
+      );
+  },
+});
+
+export const {
+  clearFilesAndFolders,
+  clearMoveItemsArray,
+  clearStudentFilesAndFolders,
+  setSelectedFolders,
+  clearSelectedIds,
+  updateFile,
+} = fileFolderSlice.actions;
+
+export default fileFolderSlice.reducer;

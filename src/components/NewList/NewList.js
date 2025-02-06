@@ -98,8 +98,8 @@ function NewList({
 
   useEffect(() => {
     if (initialFolderData?.length) {
-      const processedData = groupTimestamps(initialFolderData);
-      setFolderData(processedData);
+      // const processedData = groupTimestamps(initialFolderData);
+      setFolderData(initialFolderData);
     }
   }, [initialFolderData]);
 
@@ -265,7 +265,7 @@ function NewList({
 
   return (
     <div
-      className={`newlist-container ${isDarkMode ? "dark-mode" : ""}`}
+      className={`newlist-container glass ${isDarkMode ? "dark-mode" : ""}`}
       style={{
         color: isDarkMode ? "tranparent" : "black",
         background: isDarkMode ? "rgb(33,37,39)" : "#fff",
@@ -276,10 +276,10 @@ function NewList({
           component={Paper}
           sx={{ width: "100%", borderRadius: "none", }}
         >
-          <Table >
+          <Table  >
             <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox" sx={{...getCellStyles(isDarkMode)}}
+              <TableRow >
+                <TableCell padding="checkbox" sx={{...getCellStyles(isDarkMode),}}
                 >
                   <Checkbox
                     sx={getCellStyles(isDarkMode)}
@@ -334,9 +334,9 @@ function NewList({
                 </TableRow>
               )}
               {status === "succeeded" && folderData?.length > 0
-                ? folderData.map((folder) => (
+                ? folderData.map((folder,index) => (
                     <TableRow
-                      key={folder._id}
+                      key={index}
                       selected={selectedFolders.includes(folder._id)}
                       sx={{
                         backgroundColor: isDarkMode

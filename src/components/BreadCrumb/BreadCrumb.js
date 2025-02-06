@@ -18,14 +18,12 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode }) => {
     })
   },[])
     
-  
   useEffect(() => {
     const historyData = moveItemsArray.filter((history) =>
       history?.path.includes(directoryId)
     );
     dispatch(addBreadCrumb(historyData));
   }, [directoryId, moveItemsArray, dispatch]);
-
 
 
   const handleBreadcrumbClick = (event, path) => {

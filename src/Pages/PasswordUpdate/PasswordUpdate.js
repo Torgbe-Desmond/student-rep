@@ -1,20 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { TextField, Button, Container, Box, Typography, Snackbar, Alert, useMediaQuery } from '@mui/material';
-import './PasswordUpdate.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { getVerificationToken, updatePassword } from '../../Features/AuthSlice';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import {
+  TextField,
+  Button,
+  Container,
+  Box,
+  Typography,
+  Snackbar,
+  Alert,
+  useMediaQuery,
+  CircularProgress,
+} from "@mui/material";
+import "./PasswordUpdate.css";
+import { useDispatch, useSelector } from "react-redux";
+import { getVerificationToken, updatePassword } from "../../Features/AuthSlice";
+import { useNavigate, useParams } from "react-router-dom";
 
 const PasswordUpdate = () => {
-  const [passwords, setPasswords] = useState({ newPassword: '', confirmPassword: '' });
+  const [passwords, setPasswords] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('error');
-  const navigate = useNavigate()
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("error");
+  const updatePasswordStatus = useSelector(
+    (state) => state.auth.updatePasswordStatus
+  );
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { reference_Id } = useParams();
-  const verificationTokenStatus = useSelector((state) => state.auth.verificationTokenStatus);
-  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   useEffect(() => {
     if (reference_Id) {
@@ -22,30 +37,15 @@ const PasswordUpdate = () => {
     }
 
     return () => {
-      localStorage.removeItem('verificationToken');
+      localStorage.removeItem("verificationToken");
     };
   }, [dispatch, reference_Id]);
 
   useEffect(() => {
-    if (verificationTokenStatus === 'succeeded') {
-      setSnackbarMessage('Token verification successful');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
-      setTimeout(()=>{
-          navigate('/')
-      },3000)
-    } else if (verificationTokenStatus === 'failed') {
-      setSnackbarMessage('Token verification failed');
-      setSnackbarSeverity('error');
-      setOpenSnackbar(true);
-    } else if(verificationTokenStatus === 'succeeded'){
-      setSnackbarMessage('Password updated successfully');
-      setSnackbarSeverity('success');
-      setOpenSnackbar(true);
+    if (updatePasswordStatus === "succeeded") {
+      navigate("/");
     }
-  }, [verificationTokenStatus]);
-
-
+  }, [updatePasswordStatus]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,44 +57,44 @@ const PasswordUpdate = () => {
     const { newPassword, confirmPassword } = passwords;
 
     if (!newPassword || !confirmPassword) {
-      setSnackbarMessage('Both fields are required');
-      setSnackbarSeverity('error');
+      setSnackbarMessage("Both fields are required");
+      setSnackbarSeverity("error");
       setOpenSnackbar(true);
       return;
     }
 
     if (newPassword.length < 6) {
-      setSnackbarMessage('Password must be at least 6 characters long');
-      setSnackbarSeverity('error');
+      setSnackbarMessage("Password must be at least 6 characters long");
+      setSnackbarSeverity("error");
       setOpenSnackbar(true);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setSnackbarMessage('Passwords do not match');
-      setSnackbarSeverity('error');
+      setSnackbarMessage("Passwords do not match");
+      setSnackbarSeverity("error");
       setOpenSnackbar(true);
       return;
     }
 
     dispatch(updatePassword({ newPassword }));
-    setPasswords({ newPassword: '', confirmPassword: '' });
+    setPasswords({ newPassword: "", confirmPassword: "" });
   };
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
-  
+
   const darkMode = {
-    color: isDarkMode ? '#FFF' : '', 
-    '& .MuiInputBase-input': {
-      color: isDarkMode ? '#FFF' : '', 
-      background: isDarkMode ? '#555':''
+    color: isDarkMode ? "#FFF" : "",
+    "& .MuiInputBase-input": {
+      color: isDarkMode ? "#FFF" : "",
+      background: isDarkMode ? "#555" : "",
     },
-    '& .MuiInputBase-input::placeholder': {
-      color: isDarkMode ? '#FFF' : '',  
+    "& .MuiInputBase-input::placeholder": {
+      color: isDarkMode ? "#FFF" : "",
     },
- }
+  };
 
   return (
     <div className="password-update-container">
@@ -102,7 +102,11 @@ const PasswordUpdate = () => {
         <Box
           mt={4}
           p={4}
-          sx={{ background: '#FFF', borderRadius: '8px', backgroundColor: 'transparent' }}
+          sx={{
+            background: "#FFF",
+            borderRadius: "8px",
+            backgroundColor: "transparent",
+          }}
         >
           <Typography variant="h5" align="center" gutterBottom>
             Update Password
@@ -115,6 +119,7 @@ const PasswordUpdate = () => {
               type="password"
               value={passwords.newPassword}
               onChange={handleChange}
+              disabled={updatePasswordStatus === "loading"}
               fullWidth
               margin="normal"
             />
@@ -126,10 +131,21 @@ const PasswordUpdate = () => {
               value={passwords.confirmPassword}
               onChange={handleChange}
               fullWidth
+              disabled={updatePasswordStatus === "loading"}
               margin="normal"
             />
-            <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-              Update Password
+            <Button
+              type="submit"
+              sx={{ marginTop: 3, height: "50px" }}
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              {updatePasswordStatus === "loading" ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Update Password"
+              )}
             </Button>
           </form>
         </Box>
@@ -138,12 +154,12 @@ const PasswordUpdate = () => {
           open={openSnackbar}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         >
           <Alert
             onClose={handleSnackbarClose}
             severity={snackbarSeverity}
-            sx={{ width: '100%' }}
+            sx={{ width: "100%" }}
           >
             {snackbarMessage}
           </Alert>

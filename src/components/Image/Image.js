@@ -9,7 +9,6 @@ const Image = ({ file, handleToggleDialog }) => {
     setCurrentFile(file)
   },[file])
 
-
   return (
     <>
       <ImageHeader file={currentFile} handleToggleDialog={handleToggleDialog} />

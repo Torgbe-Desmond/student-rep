@@ -40,7 +40,6 @@ async function verifyEmail(email) {
 
 
 async function getVerificationToken(reference_Id) {
-    console.log('reference_Id',reference_Id)
     const response = await axiosInstance.get(`/auth/${reference_Id}/get-verification-token`);
     return response.data;
 }
@@ -58,7 +57,7 @@ async function updatePassword(newPassword) {
         {
           headers: {
             'Content-Type': 'application/json',
-             Authorization: `Bearer ${JSON.stringify(token)}`,
+             Authorization: `Bearer ${token}`,
           },
         }
       );

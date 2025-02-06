@@ -8,7 +8,6 @@ import { createFolder } from '../../Features/WorkSpace';
 function CreateFolder() {
     const dispatch = useDispatch();
     const [folderData, setFolderData] = useState({ name: '' });
-    const folderStatus = useSelector(state => state.work.folderStatus);
     const [isLoading, setIsLoading] = useState(false);
     const directoryId = useSelector(state => state.path.currentDirectory);
     const reference_Id = localStorage.getItem('reference_Id');  

@@ -7,6 +7,7 @@ import './Login.css';
 import { getAllFolders } from '../../Features/WorkSpace';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
+import { clearStack } from '../../Features/StackSlice';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -19,7 +20,12 @@ const Login = () => {
   const reference_Id = localStorage.getItem('reference_Id');
   const navigate = useNavigate();
   const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-  const location = useLocation();
+  const components = useSelector((state) => state.stack.components);
+
+
+  useEffect(()=>{
+    dispatch(clearStack())
+  },[components])
 
   useEffect(() => {
     if (reference_Id) {
@@ -88,7 +94,7 @@ const Login = () => {
           <ShareOutlinedIcon sx={{ fontSize: 50 }} />
           <FileCopyOutlinedIcon sx={{ fontSize: 50 }} />
         </Typography>
-        <Box mt={2} p={4}>
+        <Box mt={4} p={4}>
           <form onSubmit={handleSubmit}>
             <TextField
              sx={{

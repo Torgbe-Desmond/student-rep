@@ -6,8 +6,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import AutoplayVideo from "../AutoplayVideo/AutoplayVideo";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
-import { VideoSeekSlider } from "react-video-seek-slider";
-import "react-video-seek-slider/styles.css";
+
 
 function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -83,7 +82,7 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
     videoElement.addEventListener("canplay", handleCanPlay);
     videoElement.addEventListener("loadstart", handleLoadStart);
     videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
-    videoElement.addEventListener("timeupdate", handleTimeUpdate); // Update current time
+    videoElement.addEventListener("timeupdate", handleTimeUpdate); 
 
     if (videoElement) {
       observer.observe(videoElement);
@@ -137,16 +136,14 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
 
   let videoProgress = (currentTime / duration) * 100;
 
-
   const handleSeek = (time) => {
     const videoElement = videoRef.current;
     if (videoElement) {
-      videoElement.currentTime = time / 1000; // Convert to seconds
-      videoProgress = time / 1000
+      videoElement.currentTime = time / 1000;
+      videoProgress = time / 1000;
       setCurrentTime(time);
     }
   };
-
 
   return (
     <div className={`videoCard is-stuckToBottom`}>
@@ -177,19 +174,8 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
       </div>
 
       <div className="video-progress-bar">
-        
-      <VideoSeekSlider
-        max={duration}
-        className="video-progress-bar"
-        currentTime={currentTime}
-        onChange={handleSeek}
-        hideThumbTooltip={false}
-      />
-
         <div className="progress" style={{ width: `${videoProgress}%` }} />
-        
       </div>
-     
     </div>
   );
 }

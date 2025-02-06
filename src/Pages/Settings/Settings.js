@@ -17,7 +17,7 @@ const Settings = () => {
   const { selectedFolders: selectedFolderList, folders } = useSelector(
     (state) => state.work
   );
-  const globalActiveVideoRef = useRef(null); // Shared reference for the currently active video
+  const globalActiveVideoRef = useRef(null); 
   const dispatch = useDispatch();
   const isDarkMode = useSelector((state) => state.theme.darkMode);
 
@@ -82,7 +82,7 @@ const Settings = () => {
                 <Image handleToggleDialog={handleToggleDialog} file={file} />
               </div>
             )}
-            {["Folder", "Shared"].includes(file.mimetype.split("/")[0]) && (
+            {["application", "image","video"].includes(file.mimetype.split("/")[0]) && (
               <div className="support">
                 <div>Unsupported file type: {file.mimetype}</div>
                 <Button variant="contained" onClick={handleToggleDialog}>

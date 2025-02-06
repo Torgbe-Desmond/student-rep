@@ -12,8 +12,8 @@ const AutoplayVideo = ({
   fullScreen,
   isVideoLoading,
 }) => {
-  console.log('isVideoBuffering',isVideoBuffering)
-  console.log('isVideoLoading',isVideoLoading)
+  // console.log('isVideoBuffering',isVideoBuffering)
+  // console.log('isVideoLoading',isVideoLoading)
 
   return (
     <>

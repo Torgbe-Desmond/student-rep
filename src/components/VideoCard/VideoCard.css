@@ -42,7 +42,7 @@
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 100px;
+    bottom: 0;
     z-index: 999;
   }
   
@@ -78,6 +78,9 @@
   }
 
   
+  .ui-video-seek-slider .track {
+    padding: 1px;
+  }
 
 @media screen and (min-width:600px) {
     

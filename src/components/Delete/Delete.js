@@ -83,7 +83,7 @@ function Delete() {
 
   useEffect(() => {
     const { files, folders } =
-      filteredSelectedDataByMimetypeForOnlyFilesOrFolders();
+    filteredSelectedDataByMimetypeForOnlyFilesOrFolders();
     setSelectedFiles(files);
     setSelectedFolders(folders);
   }, [folders, files]);

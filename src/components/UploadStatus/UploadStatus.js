@@ -1,36 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Alert, CircularProgress, Snackbar } from '@mui/material';
+import { Alert, Snackbar, CircularProgress } from '@mui/material';
 import { io } from 'socket.io-client';
 import { useDispatch } from 'react-redux';
 import { updateFile } from '../../Features/WorkSpace';
 
 export default function UploadStatus({ reference_Id }) {
-  const [step, setStep] = useState(0);
-  const [totalSteps, setTotalSteps] = useState(5);
-  const [error, setError] = useState(null); 
   const [socket, setSocket] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
-let url = ['','http://localhost:5000']
+  const url = ["https://file-transfer-app-backend.vercel.app","http://localhost:5000"]
 
   useEffect(() => {
-    const newSocket = io("https://file-transfer-app-backend.vercel.app", {
-      transports: ["websocket"],
-      query: {
-        userData: JSON.stringify({
-          reference_Id,
-        }),
-      },
+    const newSocket = io(url[1], {
+      transports: ["polling", "websocket"],
+      query: { userData: JSON.stringify({ reference_Id }) },
     });
 
     setSocket(newSocket);
+    setLoading(false);
 
     return () => {
       newSocket.disconnect();
+      setSocket(null);
     };
-  }, [reference_Id, url]); 
+  }, [reference_Id]);
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
@@ -38,27 +34,24 @@ let url = ['','http://localhost:5000']
 
   useEffect(() => {
     if (!socket) return;
-    
+
     const onUploading = (data) => {
-      dispatch(updateFile(data.file));  
-      setSnackbarMessage(`${data?.process} for ${data?.file?.name}`);  
-      setOpenSnackbar(true);  
+      dispatch(updateFile(data.file));
+      setSnackbarMessage(`${data?.process} for ${data?.file?.name}`);
+      setOpenSnackbar(true);
     };
 
     socket.on('uploading', onUploading);
 
     return () => {
-      socket.off('uploading', onUploading); 
+      socket.off('uploading', onUploading);
     };
   }, [socket, dispatch]);
 
-  const formatFileName = (fileName) => {
-    if (!fileName) return 'No file';
-    return fileName.length > 20 ? `${fileName.slice(0, 17)}...` : fileName;
-  };
-
   return (
     <>
+      {loading && <CircularProgress sx={{ display: 'block', margin: 'auto' }} />}
+
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
