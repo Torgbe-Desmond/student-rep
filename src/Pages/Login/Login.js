@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearError, login } from '../../Features/AuthSlice';
 import { TextField, Button, Container, Box, CircularProgress, Snackbar, Alert, Typography, useMediaQuery } from '@mui/material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { getAllFolders } from '../../Features/WorkSpace';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
@@ -13,42 +13,49 @@ const Login = () => {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  
   const dispatch = useDispatch();
   const moveItemStatus = useSelector((state) => state.work.moveItemStatus);
   const status = useSelector((state) => state.auth.status);
   const error = useSelector((state) => state.auth.error);
   const reference_Id = localStorage.getItem('reference_Id');
+  
   const navigate = useNavigate();
-  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-  const components = useSelector((state) => state.stack.components);
+  const isDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
+  // Clear stack once when component mounts
+  useEffect(() => {
+    dispatch(clearStack());
+  }, []);
 
-  useEffect(()=>{
-    dispatch(clearStack())
-  },[components])
-
+  // Fetch folders when reference_Id changes
   useEffect(() => {
     if (reference_Id) {
       dispatch(getAllFolders({ reference_Id }));
     }
-  }, [status, reference_Id, dispatch]);
+  }, [reference_Id, dispatch]);
 
+  // Navigate when moveItemStatus succeeds
   useEffect(() => {
     if (moveItemStatus === 'succeeded' && reference_Id) {
       navigate(`/${reference_Id}/directories`);
     }
   }, [moveItemStatus, reference_Id, navigate]);
 
+  // Handle and display errors
   useEffect(() => {
     if (error) {
       setSnackbarMessage(error);
       setOpenSnackbar(true);
     }
+  }, [error]);
 
+  // Clear error on component unmount
+  useEffect(() => {
     return () => {
       dispatch(clearError());
     };
-  }, [error, dispatch]);
+  }, [dispatch]);
 
   const handleChange = (e) => {
     setCredentials({
@@ -88,25 +95,26 @@ const Login = () => {
   };
 
   return (
-    <div className={`login-container ${isDarkMode ? '':''}`}>
+    <div className={`login-container ${isDarkMode ? 'dark-mode' : ''}`}>
       <Container maxWidth="sm">
         <Typography variant="h4" align="center">
           <ShareOutlinedIcon sx={{ fontSize: 50 }} />
           <FileCopyOutlinedIcon sx={{ fontSize: 50 }} />
         </Typography>
+
         <Box mt={4} p={4}>
           <form onSubmit={handleSubmit}>
             <TextField
-             sx={{
-              color: isDarkMode ? '#FFF' : '', 
-              '& .MuiInputBase-input': {
+              sx={{
                 color: isDarkMode ? '#FFF' : '', 
-                background: isDarkMode ? '#555':''
-              },
-              '& .MuiInputBase-input::placeholder': {
-                color: isDarkMode ? '#FFF' : '',  
-              },
-            }}
+                '& .MuiInputBase-input': {
+                  color: isDarkMode ? '#FFF' : '', 
+                  background: isDarkMode ? '#555' : ''
+                },
+                '& .MuiInputBase-input::placeholder': {
+                  color: isDarkMode ? '#FFF' : '',  
+                },
+              }}
               placeholder="Email"
               name="email"
               value={credentials.email}
@@ -120,7 +128,7 @@ const Login = () => {
                 color: isDarkMode ? '#FFF' : '', 
                 '& .MuiInputBase-input': {
                   color: isDarkMode ? '#FFF' : '', 
-                  background: isDarkMode ? '#555':''
+                  background: isDarkMode ? '#555' : ''
                 },
                 '& .MuiInputBase-input::placeholder': {
                   color: isDarkMode ? '#FFF' : '',  
@@ -135,33 +143,31 @@ const Login = () => {
               margin="normal"
               disabled={status === 'loading'}
             />
+
             <Typography align="right" sx={{ margin: 2 }}>
-              <Link to="/forgot-password" variant="body2" className={`${isDarkMode ? 'switch' : ''}`}>
+              <Link to="/forgot-password" className={isDarkMode ? 'switch' : ''}>
                 Forgot Password?
               </Link>
             </Typography>
+
             <Button
               type="submit"
               variant="contained"
               color="primary"
               fullWidth
               disabled={status === 'loading'}
-              style={{ position: 'relative', marginTop: 5,height:'50px' }}
+              sx={{ mt: 1, height: '50px' }}
             >
-              {status === 'loading' ? (
-                <CircularProgress size={24} color="inherit" />
-              ) : (
-                'Login'
-              )}
+              {status === 'loading' ? <CircularProgress size={24} color="inherit" /> : 'Login'}
             </Button>
           </form>
         </Box>
 
-           <Typography align="center">
-              <Link to="/register" variant="body2" className={`${isDarkMode ? 'switch' : ''}`}>
-                Register
-              </Link>
-            </Typography>
+        <Typography align="center">
+          <Link to="/register" className={isDarkMode ? 'switch' : ''}>
+            Register
+          </Link>
+        </Typography>
       </Container>
 
       <Snackbar
