@@ -12,7 +12,7 @@ function VideoHeader({ toggleMute, fileName, isMuted, handleToggleDialog }) {
         sx={{
           fontSize: "32px",
           cursor: "pointer",
-          textShadow: " 2px 2px 4px rgba(0, 0, 0, 0.5)",
+          filter: "drop-shadow(2px 2px 4px rgba(9, 8, 8, 0.5))",
         }}
         onClick={handleToggleDialog}
       />
@@ -26,8 +26,7 @@ function VideoHeader({ toggleMute, fileName, isMuted, handleToggleDialog }) {
           sx={{
             fontSize: "32px",
             cursor: "pointer",
-            zIndex: 999,
-            textShadow: " 2px 2px 4px rgba(9, 8, 8, 0.5)",
+            filter: "drop-shadow(2px 2px 4px rgba(9, 8, 8, 0.5))",
           }}
           onClick={toggleMute}
         />
@@ -36,8 +35,7 @@ function VideoHeader({ toggleMute, fileName, isMuted, handleToggleDialog }) {
           sx={{
             fontSize: "32px",
             cursor: "pointer",
-            zIndex: 999,
-            textShadow: " 2px 2px 4px rgba(0, 0, 0, 0.5)",
+            filter: "drop-shadow(2px 2px 4px rgba(9, 8, 8, 0.5))",
           }}
           onClick={toggleMute}
         />

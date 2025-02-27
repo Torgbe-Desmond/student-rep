@@ -19,6 +19,7 @@ import { useMediaQuery, ThemeProvider } from "@mui/material";
 import { clearAuthErrorMessage, clearAuthMessage } from "./Features/AuthSlice";
 import { clearErrorMessage, clearMessage } from "./Features/WorkSpace";
 import TabComponent from "./components/Tab/Tab";
+import ButtonTabComponent from "./components/BottomTab/BottomTab";
 
 const IThemeMode = {
   LIGHT: "light",
@@ -53,6 +54,8 @@ function App() {
   const SYSTEM_THEME = useMediaQuery("(prefers-color-scheme: dark)")
     ? IThemeMode.DARK
     : IThemeMode.LIGHT;
+
+  const isMobile = useMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     if (authSuccessMessage) setSuccessMessage(authSuccessMessage);
@@ -130,7 +133,9 @@ function App() {
           <div>
             <Routes>
               {/* Protected Route */}
-              <Route element={<TabComponent />}>
+              <Route
+                element={<TabComponent/>}
+              >
                 <Route path="/:reference_Id/directories" element={<Main />} />
                 <Route
                   path="/:reference_Id/directories/:directoryId"
