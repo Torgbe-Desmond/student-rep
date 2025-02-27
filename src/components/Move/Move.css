@@ -53,6 +53,14 @@
     box-sizing: border-box;
 }
 
+.available-folders ul li {
+    padding: 8px ;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
 /* Individual folder item styling */
 .f-item {
     display: flex;

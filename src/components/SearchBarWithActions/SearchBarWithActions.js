@@ -17,6 +17,7 @@ import handleStack from "../HandleStack/HandleStack";
 import { useParams } from "react-router-dom";
 import { toggleBottomTab } from "../../Features/PathSlice";
 import SlideshowIcon from "@mui/icons-material/Slideshow";
+import SearchIcon from '@mui/icons-material/Search';
 
 function SearchBarWithActions({
   folderData,
@@ -69,6 +70,13 @@ function SearchBarWithActions({
       color: "secondary",
       disabled: null,
       action: () => handleAction("Logout"),
+      label: "Logout",
+    },
+    {
+      iconType: <SearchIcon />,
+      color: "secondary",
+      disabled: null,
+      action: () => 0,
       label: "Logout",
     },
   ];
@@ -166,7 +174,7 @@ function SearchBarWithActions({
 
   return (
     <div className={`search-options ${isDarkMode ? "dark-mode" : "border-bottom"}`}>
-      <TextField
+      {/* <TextField
         sx={{
           color: isDarkMode ? "#FFF" : "",
           "& .MuiInputBase-input": {
@@ -182,7 +190,7 @@ function SearchBarWithActions({
         variant="outlined"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      /> */}
 
       <div className="button-group">
         {buttonConfigs.map((config, index) => (

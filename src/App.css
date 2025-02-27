@@ -25,13 +25,13 @@ body, html {
   }
 
   .dark-mode {
-    background-color: rgb(33,37,39);;
+    background:rgb(50, 53, 55);
     color: white;
   } 
 }
 
 .switch {
-  background:rgb(33,37,39);
+  background:rgb(50, 53, 55);
   color: #7e7d7d;
   border:'1px solid #ccc'
 }
@@ -44,13 +44,13 @@ body, html {
 /* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   .dark-mode {
-    background-color: rgb(33,37,39);
+    background:rgb(50, 53, 55);
     color: white;
   } 
 }
 
 .dark-mode {
-  background-color: rgb(33,37,39);
+  background:rgb(50, 53, 55);
   color: white;
 } 
 

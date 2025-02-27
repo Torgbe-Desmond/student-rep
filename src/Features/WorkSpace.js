@@ -16,6 +16,7 @@ const initialState = {
   status: "idle",
   moveItemStatus: "idle",
   generateSecretCodeStatus: "idle",
+  searchStatus:"idle",
   mainFolders: [],
   selectedFolders: null,
   secreteCode: "",
@@ -24,6 +25,7 @@ const initialState = {
   statusCode: null,
   message: "",
   workspaceErrorMessage: "",
+  searchResults:[]
 };
 
 const updateFolderName = (folders, id, newName) => {
@@ -328,6 +330,27 @@ export const getAdirectory = createAsyncThunk(
   }
 );
 
+
+// ------------------------------------------------------------------------
+
+export const searchFilesOrDirectories = createAsyncThunk(
+  "folder/search",
+  async ({ reference_Id, searchTerm }, thunkAPI) => {
+    try {
+      const response = await FolderService.search(
+        reference_Id,
+        searchTerm
+      );
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+
+
 const fileFolderSlice = createSlice({
   name: "fileFolder",
   initialState,
@@ -337,6 +360,12 @@ const fileFolderSlice = createSlice({
     },
     clearStudentFilesAndFolders: (state) => {
       state.studentFilesAndFoldrs = [];
+    },
+    clearMessage:(state)=>{
+      state.message = ""
+    },
+    clearErrorMessage:(state)=>{
+      state.workspaceErrorMessage = ""
     },
     clearMoveItemsArray: (state) => {
       state.moveItemsArray = [];
@@ -352,9 +381,34 @@ const fileFolderSlice = createSlice({
       const { id, url } = action.payload;
       state.folders = updateFileUrl(state.folders, id, url);
     },
+    clearSearchTerm:(state)=>{
+      state.searchResults = []
+    }
   },
   extraReducers: (builder) => {
     builder
+      //Search
+      .addCase(searchFilesOrDirectories.pending, (state) =>
+        handleAsyncActions(
+          state,
+          { type: "file/search/pending" },
+          "searchStatus"
+        )
+      )
+      .addCase(searchFilesOrDirectories.fulfilled, (state, action) => {
+        const {
+          data,
+          message,
+          status,
+        } = action.payload;
+        state.searchResults = data
+        state.globalStatus = status;
+        state.message = message;
+      })
+      .addCase(searchFilesOrDirectories.rejected, (state, action) =>
+        handleAsyncActions(state, action, "searchStatus")
+      )
+
       // Delete File
       .addCase(deleteFile.pending, (state) =>
         handleAsyncActions(
@@ -610,6 +664,9 @@ export const {
   setSelectedFolders,
   clearSelectedIds,
   updateFile,
+  clearMessage,
+  clearErrorMessage,
+  clearSearchTerm
 } = fileFolderSlice.actions;
 
 export default fileFolderSlice.reducer;

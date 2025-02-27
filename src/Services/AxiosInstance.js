@@ -1,11 +1,11 @@
 import axios from "axios";
 const url = [
-  "https://file-transfer-app-backend.vercel.app/api/v1",
+  "https://file-transfer-app-backend.onrender.com/api/v1",
   "http://localhost:5000/api/v1",
 ];
 
 const axiosInstance = axios.create({
-  baseURL: url[0],
+  baseURL: url[1],
   headers: {
     "Content-Type": "application/json",
   },

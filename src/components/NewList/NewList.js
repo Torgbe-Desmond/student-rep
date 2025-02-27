@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -25,6 +25,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./NewList.css";
 import { toggleDarkMode } from "../../Features/ThemeSlice";
+import ReusableTable from "../Table/Table";
 
 const getFilteredData = (folderData, selectedFolders) => ({
   files: folderData?.filter(
@@ -59,6 +60,12 @@ function NewList({
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const dispatch = useDispatch();
+  const targetRef = useRef(null);
+
+
+  useEffect(()=>{
+    handleScroll()
+  },[folderData])
 
   useEffect(() => {
     setFolderData(initialFolderData);
@@ -102,6 +109,12 @@ function NewList({
       setFolderData(initialFolderData);
     }
   }, [initialFolderData]);
+
+  const handleScroll = () => {
+    if (targetRef.current) {
+      targetRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const groupTimestamps = (data) => {
     const grouped = {};
@@ -250,8 +263,8 @@ function NewList({
   };
 
   const getCellStyles = (isDarkMode) => ({
-    backgroundColor: isDarkMode ? "rgb(33,37,39)" : "#fff",
-    color: isDarkMode ? "white" : "black",
+    // backgroundColor: isDarkMode ? "rgb(33,37,39)" : "#fff",
+    // color: isDarkMode ? "white" : "black",
   });
 
   const toggleDarkModeParent = () => {
@@ -264,25 +277,18 @@ function NewList({
   };
 
   return (
-    <div
-      className={`newlist-container glass ${isDarkMode ? "dark-mode" : ""}`}
-      style={{
-        color: isDarkMode ? "tranparent" : "black",
-        background: isDarkMode ? "rgb(33,37,39)" : "#fff",
-      }}
-    >
+    <div className={`newlist-container glass ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="files">
-        <TableContainer
+        {/* <TableContainer
+          // ref={targetRef}
           component={Paper}
-          sx={{ width: "100%", borderRadius: "none", }}
+          sx={{ width: "100%", borderRadius: "none" }}
         >
-          <Table  >
+          <Table>
             <TableHead>
-              <TableRow >
-                <TableCell padding="checkbox" sx={{...getCellStyles(isDarkMode),}}
-                >
+              <TableRow>
+                <TableCell padding="checkbox">
                   <Checkbox
-                    sx={getCellStyles(isDarkMode)}
                     indeterminate={
                       selectedFolders?.length > 0 &&
                       selectedFolders?.length < folderData?.length
@@ -293,7 +299,7 @@ function NewList({
                     }
                     onChange={handleSelectAll}
                   />
-                </TableCell >
+                </TableCell>
                 {[
                   "Status",
                   "Folder",
@@ -302,31 +308,21 @@ function NewList({
                   "Items",
                   "Last Modified",
                 ].map((header) => (
-                  <TableCell key={header} sx={getCellStyles(isDarkMode)}>
-                    {header}
-                  </TableCell>
+                  <TableCell key={header}>{header}</TableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
               {status === "loading" && (
                 <TableRow>
-                  <TableCell
-                    sx={getCellStyles(isDarkMode)}
-                    colSpan={12}
-                    align="center"
-                  >
+                  <TableCell colSpan={12} align="center">
                     <CircularProgress />
                   </TableCell>
                 </TableRow>
               )}
               {status === "failed" && (
                 <TableRow>
-                  <TableCell
-                    sx={getCellStyles(isDarkMode)}
-                    colSpan={12}
-                    align="center"
-                  >
+                  <TableCell colSpan={12} align="center">
                     <Typography color="error">
                       {error || "Failed to load folders"}
                     </Typography>
@@ -334,7 +330,7 @@ function NewList({
                 </TableRow>
               )}
               {status === "succeeded" && folderData?.length > 0
-                ? folderData.map((folder,index) => (
+                ? folderData.map((folder, index) => (
                     <TableRow
                       key={index}
                       selected={selectedFolders.includes(folder._id)}
@@ -347,22 +343,15 @@ function NewList({
                         },
                       }}
                     >
-                      <TableCell
-                        sx={getCellStyles(isDarkMode)}
-                        padding="checkbox"
-                      >
+                      <TableCell padding="checkbox">
                         <Checkbox
-                          sx={getCellStyles(isDarkMode)}
                           checked={selectedFolders.includes(folder._id)}
                           onChange={() => toggleFolderSelection(folder._id)}
                         />
                       </TableCell>
-                      <TableCell sx={getCellStyles(isDarkMode)}>
-                        {renderStatus(folder)}
-                      </TableCell>
+                      <TableCell>{renderStatus(folder)}</TableCell>
                       <TableCell
                         sx={{
-                          ...getCellStyles(isDarkMode),
                           cursor:
                             folder.mimetype === "Shared"
                               ? "pointer"
@@ -383,13 +372,9 @@ function NewList({
                       >
                         {folder.name}
                       </TableCell>
-                      <TableCell sx={getCellStyles(isDarkMode)}>
-                        {folder.mimetype}
-                      </TableCell>
-                      <TableCell sx={getCellStyles(isDarkMode)}>
-                        {handleFileSize(folder)}
-                      </TableCell>
-                      <TableCell sx={getCellStyles(isDarkMode)}>
+                      <TableCell>{folder.mimetype}</TableCell>
+                      <TableCell>{handleFileSize(folder)}</TableCell>
+                      <TableCell>
                         {new Date(folder.lastUpdated).toLocaleDateString()}
                       </TableCell>
                     </TableRow>
@@ -397,18 +382,30 @@ function NewList({
                 : status === "succeeded" &&
                   folderData?.length === 0 && (
                     <TableRow>
-                      <TableCell
-                        sx={getCellStyles(isDarkMode)}
-                        colSpan={12}
-                        align="center"
-                      >
+                      <TableCell colSpan={12} align="center">
                         <Typography>No folders available</Typography>
                       </TableCell>
                     </TableRow>
                   )}
             </TableBody>
           </Table>
-        </TableContainer>
+        </TableContainer> */}
+        <ReusableTable
+          selectedFolders={selectedFolders}
+          setSelectedFolders={setSelectedFolders}
+          handleSelectAll={handleSelectAll}
+          isLoading={status}
+          error={error}
+          renderIcon={renderIcon}
+          isDarkMode={isDarkMode}
+          folderData={folderData}
+          toggleFolderSelection={toggleFolderSelection}
+          renderStatus={renderStatus}
+          handleCopyToClipboard={handleCopyToClipboard}
+          getCellStyles={getCellStyles}
+          handleNavigate={handleNavigate}
+          handleFileSize={handleFileSize}
+        />
       </div>
 
       {status === "failed" && (

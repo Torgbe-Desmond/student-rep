@@ -10,6 +10,7 @@
   box-sizing: border-box;
   overflow: scroll;
   overflow-x: hidden;
+  margin-bottom: 75px;
 }
 
 .search-input { 

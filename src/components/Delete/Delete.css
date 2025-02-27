@@ -53,12 +53,13 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 10px;
+    overflow-y: scroll;
 }
 
 .selected-ids ul li {
-    padding: 8px;
+    padding: 8px ;
     margin-bottom: 5px;
-    border-radius: 4px;
+    border-bottom: 1px solid #ccc;
     font-size: 14px;
     transition: background-color 0.3s ease;
 }
@@ -76,5 +77,9 @@
     border-radius: 8px;
     width: 400px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.selected-ids ul {
+    max-height: 250px;
 }
 }

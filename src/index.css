@@ -1,4 +1,4 @@
-:root {
+  :root {
   --direction: ltr;
   --disabled-opacity: 0.3;
   --base-height-multiplier: 8;
@@ -86,12 +86,10 @@ code {
   align-content: center;
   position: fixed;
   width: 100%;
-  margin-top: -100px;
   z-index: 999;
 }
 
 .main {
-  margin-top: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -140,7 +138,7 @@ code {
   }
 
   .main {
-    margin-top: 50px;
+    margin-top: -20px;
     display: flex;
     justify-content: center;
     align-items: center;

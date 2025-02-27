@@ -149,7 +149,7 @@ function Delete() {
           </Button>
         </div>
         <div className="selected-ids">
-          <h4>{isLoading ? "Deleting items..." : "Items to be deleted:"}</h4>
+          <h4>{isLoading ? `Deleting ${files.length} items...` : `${files.length} Items to be deleted:`}</h4>
           {isLoading ? (
             <LinearProgress />
           ) : (

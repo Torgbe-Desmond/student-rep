@@ -40,7 +40,7 @@ const Settings = () => {
 
   const handleToggleDialog = () => {
     dispatch(toggleBottomTab());
-    handleStackClear(dispatch);
+    // handleStackClear(dispatch);
   };
 
   return (
@@ -82,7 +82,7 @@ const Settings = () => {
                 <Image handleToggleDialog={handleToggleDialog} file={file} />
               </div>
             )}
-            {["application", "image","video"].includes(file.mimetype.split("/")[0]) && (
+            {!["application", "image","video"].includes(file.mimetype.split("/")[0]) && (
               <div className="support">
                 <div>Unsupported file type: {file.mimetype}</div>
                 <Button variant="contained" onClick={handleToggleDialog}>

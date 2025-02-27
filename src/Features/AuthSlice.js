@@ -148,6 +148,12 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    clearAuthMessage:(state)=>{
+      state.message = ""
+    },
+    clearAuthErrorMessage:(state)=>{
+      state.errorMessage = null
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -158,7 +164,6 @@ const authSlice = createSlice({
         const {
           data: { reference_Id, token },
           message,
-          success,
         } = action.payload;
         state.status = "succeeded";
         state.reference_Id = reference_Id;
@@ -167,10 +172,8 @@ const authSlice = createSlice({
         localStorage.setItem("reference_Id", reference_Id);
       })
       .addCase(login.rejected, (state, action) => {
-        console.log(action.payload);
         const {
           error: { message, code },
-          success,
         } = action.payload;
         state.code = code
         state.status = "failed";
@@ -184,7 +187,6 @@ const authSlice = createSlice({
         const {
           data: { reference_Id, token },
           message,
-          success,
         } = action.payload;
         state.registerStatus = "succeeded";
         state.reference_Id = reference_Id;
@@ -195,7 +197,6 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         const {
           error: { message, code },
-          success,
         } = action.payload;
         state.registerStatus = "failed";
         state.errorMessage = message;
@@ -215,7 +216,6 @@ const authSlice = createSlice({
       .addCase(logout.rejected, (state, action) => {
         const {
           error: { message, code },
-          success,
         } = action.payload;
         state.logoutStatus = "failed";
         state.errorMessage = message;
@@ -236,7 +236,6 @@ const authSlice = createSlice({
       .addCase(verifyEmail.rejected, (state, action) => {
         const {
           error: { message, code },
-          success,
         } = action.payload;
         state.verifyEmailStatus = "failed";
         state.errorMessage = message;
@@ -250,7 +249,6 @@ const authSlice = createSlice({
       .addCase(updatePassword.fulfilled, (state, action) => {
         const {
           message,
-          success,
         } = action.payload;
         state.updatePasswordStatus = "succeeded";
         state.message = message;
@@ -258,7 +256,6 @@ const authSlice = createSlice({
       .addCase(updatePassword.rejected, (state, action) => {
         const {
           error: { message, code },
-          success,
         } = action.payload;
         state.updatePasswordStatus = "failed";
         state.errorMessage = message;
@@ -273,7 +270,6 @@ const authSlice = createSlice({
         const {
           data :{ token },
           message,
-          success,
         } = action.payload;
         state.verificationTokenStatus = "succeeded";
         state.message = message;
@@ -282,7 +278,6 @@ const authSlice = createSlice({
       .addCase(getVerificationToken.rejected, (state, action) => {
         const {
           error: { message, code },
-          success,
         } = action.payload;
         state.verificationTokenStatus = "failed";
         state.errorMessage = message;
@@ -291,5 +286,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setAuthData, clearAuthData, clearError } = authSlice.actions;
+export const { setAuthData, clearAuthData, clearError, clearAuthMessage,clearAuthErrorMessage } = authSlice.actions;
 export default authSlice.reducer;

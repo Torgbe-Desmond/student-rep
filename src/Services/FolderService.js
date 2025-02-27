@@ -63,6 +63,12 @@ async function subscribeToSubscription(data) {
     const response = await axiosInstance.post(`/subscribed`, data);
     return response.data;
 }
+// /:reference_Id/search/:searchItem
+// Function to search file files or directories
+async function search(reference_Id,searchTerm){
+    const response = await axiosInstance.get(`/${reference_Id}/search/${searchTerm}`);
+    return response.data;
+}
 
 export const FolderService = {
     createDirectory,
@@ -75,4 +81,5 @@ export const FolderService = {
     getSubscriptionsByDirectoryId,
     renameDirectory,
     subscribeToSubscription,
+    search
 };
