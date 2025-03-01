@@ -50,6 +50,7 @@ function App() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [theme, setTheme] = useState(AppLightTheme);
   const [themeMode, setThemeMode] = useState(IThemeMode.SYSTEM);
+  const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const SYSTEM_THEME = useMediaQuery("(prefers-color-scheme: dark)")
     ? IThemeMode.DARK
@@ -126,6 +127,16 @@ function App() {
     setErrorMessage(null);
   };
 
+  useEffect(() => {
+    const themeColorMeta = document.querySelector("meta[name='theme-color']");
+    if (themeColorMeta) {
+      themeColorMeta.setAttribute(
+        "content",
+        isDarkMode ? "background:rgb(50, 53, 55)" : "#ffffff"
+      );
+    }
+  }, [isDarkMode]);
+
   return (
     <ThemeContext.Provider value={{ theme, switchThemeMode }}>
       <ThemeProvider theme={theme}>
@@ -133,9 +144,7 @@ function App() {
           <div>
             <Routes>
               {/* Protected Route */}
-              <Route
-                element={<TabComponent/>}
-              >
+              <Route element={<TabComponent />}>
                 <Route path="/:reference_Id/directories" element={<Main />} />
                 <Route
                   path="/:reference_Id/directories/:directoryId"

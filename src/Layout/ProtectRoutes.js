@@ -1,19 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Navigate, Outlet, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  clearFilesAndFolders,
-  getAdirectory,
-  getAllFolders,
-  getMainDirectories,
-} from "../Features/WorkSpace";
-import { restoreBreadCrumbs, setCurrentDirectory } from "../Features/PathSlice";
-import handleStack from "../components/HandleStack/HandleStack";
-import SearchBarWithActions from "../components/SearchBarWithActions/SearchBarWithActions";
 import "../index.css";
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, } from "@mui/material";
 import BasicSpeedDial from "../components/SpeedDial/SpeedDial";
-import UploadStatus from "../components/UploadStatus/UploadStatus";
 
 const ProtectRoutes = ({
   token,

@@ -62,10 +62,9 @@ function NewList({
   const dispatch = useDispatch();
   const targetRef = useRef(null);
 
-
-  useEffect(()=>{
-    handleScroll()
-  },[folderData])
+  useEffect(() => {
+    handleScroll();
+  }, [folderData]);
 
   useEffect(() => {
     setFolderData(initialFolderData);
@@ -112,7 +111,7 @@ function NewList({
 
   const handleScroll = () => {
     if (targetRef.current) {
-      targetRef.current.scrollIntoView({ behavior: 'smooth' });
+      targetRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -279,117 +278,6 @@ function NewList({
   return (
     <div className={`newlist-container glass ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="files">
-        {/* <TableContainer
-          // ref={targetRef}
-          component={Paper}
-          sx={{ width: "100%", borderRadius: "none" }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    indeterminate={
-                      selectedFolders?.length > 0 &&
-                      selectedFolders?.length < folderData?.length
-                    }
-                    checked={
-                      selectedFolders?.length === folderData?.length &&
-                      folderData?.length > 0
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                {[
-                  "Status",
-                  "Folder",
-                  "Name",
-                  "Mime Type",
-                  "Items",
-                  "Last Modified",
-                ].map((header) => (
-                  <TableCell key={header}>{header}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {status === "loading" && (
-                <TableRow>
-                  <TableCell colSpan={12} align="center">
-                    <CircularProgress />
-                  </TableCell>
-                </TableRow>
-              )}
-              {status === "failed" && (
-                <TableRow>
-                  <TableCell colSpan={12} align="center">
-                    <Typography color="error">
-                      {error || "Failed to load folders"}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-              {status === "succeeded" && folderData?.length > 0
-                ? folderData.map((folder, index) => (
-                    <TableRow
-                      key={index}
-                      selected={selectedFolders.includes(folder._id)}
-                      sx={{
-                        backgroundColor: isDarkMode
-                          ? "#444"
-                          : folder.backgroundColor,
-                        "&:hover": {
-                          backgroundColor: isDarkMode ? "#555" : "#f5f5f5",
-                        },
-                      }}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedFolders.includes(folder._id)}
-                          onChange={() => toggleFolderSelection(folder._id)}
-                        />
-                      </TableCell>
-                      <TableCell>{renderStatus(folder)}</TableCell>
-                      <TableCell
-                        sx={{
-                          cursor:
-                            folder.mimetype === "Shared"
-                              ? "pointer"
-                              : "default",
-                        }}
-                        onClick={() => handleCopyToClipboard(folder)}
-                      >
-                        {renderIcon(folder.mimetype)}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          ...getCellStyles(isDarkMode),
-                          cursor: "pointer",
-                        }}
-                        onClick={() =>
-                          handleNavigate(folder._id, folder.mimetype)
-                        }
-                      >
-                        {folder.name}
-                      </TableCell>
-                      <TableCell>{folder.mimetype}</TableCell>
-                      <TableCell>{handleFileSize(folder)}</TableCell>
-                      <TableCell>
-                        {new Date(folder.lastUpdated).toLocaleDateString()}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                : status === "succeeded" &&
-                  folderData?.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={12} align="center">
-                        <Typography>No folders available</Typography>
-                      </TableCell>
-                    </TableRow>
-                  )}
-            </TableBody>
-          </Table>
-        </TableContainer> */}
         <ReusableTable
           selectedFolders={selectedFolders}
           setSelectedFolders={setSelectedFolders}

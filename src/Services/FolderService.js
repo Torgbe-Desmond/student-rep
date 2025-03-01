@@ -70,6 +70,12 @@ async function search(reference_Id,searchTerm){
     return response.data;
 }
 
+async function searchHistory(reference_Id){
+    const response = await axiosInstance.get(`/${reference_Id}/search`);
+    return response.data;
+}
+
+
 export const FolderService = {
     createDirectory,
     getMainDirectories,
@@ -81,5 +87,6 @@ export const FolderService = {
     getSubscriptionsByDirectoryId,
     renameDirectory,
     subscribeToSubscription,
-    search
+    search,
+    searchHistory
 };

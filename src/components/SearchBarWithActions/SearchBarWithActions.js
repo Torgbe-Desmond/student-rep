@@ -18,6 +18,7 @@ import { useParams } from "react-router-dom";
 import { toggleBottomTab } from "../../Features/PathSlice";
 import SlideshowIcon from "@mui/icons-material/Slideshow";
 import SearchIcon from '@mui/icons-material/Search';
+import { toggleSearch } from "../../Features/StackSlice";
 
 function SearchBarWithActions({
   folderData,
@@ -72,13 +73,13 @@ function SearchBarWithActions({
       action: () => handleAction("Logout"),
       label: "Logout",
     },
-    {
-      iconType: <SearchIcon />,
-      color: "secondary",
-      disabled: null,
-      action: () => 0,
-      label: "Logout",
-    },
+    // {
+    //   iconType: <SearchIcon />,
+    //   color: "secondary",
+    //   disabled: null,
+    //   action: () => dispatch(toggleSearch()),
+    //   label: "Logout",
+    // },
   ];
 
   const buttonConfigs = [
@@ -205,7 +206,7 @@ function SearchBarWithActions({
         ))}
       </div>
       <div className="logout">
-        {logout.map((config, index) => (
+        { logout.map((config, index) => (
           <ButtonIcon
             key={index}
             iconType={config.iconType}

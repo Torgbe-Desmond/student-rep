@@ -17,10 +17,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import {
   clearSearchTerm,
+  getSearchHistory,
   searchFilesOrDirectories,
 } from "../../Features/WorkSpace";
 import ClearIcon from "@mui/icons-material/Clear";
-import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 import "./Public.css";
 
 function Public() {
@@ -35,6 +36,7 @@ function Public() {
       if (searchTerm) {
         dispatch(searchFilesOrDirectories({ reference_Id, searchTerm }));
       }
+      dispatch(getSearchHistory({ reference_Id }));
     }, 500);
     if (searchTerm === "") {
       dispatch(clearSearchTerm());
@@ -89,12 +91,12 @@ function Public() {
         {searchTerm && (
           <TableContainer
             component={Paper}
-            sx={{ width: "400px", borderRadius: "none" , cursor:"pointer"}}
+            sx={{ width: "400px", borderRadius: "none", cursor: "pointer" }}
           >
             <Table>
               <TableBody>
-                {searchResults.map((item) => (
-                  <TableRow key={item.id}>
+                {searchResults.map((item,index) => (
+                  <TableRow key={index}>
                     <TableCell>{item.name}</TableCell>
                   </TableRow>
                 ))}

@@ -16,7 +16,7 @@ const initialState = {
   status: "idle",
   moveItemStatus: "idle",
   generateSecretCodeStatus: "idle",
-  searchStatus:"idle",
+  searchStatus: "idle",
   mainFolders: [],
   selectedFolders: null,
   secreteCode: "",
@@ -25,7 +25,8 @@ const initialState = {
   statusCode: null,
   message: "",
   workspaceErrorMessage: "",
-  searchResults:[]
+  searchResults: [],
+  searchHistory: [],
 };
 
 const updateFolderName = (folders, id, newName) => {
@@ -330,17 +331,13 @@ export const getAdirectory = createAsyncThunk(
   }
 );
 
-
 // ------------------------------------------------------------------------
 
 export const searchFilesOrDirectories = createAsyncThunk(
   "folder/search",
   async ({ reference_Id, searchTerm }, thunkAPI) => {
     try {
-      const response = await FolderService.search(
-        reference_Id,
-        searchTerm
-      );
+      const response = await FolderService.search(reference_Id, searchTerm);
       return response;
     } catch (error) {
       let message = error?.response?.data;
@@ -349,7 +346,18 @@ export const searchFilesOrDirectories = createAsyncThunk(
   }
 );
 
-
+export const getSearchHistory = createAsyncThunk(
+  "folder/searchHistory",
+  async ({ reference_Id }, thunkAPI) => {
+    try {
+      const response = await FolderService.searchHistory(reference_Id);
+      return response;
+    } catch (error) {
+      let message = error?.response?.data;
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 const fileFolderSlice = createSlice({
   name: "fileFolder",
@@ -361,11 +369,11 @@ const fileFolderSlice = createSlice({
     clearStudentFilesAndFolders: (state) => {
       state.studentFilesAndFoldrs = [];
     },
-    clearMessage:(state)=>{
-      state.message = ""
+    clearMessage: (state) => {
+      state.message = "";
     },
-    clearErrorMessage:(state)=>{
-      state.workspaceErrorMessage = ""
+    clearErrorMessage: (state) => {
+      state.workspaceErrorMessage = "";
     },
     clearMoveItemsArray: (state) => {
       state.moveItemsArray = [];
@@ -381,12 +389,26 @@ const fileFolderSlice = createSlice({
       const { id, url } = action.payload;
       state.folders = updateFileUrl(state.folders, id, url);
     },
-    clearSearchTerm:(state)=>{
-      state.searchResults = []
-    }
+    clearSearchTerm: (state) => {
+      state.searchResults = [];
+    },
   },
   extraReducers: (builder) => {
     builder
+
+      //search History
+      .addCase(getSearchHistory.pending, (state) =>
+        state.searchHistory = []
+      )
+      .addCase(getSearchHistory.fulfilled, (state, action) => {
+        const { data,status } = action.payload;
+        state.searchHistory = data;
+        state.globalStatus = status;
+      })
+      .addCase(getSearchHistory.rejected, (state, action) =>
+        handleAsyncActions(state, action, "searchStatus")
+      )
+
       //Search
       .addCase(searchFilesOrDirectories.pending, (state) =>
         handleAsyncActions(
@@ -396,18 +418,12 @@ const fileFolderSlice = createSlice({
         )
       )
       .addCase(searchFilesOrDirectories.fulfilled, (state, action) => {
-        const {
-          data,
-          message,
-          status,
-        } = action.payload;
-        state.searchResults = data
+        const { data, message, status } = action.payload;
+        state.searchResults = data;
         state.globalStatus = status;
         state.message = message;
       })
-      .addCase(searchFilesOrDirectories.rejected, (state, action) =>
-        handleAsyncActions(state, action, "searchStatus")
-      )
+      .addCase(searchFilesOrDirectories.rejected, (state, action) =>{ state.searchHistory = []})
 
       // Delete File
       .addCase(deleteFile.pending, (state) =>
@@ -418,11 +434,7 @@ const fileFolderSlice = createSlice({
         )
       )
       .addCase(deleteFile.fulfilled, (state, action) => {
-        const {
-          data,
-          message,
-          status,
-        } = action.payload;
+        const { data, message, status } = action.payload;
         const idsToDelete = new Set(data);
         state.folders = state.folders.filter(
           (item) => !idsToDelete.has(item._id)
@@ -477,10 +489,7 @@ const fileFolderSlice = createSlice({
         )
       )
       .addCase(receiveFile.fulfilled, (state, action) => {
-        const {
-          message,
-          status,
-        } = action.payload;
+        const { message, status } = action.payload;
         state.globalStatus = status;
         state.message = message;
       })
@@ -666,7 +675,7 @@ export const {
   updateFile,
   clearMessage,
   clearErrorMessage,
-  clearSearchTerm
+  clearSearchTerm,
 } = fileFolderSlice.actions;
 
 export default fileFolderSlice.reducer;

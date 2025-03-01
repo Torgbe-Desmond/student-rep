@@ -1,7 +1,11 @@
 import { Breadcrumbs, Button, Typography } from "@mui/material";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addBreadCrumb, clearBreadCrumb, storeBreadCrumbs } from "../../Features/PathSlice";
+import {
+  addBreadCrumb,
+  clearBreadCrumb,
+  storeBreadCrumbs,
+} from "../../Features/PathSlice";
 import { useEffect } from "react";
 import "./BreadCrumb.css";
 import clsx from "clsx";
@@ -9,22 +13,22 @@ import clsx from "clsx";
 const Breadcrumb = ({ breadcrumbs = [], isDarkMode }) => {
   const { directoryId, reference_Id } = useParams();
   const { moveItemsArray = [], status } = useSelector((state) => state.work);
+  const toggelSearch = useSelector((state) => state.stack.search);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    window.addEventListener('beforeunload',()=>{
-      dispatch(storeBreadCrumbs())
-    })
-  },[])
-    
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      dispatch(storeBreadCrumbs());
+    });
+  }, []);
+
   useEffect(() => {
     const historyData = moveItemsArray.filter((history) =>
       history?.path.includes(directoryId)
     );
     dispatch(addBreadCrumb(historyData));
   }, [directoryId, moveItemsArray, dispatch]);
-
 
   const handleBreadcrumbClick = (event, path) => {
     event.preventDefault();
@@ -44,13 +48,22 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode }) => {
         "light-mode": !isDarkMode,
       })}
     >
-      <Button
-        sx={{ marginRight: 1 }}
-        variant="outlined"
-        onClick={(e) => handleBreadcrumbClick(e)}
-      >
-        Home
-      </Button>
+      {/* {!toggelSearch && (
+        <Button
+          sx={{ marginRight: 1 }}
+          variant="outlined"
+          onClick={(e) => handleBreadcrumbClick(e)}
+        >
+          Home
+        </Button>
+      )} */}
+          <Button
+          sx={{ marginRight: 1 }}
+          variant="outlined"
+          onClick={(e) => handleBreadcrumbClick(e)}
+        >
+          Home
+        </Button>
       <Breadcrumbs
         sx={{
           "& .MuiBreadcrumbs-separator": {
