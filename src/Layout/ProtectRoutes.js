@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Navigate, Outlet, useParams } from "react-router-dom";
 import "../index.css";
-import { Box, } from "@mui/material";
+import { Box } from "@mui/material";
 import BasicSpeedDial from "../components/SpeedDial/SpeedDial";
 
 const ProtectRoutes = ({
   token,
-  reference_Id,
-  directoryId,
-  dispatch,
   selectedItems,
   setSelectedItems,
-  folders,
   filteredData,
   setFilteredData,
   selectedFilesForOptions,
@@ -19,13 +15,9 @@ const ProtectRoutes = ({
   selectedFoldersForOptions,
   setSelectedFoldersForOptions,
   breadCrumbs,
-  authorizeStatus,
   handleReload,
-  handleAction,
   isDarkMode,
 }) => {
-
-  useEffect(() => handleReload(), [handleReload]);
 
   const sharedProps = {
     isDarkMode,
@@ -38,7 +30,6 @@ const ProtectRoutes = ({
     selectedFoldersForOptions,
     setSelectedFoldersForOptions,
     breadCrumbs,
-    authorizeStatus,
     handleReload,
   };
 
@@ -46,8 +37,6 @@ const ProtectRoutes = ({
   if (token) {
     component = (
       <Box className="app">
-      
-
         <Box className="main">
           <Outlet context={sharedProps} />
         </Box>
@@ -59,7 +48,6 @@ const ProtectRoutes = ({
             selectedFoldersForOptions={selectedFoldersForOptions}
           />
         </Box>
-        
       </Box>
     );
   } else {

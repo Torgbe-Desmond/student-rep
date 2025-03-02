@@ -43,14 +43,15 @@ const TabComponent = () => {
   const breadCrumb = useSelector((state) => state.path.breadCrumbs);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedFilesForOptions, setSelectedFilesForOptions] = useState([]);
-  const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState([]);
+  const [selectedFoldersForOptions, setSelectedFoldersForOptions] = useState(
+    []
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredData, setFilteredData] = useState(folders);
   const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   // Reload folders on reference_Id or directoryId change
   const handleReload = useCallback(() => {
-    dispatch(restoreBreadCrumbs());
     dispatch(getAllFolders({ reference_Id }));
     if (reference_Id && directoryId) {
       dispatch(getAdirectory({ reference_Id, directoryId }));
@@ -58,21 +59,27 @@ const TabComponent = () => {
     } else if (reference_Id) {
       dispatch(getMainDirectories({ reference_Id }));
     }
+    dispatch(restoreBreadCrumbs());
   }, [dispatch, reference_Id, directoryId]);
 
-  useEffect(() => handleReload(), [reference_Id, directoryId, handleReload]);
-
   useEffect(() => {
-    // let folderData = toggelSearch ? searchResults : folders
-    setFilteredData(folders);
-  }, [folders]);
+    // dispatch(getAllFolders({ reference_Id }));
+    if (reference_Id && directoryId) {
+      dispatch(getAdirectory({ reference_Id, directoryId }));
+      dispatch(setCurrentDirectory(directoryId));
+    } else if (reference_Id) {
+      dispatch(getMainDirectories({ reference_Id }));
+    }
+    return () => {
+      dispatch(clearFilesAndFolders());
+    };
+  }, [reference_Id, directoryId, dispatch]);
 
   // Handles searching with debounce
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
       if (searchTerm) {
-        // let searchId = directoryId ? directoryId : null
-        dispatch(searchFilesOrDirectories({ reference_Id, searchTerm ,  }));
+        dispatch(searchFilesOrDirectories({ reference_Id, searchTerm }));
         dispatch(getSearchHistory({ reference_Id }));
       } else {
         dispatch(clearSearchTerm());
@@ -123,22 +130,18 @@ const TabComponent = () => {
           //   <Tab label="Public" />
           // </Tabs>
         )} */}
-         <Tabs value={value} onChange={handleChange} centered>
-            <Tab label="Local" />
-            <Tab label="Public" />
-          </Tabs>
+        <Tabs value={value} onChange={handleChange} centered>
+          <Tab label="Local" />
+          <Tab label="Public" />
+        </Tabs>
       </div>
 
       <Box>
         {value === 0 && (
           <ProtectRoutes
             token={token}
-            reference_Id={reference_Id}
-            directoryId={directoryId}
-            dispatch={dispatch}
             selectedItems={selectedItems}
             setSelectedItems={setSelectedItems}
-            folders={filteredData}
             filteredData={filteredData}
             setFilteredData={setFilteredData}
             selectedFilesForOptions={selectedFilesForOptions}

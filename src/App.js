@@ -132,7 +132,7 @@ function App() {
     if (themeColorMeta) {
       themeColorMeta.setAttribute(
         "content",
-        isDarkMode ? "background:rgb(50, 53, 55)" : "#ffffff"
+        isDarkMode ? "#60c9fc" : "#ffffff"
       );
     }
   }, [isDarkMode]);
