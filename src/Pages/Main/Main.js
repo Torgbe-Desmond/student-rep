@@ -18,11 +18,12 @@ function Main() {
     breadCrumbs,
     authorizeStatus,
     handleReload,
+    setSearchTerm,
   } = useOutletContext();
 
   return (
     <div className={`app-container ${isDarkMode ? "dark-mode" : ""}`}>
-      <Breadcrumb isDarkMode={isDarkMode} breadcrumbs={breadCrumbs} />
+      <Breadcrumb setSearchTerm={setSearchTerm} isDarkMode={isDarkMode} breadcrumbs={breadCrumbs} />
 
       <NewList
         isDarkMode={isDarkMode}

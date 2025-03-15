@@ -6,7 +6,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import AutoplayVideo from "../AutoplayVideo/AutoplayVideo";
 import FullscreenIcon from "@mui/icons-material/Fullscreen";
 import FullscreenExitIcon from "@mui/icons-material/FullscreenExit";
-
+import VideoActions from "../VideoActions/VideoActions";
 
 function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -77,32 +77,67 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
       }
     );
 
-    // Add event listeners
+    if (videoElement) {
+      observer.observe(
+        addEventListeners(
+          videoElement,
+          handleWaiting,
+          handleCanPlay,
+          handleLoadStart,
+          handleLoadedMetadata,
+          handleTimeUpdate
+        )
+      );
+    }
+
+    // Cleanup
+    return () =>
+      cleanUp(
+        videoElement,
+        handleWaiting,
+        observer,
+        handleCanPlay,
+        handleLoadStart,
+        handleLoadedMetadata,
+        handleTimeUpdate
+      );
+  }, []);
+
+  function addEventListeners(
+    videoElement,
+    handleWaiting,
+    handleCanPlay,
+    handleLoadStart,
+    handleLoadedMetadata,
+    handleTimeUpdate
+  ) {
     videoElement.addEventListener("waiting", handleWaiting);
     videoElement.addEventListener("canplay", handleCanPlay);
     videoElement.addEventListener("loadstart", handleLoadStart);
     videoElement.addEventListener("loadedmetadata", handleLoadedMetadata);
-    videoElement.addEventListener("timeupdate", handleTimeUpdate); 
+    videoElement.addEventListener("timeupdate", handleTimeUpdate);
 
+    return videoElement;
+  }
+
+  function cleanUp(
+    videoElement,
+    handleWaiting,
+    observer,
+    handleCanPlay,
+    handleLoadStart,
+    handleLoadedMetadata,
+    handleTimeUpdate
+  ) {
     if (videoElement) {
-      observer.observe(videoElement);
+      videoElement.removeEventListener("waiting", handleWaiting);
+      videoElement.removeEventListener("canplay", handleCanPlay);
+      videoElement.removeEventListener("loadstart", handleLoadStart);
+      videoElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      videoElement.removeEventListener("timeupdate", handleTimeUpdate);
+      observer.unobserve(videoElement);
     }
-
-    // Cleanup
-    return () => {
-      if (videoElement) {
-        videoElement.removeEventListener("waiting", handleWaiting);
-        videoElement.removeEventListener("canplay", handleCanPlay);
-        videoElement.removeEventListener("loadstart", handleLoadStart);
-        videoElement.removeEventListener(
-          "loadedmetadata",
-          handleLoadedMetadata
-        );
-        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
-        observer.unobserve(videoElement);
-      }
-    };
-  }, []);
+  }
 
   const onVideoPress = () => {
     const videoElement = videoRef.current;
@@ -136,15 +171,6 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
 
   let videoProgress = (currentTime / duration) * 100;
 
-  const handleSeek = (time) => {
-    const videoElement = videoRef.current;
-    if (videoElement) {
-      videoElement.currentTime = time / 1000;
-      videoProgress = time / 1000;
-      setCurrentTime(time);
-    }
-  };
-
   return (
     <div className={`videoCard is-stuckToBottom`}>
       <VideoHeader
@@ -165,22 +191,11 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
         isVideoPlaying={isVideoPlaying}
       />
 
-      <div className="video-actions" onClick={() => toggleFullScreen()}>
-        {fullScreen ? (
-          <FullscreenIcon   sx={{
-            fontSize: "32px",
-            cursor: "pointer",
-            filter: "drop-shadow(2px 2px 4px rgba(9, 8, 8, 0.5))",
-          }} />
-        ) : (
-          <FullscreenExitIcon   sx={{
-            fontSize: "32px",
-            cursor: "pointer",
-            filter: "drop-shadow(2px 2px 4px rgba(9, 8, 8, 0.5))",
-          }} />
-        )}
-      </div>
-
+      <VideoActions
+        fullScreen={fullScreen}
+        toggleFullScreen={toggleFullScreen}
+      />
+    
       <div className="video-progress-bar">
         <div className="progress" style={{ width: `${videoProgress}%` }} />
       </div>

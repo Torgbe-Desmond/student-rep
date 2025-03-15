@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import "./BreadCrumb.css";
 import clsx from "clsx";
 
-const Breadcrumb = ({ breadcrumbs = [], isDarkMode }) => {
+const Breadcrumb = ({ breadcrumbs = [], isDarkMode,setSearchTerm }) => {
   const { directoryId, reference_Id } = useParams();
   const { moveItemsArray = [], status } = useSelector((state) => state.work);
   const toggelSearch = useSelector((state) => state.stack.search);
@@ -28,6 +28,7 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode }) => {
       history?.path.includes(directoryId)
     );
     dispatch(addBreadCrumb(historyData));
+    setSearchTerm("")
   }, [directoryId, moveItemsArray, dispatch]);
 
   const handleBreadcrumbClick = (event, path) => {

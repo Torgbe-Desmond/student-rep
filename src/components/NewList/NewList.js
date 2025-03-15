@@ -1,20 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Checkbox,
-  Paper,
   CircularProgress,
-  Typography,
   Button,
   Snackbar,
   IconButton,
-  FormControlLabel,
-  Switch,
 } from "@mui/material";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import KeyIcon from "@mui/icons-material/Key";
@@ -24,7 +13,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./NewList.css";
-import { toggleDarkMode } from "../../Features/ThemeSlice";
 import ReusableTable from "../Table/Table";
 
 const getFilteredData = (folderData, selectedFolders) => ({
@@ -54,12 +42,8 @@ function NewList({
   const { reference_Id } = useParams();
   const { status, error } = useSelector((state) => state.work);
   const stackState = useSelector((state) => state.stack.stackState);
-  const colorDifferentiation = useSelector(
-    (state) => state.settings.colorDifferentiation
-  );
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
-  const dispatch = useDispatch();
   const targetRef = useRef(null);
 
   useEffect(() => {
@@ -90,9 +74,6 @@ function NewList({
     }
   }, [stackState]);
 
-  const [isDarkModeParent, setIsDarkModeParent] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
-  });
 
   useEffect(() => {
     if (isDarkMode) {
@@ -104,7 +85,6 @@ function NewList({
 
   useEffect(() => {
     if (initialFolderData?.length) {
-      // const processedData = groupTimestamps(initialFolderData);
       setFolderData(initialFolderData);
     }
   }, [initialFolderData]);
@@ -113,52 +93,6 @@ function NewList({
     if (targetRef.current) {
       targetRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  };
-
-  const groupTimestamps = (data) => {
-    const grouped = {};
-    const colors = [
-      "#FFDDC1", // Light peach
-      "#D1E8E4", // Pale aqua
-      "#FFC3A0", // Light orange
-      "#D5AAFF", // Lavender
-      "#B9FBC0", // Mint green
-      "#FFB3BA", // Light pink
-      "#BFFCC6", // Pale green
-      "#FFFFBA", // Light yellow
-      "#FFDFBA", // Peach
-      "#BAE1FF", // Light blue
-      "#C1D5FF", // Soft blue
-      "#FFABAB", // Coral pink
-      "#FFC1E3", // Light rose
-      "#B4FFAB", // Lime green
-      "#FFF7AB", // Lemon yellow
-      "#ABEFFB", // Aqua blue
-      "#D2BAFF", // Soft purple
-      "#FFD9C0", // Apricot
-      "#C0FFE3", // Pale teal
-      "#E3C0FF", // Soft lavender
-    ];
-
-    data.forEach((item) => {
-      const date = new Date(item.lastUpdated);
-      const seconds = Math.floor(date.getSeconds() / 5) * 5;
-      const timeKey = new Date(date.setSeconds(seconds, 0)).toISOString();
-
-      if (!grouped[timeKey]) {
-        grouped[timeKey] = [];
-      }
-      grouped[timeKey].push({ ...item });
-    });
-
-    const groupKeys = Object.keys(grouped);
-    groupKeys.forEach((key, index) => {
-      grouped[key].forEach((item) => {
-        item.backgroundColor = colors[index % colors.length];
-      });
-    });
-
-    return Object.values(grouped).flat();
   };
 
   const handleSelectAll = (event) => {
@@ -179,13 +113,6 @@ function NewList({
       setSelectedFilesForOptions([]);
     };
   }, [selectedFolders, folderData]);
-
-  const handleDeleteSelected = () => {
-    setFolderData((prev) =>
-      prev.filter((folder) => !selectedFolders.includes(folder._id))
-    );
-    setSelectedFolders([]);
-  };
 
   const handleNavigate = (id, mimetype) => {
     if (
@@ -266,14 +193,6 @@ function NewList({
     // color: isDarkMode ? "white" : "black",
   });
 
-  const toggleDarkModeParent = () => {
-    dispatch(toggleDarkMode());
-    setIsDarkModeParent((prevMode) => {
-      const newMode = !prevMode;
-      localStorage.setItem("darkMode", newMode);
-      return newMode;
-    });
-  };
 
   return (
     <div className={`newlist-container glass ${isDarkMode ? "dark-mode" : ""}`}>

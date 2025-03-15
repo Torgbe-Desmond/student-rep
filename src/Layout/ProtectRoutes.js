@@ -17,6 +17,7 @@ const ProtectRoutes = ({
   breadCrumbs,
   handleReload,
   isDarkMode,
+  setSearchTerm,
 }) => {
 
   const sharedProps = {
@@ -31,6 +32,7 @@ const ProtectRoutes = ({
     setSelectedFoldersForOptions,
     breadCrumbs,
     handleReload,
+    setSearchTerm,
   };
 
   let component;

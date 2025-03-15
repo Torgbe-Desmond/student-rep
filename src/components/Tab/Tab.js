@@ -47,7 +47,7 @@ const TabComponent = () => {
     []
   );
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredData, setFilteredData] = useState(folders);
+  const [filteredData, setFilteredData] = useState([]);
   const isDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   // Reload folders on reference_Id or directoryId change
@@ -77,17 +77,9 @@ const TabComponent = () => {
 
   // Handles searching with debounce
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      if (searchTerm) {
-        dispatch(searchFilesOrDirectories({ reference_Id, searchTerm }));
-        dispatch(getSearchHistory({ reference_Id }));
-      } else {
-        dispatch(clearSearchTerm());
-      }
-    }, 500);
-
-    return () => clearTimeout(delayDebounce);
-  }, [searchTerm, dispatch, reference_Id]);
+    let searchedData = folders?.filter((st)=>st.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()))
+    setFilteredData(searchedData);
+  }, [searchTerm])
 
   // Clears search input and results
   const handleClear = () => {
@@ -98,62 +90,65 @@ const TabComponent = () => {
   return (
     <Box sx={{ width: "100%", position: "sticky" }}>
       <div className="local-search">
-        {/* {toggelSearch ? (
-          <TextField
-            sx={{
+        <TextField
+          sx={{
+            color: isDarkMode ? "#FFF" : "",
+            "& .MuiInputBase-input": {
               color: isDarkMode ? "#FFF" : "",
-              "& .MuiInputBase-input": {
-                color: isDarkMode ? "#FFF" : "",
-              },
-              "& .MuiInputBase-input::placeholder": {
-                color: isDarkMode ? "#FFF" : "",
-              },
-            }}
-            className="public-input"
-            placeholder="Search files by name"
-            variant="outlined"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              endAdornment: searchTerm && (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleClear}>
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+            },
+            "& .MuiInputBase-input::placeholder": {
+              color: isDarkMode ? "#FFF" : "",
+            },
+          }}
+          className="public-input"
+          placeholder="Search files by name"
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            endAdornment: searchTerm && (
+              <InputAdornment position="end">
+                <IconButton onClick={handleClear}>
+                  <ClearIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        {/* {toggelSearch ? (
+          
         ) : (
           // <Tabs value={value} onChange={handleChange} centered>
           //   <Tab label="Local" />
           //   <Tab label="Public" />
           // </Tabs>
         )} */}
-        <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Local" />
-          <Tab label="Public" />
-        </Tabs>
+        {/* <Tabs value={value} onChange={handleChange} centered> */}
+        {/* <Tab label="Local" /> */}
+        {/* <Tab label="Public" /> */}
+        {/* </Tabs> */}
       </div>
 
       <Box>
-        {value === 0 && (
-          <ProtectRoutes
-            token={token}
-            selectedItems={selectedItems}
-            setSelectedItems={setSelectedItems}
-            filteredData={filteredData}
-            setFilteredData={setFilteredData}
-            selectedFilesForOptions={selectedFilesForOptions}
-            setSelectedFilesForOptions={setSelectedFilesForOptions}
-            selectedFoldersForOptions={selectedFoldersForOptions}
-            setSelectedFoldersForOptions={setSelectedFoldersForOptions}
-            breadCrumbs={breadCrumb}
-            handleReload={handleReload}
-            isDarkMode={isDarkMode}
-          />
-        )}
-        {value === 1 && <Public />}
+        {/* {value === 0 && (
+          
+        )} */}
+        {/* {value === 1 && <Public />} */}
+        <ProtectRoutes
+          token={token}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+          filteredData={filteredData}
+          setFilteredData={setFilteredData}
+          selectedFilesForOptions={selectedFilesForOptions}
+          setSelectedFilesForOptions={setSelectedFilesForOptions}
+          selectedFoldersForOptions={selectedFoldersForOptions}
+          setSelectedFoldersForOptions={setSelectedFoldersForOptions}
+          breadCrumbs={breadCrumb}
+          handleReload={handleReload}
+          setSearchTerm = {setSearchTerm}
+          isDarkMode={isDarkMode}
+        />
       </Box>
 
       <Box className="header">

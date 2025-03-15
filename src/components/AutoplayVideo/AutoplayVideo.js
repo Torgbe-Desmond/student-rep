@@ -12,16 +12,13 @@ const AutoplayVideo = ({
   fullScreen,
   isVideoLoading,
 }) => {
-  // console.log('isVideoBuffering',isVideoBuffering)
-  // console.log('isVideoLoading',isVideoLoading)
-
   return (
     <>
       <div className="video-container" onClick={onVideoPress}>
         <video
           ref={videoRef}
           type="video/mp4"
-          className={fullScreen ? "video__player fit-screen":"video__player"}
+          className={fullScreen ? "video__player fit-screen" : "video__player"}
           src={url}
           alt="meme-me"
           loop
@@ -29,6 +26,7 @@ const AutoplayVideo = ({
           playsInline
           preload="metadata"
         />
+        
         {!isVideoPlaying && !isVideoBuffering ? (
           <div className="play-button-overlay">
             <PlayArrowIcon style={{ fontSize: 50, color: "white" }} />

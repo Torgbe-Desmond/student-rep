@@ -118,6 +118,10 @@ const ReusableTable = ({
                     sx={{
                       ...getCellStyles(isDarkMode),
                       cursor: "pointer",
+                      textOverflow: "ellipsis",
+                      maxWidth:"150px",
+                      whiteSpace:"nowrap",
+                      overflow:"hidden",
                     }}
                     onClick={() => handleNavigate(folder._id, folder.mimetype)}
                   >
