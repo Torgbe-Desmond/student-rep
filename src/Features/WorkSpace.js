@@ -359,6 +359,7 @@ export const getSearchHistory = createAsyncThunk(
   }
 );
 
+
 const fileFolderSlice = createSlice({
   name: "fileFolder",
   initialState,
@@ -397,11 +398,9 @@ const fileFolderSlice = createSlice({
     builder
 
       //search History
-      .addCase(getSearchHistory.pending, (state) =>
-        state.searchHistory = []
-      )
+      .addCase(getSearchHistory.pending, (state) => (state.searchHistory = []))
       .addCase(getSearchHistory.fulfilled, (state, action) => {
-        const { data,status } = action.payload;
+        const { data, status } = action.payload;
         state.searchHistory = data;
         state.globalStatus = status;
       })
@@ -423,7 +422,9 @@ const fileFolderSlice = createSlice({
         state.globalStatus = status;
         state.message = message;
       })
-      .addCase(searchFilesOrDirectories.rejected, (state, action) =>{ state.searchHistory = []})
+      .addCase(searchFilesOrDirectories.rejected, (state, action) => {
+        state.searchHistory = [];
+      })
 
       // Delete File
       .addCase(deleteFile.pending, (state) =>
@@ -662,7 +663,8 @@ const fileFolderSlice = createSlice({
       })
       .addCase(getAdirectory.rejected, (state, action) =>
         handleFolderActions(state, action, "status")
-      );
+      )
+
   },
 });
 

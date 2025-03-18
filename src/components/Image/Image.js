@@ -3,15 +3,20 @@ import "./Image.css";
 import ImageHeader from "../ImageHeader/ImageHeader";
 
 const Image = ({ file, handleToggleDialog }) => {
-  const [currentFile,setCurrentFile] = useState(null)
+  const [currentFile, setCurrentFile] = useState(null);
 
-  useEffect(()=>{
-    setCurrentFile(file)
-  },[file])
+  useEffect(() => {
+    setCurrentFile(file);
+  }, [file]);
 
   return (
     <>
-      <ImageHeader file={currentFile} handleToggleDialog={handleToggleDialog} />
+      <div className="image-container-header">
+        <ImageHeader
+          file={currentFile}
+          handleToggleDialog={handleToggleDialog}
+        />
+      </div>
       <div className="image-holder">
         <img
           src={currentFile?.url}

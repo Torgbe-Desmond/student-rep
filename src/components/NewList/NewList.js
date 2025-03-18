@@ -1,10 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  CircularProgress,
-  Button,
-  Snackbar,
-  IconButton,
-} from "@mui/material";
+import { CircularProgress, Button, Snackbar, IconButton } from "@mui/material";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import KeyIcon from "@mui/icons-material/Key";
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
@@ -14,6 +9,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./NewList.css";
 import ReusableTable from "../Table/Table";
+import { getBreadCrumb } from "../../Features/PathSlice";
 
 const getFilteredData = (folderData, selectedFolders) => ({
   files: folderData?.filter(
@@ -42,6 +38,7 @@ function NewList({
   const { reference_Id } = useParams();
   const { status, error } = useSelector((state) => state.work);
   const stackState = useSelector((state) => state.stack.stackState);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const targetRef = useRef(null);
@@ -73,7 +70,6 @@ function NewList({
       selectedFoldersState([]);
     }
   }, [stackState]);
-
 
   useEffect(() => {
     if (isDarkMode) {
@@ -114,13 +110,15 @@ function NewList({
     };
   }, [selectedFolders, folderData]);
 
-  const handleNavigate = (id, mimetype) => {
+  const handleNavigate = (directoryId, mimetype) => {
     if (
       mimetype === "Folder" ||
       mimetype === "Subscriptions" ||
       mimetype === "Shared"
     ) {
-      navigate(`/${reference_Id}/directories/${id}`);
+      dispatch(getBreadCrumb({ reference_Id, directoryId }));
+      navigate(`/${reference_Id}/directories/${directoryId}`);
+      console.log("entered navigate");
     }
   };
 
@@ -192,7 +190,6 @@ function NewList({
     // backgroundColor: isDarkMode ? "rgb(33,37,39)" : "#fff",
     // color: isDarkMode ? "white" : "black",
   });
-
 
   return (
     <div className={`newlist-container glass ${isDarkMode ? "dark-mode" : ""}`}>

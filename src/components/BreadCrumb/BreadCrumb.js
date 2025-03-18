@@ -1,35 +1,30 @@
 import { Breadcrumbs, Button, Typography } from "@mui/material";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addBreadCrumb,
-  clearBreadCrumb,
-  storeBreadCrumbs,
-} from "../../Features/PathSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./BreadCrumb.css";
 import clsx from "clsx";
+import { clearBreadCrumb, getBreadCrumb } from "../../Features/PathSlice";
 
-const Breadcrumb = ({ breadcrumbs = [], isDarkMode,setSearchTerm }) => {
+const Breadcrumb = ({ breadcrumbs = [], isDarkMode, setSearchTerm }) => {
   const { directoryId, reference_Id } = useParams();
   const { moveItemsArray = [], status } = useSelector((state) => state.work);
+  const [breadCrumbs, setBreadCrumbs] = useState([]);
   const toggelSearch = useSelector((state) => state.stack.search);
+  const breadCrumb = useSelector((state) => state.path.breadCrumbs);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    window.addEventListener("beforeunload", () => {
-      dispatch(storeBreadCrumbs());
-    });
-  }, []);
+    if (breadCrumb) {
+      setBreadCrumbs([...(breadCrumb || [])].sort((a, b) => b.order - a.order));
+    }
+    setSearchTerm("");
 
-  useEffect(() => {
-    const historyData = moveItemsArray.filter((history) =>
-      history?.path.includes(directoryId)
-    );
-    dispatch(addBreadCrumb(historyData));
-    setSearchTerm("")
-  }, [directoryId, moveItemsArray, dispatch]);
+    return () => {
+      setBreadCrumbs([]);
+    };
+  }, [directoryId, dispatch]);
 
   const handleBreadcrumbClick = (event, path) => {
     event.preventDefault();
@@ -37,8 +32,8 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode,setSearchTerm }) => {
     if (path) {
       navigate(`/${reference_Id}/directories/${path}`);
     } else {
-      dispatch(clearBreadCrumb());
       navigate(`/${reference_Id}/directories/`);
+      dispatch(clearBreadCrumb());
     }
   };
 
@@ -49,22 +44,13 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode,setSearchTerm }) => {
         "light-mode": !isDarkMode,
       })}
     >
-      {/* {!toggelSearch && (
-        <Button
-          sx={{ marginRight: 1 }}
-          variant="outlined"
-          onClick={(e) => handleBreadcrumbClick(e)}
-        >
-          Home
-        </Button>
-      )} */}
-          <Button
-          sx={{ marginRight: 1 }}
-          variant="outlined"
-          onClick={(e) => handleBreadcrumbClick(e)}
-        >
-          Home
-        </Button>
+      <Button
+        sx={{ marginRight: 1 }}
+        variant="outlined"
+        onClick={(e) => handleBreadcrumbClick(e)}
+      >
+        Home
+      </Button>
       <Breadcrumbs
         sx={{
           "& .MuiBreadcrumbs-separator": {
@@ -73,31 +59,19 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode,setSearchTerm }) => {
         }}
         aria-label="breadcrumb"
       >
-        {breadcrumbs.map((breadcrumb, index) =>
-          breadcrumb?.path ? (
-            <RouterLink
-              key={index}
-              to={breadcrumb?.path}
-              onClick={(e) => handleBreadcrumbClick(e, breadcrumb?.path)}
-              style={{
-                textDecoration: "none",
-                color: isDarkMode ? "#FFF" : "rgb(33,37,39)",
-              }}
-            >
-              {breadcrumb?.label}
-            </RouterLink>
-          ) : (
-            <Typography
-              sx={{
-                textDecoration: "none",
-                color: isDarkMode ? "#FFF" : "rgb(33,37,39)",
-              }}
-              key={index}
-            >
-              {breadcrumb?.label}
-            </Typography>
-          )
-        )}
+        {breadCrumb?.map((value, index) => (
+          <RouterLink
+            key={index}
+            to={value?.directoryId}
+            onClick={(e) => handleBreadcrumbClick(e, value?.directoryId)}
+            style={{
+              textDecoration: "none",
+              color: isDarkMode ? "#FFF" : "rgb(33,37,39)",
+            }}
+          >
+            {value?.name}
+          </RouterLink>
+        ))}
       </Breadcrumbs>
     </div>
   );

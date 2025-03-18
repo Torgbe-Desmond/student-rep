@@ -12,6 +12,8 @@ import ProtectRoutes from "../../Layout/ProtectRoutes";
 import SearchBarWithActions from "../SearchBarWithActions/SearchBarWithActions";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  clearBreadCrumb,
+  getBreadCrumb,
   restoreBreadCrumbs,
   setCurrentDirectory,
 } from "../../Features/PathSlice";
@@ -54,17 +56,16 @@ const TabComponent = () => {
   const handleReload = useCallback(() => {
     dispatch(getAllFolders({ reference_Id }));
     if (reference_Id && directoryId) {
+      dispatch(getBreadCrumb({ reference_Id, directoryId }));
       dispatch(getAdirectory({ reference_Id, directoryId }));
-      dispatch(setCurrentDirectory(directoryId));
     } else if (reference_Id) {
       dispatch(getMainDirectories({ reference_Id }));
     }
-    dispatch(restoreBreadCrumbs());
   }, [dispatch, reference_Id, directoryId]);
 
   useEffect(() => {
-    // dispatch(getAllFolders({ reference_Id }));
     if (reference_Id && directoryId) {
+      dispatch(getBreadCrumb({ reference_Id, directoryId }));
       dispatch(getAdirectory({ reference_Id, directoryId }));
       dispatch(setCurrentDirectory(directoryId));
     } else if (reference_Id) {
@@ -72,14 +73,17 @@ const TabComponent = () => {
     }
     return () => {
       dispatch(clearFilesAndFolders());
+      // dispatch(clearBreadCrumb())
     };
   }, [reference_Id, directoryId, dispatch]);
 
   // Handles searching with debounce
   useEffect(() => {
-    let searchedData = folders?.filter((st)=>st.name.toLowerCase().includes(searchTerm.toLocaleLowerCase()))
+    let searchedData = folders?.filter((st) =>
+      st.name.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+    );
     setFilteredData(searchedData);
-  }, [searchTerm])
+  }, [searchTerm]);
 
   // Clears search input and results
   const handleClear = () => {
@@ -146,7 +150,7 @@ const TabComponent = () => {
           setSelectedFoldersForOptions={setSelectedFoldersForOptions}
           breadCrumbs={breadCrumb}
           handleReload={handleReload}
-          setSearchTerm = {setSearchTerm}
+          setSearchTerm={setSearchTerm}
           isDarkMode={isDarkMode}
         />
       </Box>

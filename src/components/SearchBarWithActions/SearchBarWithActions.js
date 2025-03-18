@@ -66,13 +66,7 @@ function SearchBarWithActions({
   );
 
   const logout = [
-    {
-      iconType: <LogoutIcon />,
-      color: "secondary",
-      disabled: null,
-      action: () => handleAction("Logout"),
-      label: "Logout",
-    },
+   
     // {
     //   iconType: <SearchIcon />,
     //   color: "secondary",
@@ -149,6 +143,13 @@ function SearchBarWithActions({
       action: () => handleAction("UploadFileDetails"),
       label: "Upload File",
     },
+    {
+      iconType: <LogoutIcon />,
+      color: "secondary",
+      disabled: null,
+      action: () => handleAction("Logout"),
+      label: "Logout",
+    },
   ];
 
   useEffect(() => {
@@ -195,18 +196,6 @@ function SearchBarWithActions({
 
       <div className="button-group">
         {buttonConfigs.map((config, index) => (
-          <ButtonIcon
-            key={index}
-            iconType={config.iconType}
-            color={config.color}
-            disabled={config.disabled}
-            onClick={config.action}
-            ariaLabel={config.label}
-          />
-        ))}
-      </div>
-      <div className="logout">
-        { logout.map((config, index) => (
           <ButtonIcon
             key={index}
             iconType={config.iconType}

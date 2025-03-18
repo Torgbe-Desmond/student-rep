@@ -12,7 +12,6 @@ function ImageHeader({ handleToggleDialog, file }) {
         <ArrowBackIosIcon
           onClick={handleToggleDialog}
           sx={{
-            fontSize: "32px",
             cursor: "pointer",
             filter: "drop-shadow(2px 2px 4px rgba(9, 8, 8, 0.5))",
           }}

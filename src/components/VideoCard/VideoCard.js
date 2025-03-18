@@ -37,7 +37,7 @@ function VideoCard({ url, id, fileName, handleToggleDialog, selectedFiles }) {
 
     const handleLoadedMetadata = () => {
       setIsVideoLoading(false);
-      setDuration(videoElement.duration); // Get video duration
+      setDuration(videoElement.duration); 
     };
 
     // Update current time of video

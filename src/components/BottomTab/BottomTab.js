@@ -29,11 +29,9 @@ const ButtonTabComponent = () => {
   const isMobile = useMediaQuery("(max-width: 600px)");
 
   const handleReload = useCallback(() => {
-    dispatch(restoreBreadCrumbs());
     dispatch(getAllFolders({ reference_Id }));
     if (reference_Id && directoryId) {
       dispatch(getAdirectory({ reference_Id, directoryId }));
-      dispatch(setCurrentDirectory(directoryId));
     } else if (reference_Id) {
       dispatch(getMainDirectories({ reference_Id }));
     }

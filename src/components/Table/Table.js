@@ -141,7 +141,8 @@ const ReusableTable = ({
                     <Typography>No folders available</Typography>
                   </TableCell>
                 </TableRow>
-              )}
+              )
+              }
         </TableBody>
       </Table>
     </TableContainer>
