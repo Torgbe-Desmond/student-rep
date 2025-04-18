@@ -20,6 +20,7 @@ import { clearAuthErrorMessage, clearAuthMessage } from "./Features/AuthSlice";
 import { clearErrorMessage, clearMessage } from "./Features/WorkSpace";
 import TabComponent from "./components/Tab/Tab";
 import ButtonTabComponent from "./components/BottomTab/BottomTab";
+import Global from "./Pages/Global/Global";
 
 const IThemeMode = {
   LIGHT: "light",
@@ -151,6 +152,17 @@ function App() {
                   element={<Main />}
                 />
               </Route>
+              {/* <Route element={<TabComponent />}>
+                <Route path="/:reference_Id/directories" element={<Main />} />
+                <Route
+                  path="/:reference_Id/directories/:directoryId"
+                  element={<Main />}
+                />
+              </Route> */}
+               {/* <Route
+                  path="/global"
+                  element={<Global />}
+                /> */}
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route
                 path="/:reference_Id/update-password"
@@ -158,6 +170,7 @@ function App() {
               />
               <Route path="/" element={<Login />} />
               <Route path="/register" element={<Register />} />
+
             </Routes>
 
             <div>

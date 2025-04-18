@@ -45,8 +45,8 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode, setSearchTerm }) => {
       })}
     >
       <Button
-        sx={{ marginRight: 1 }}
-        variant="outlined"
+        variant="contained"
+        sx={{ marginRight: 1, p: 0.5, fontSize: "" }}
         onClick={(e) => handleBreadcrumbClick(e)}
       >
         Home
@@ -67,6 +67,7 @@ const Breadcrumb = ({ breadcrumbs = [], isDarkMode, setSearchTerm }) => {
             style={{
               textDecoration: "none",
               color: isDarkMode ? "#FFF" : "rgb(33,37,39)",
+              fontSize: { sm: "16px", md: "18px", lg: "18px" },
             }}
           >
             {value?.name}

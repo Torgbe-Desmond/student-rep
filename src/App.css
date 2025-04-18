@@ -1,7 +1,7 @@
 
 body {
   /* background-color: #eaf0f5; */
-  background-color: #e9dddd1d;
+  background-color: #FFFF;
 }
 
 body, html {
@@ -20,10 +20,6 @@ body, html {
 
 
 @media screen and (min-width:600px) {
-  body, html {
-    position: relative;
-  }
-
   .dark-mode {
     background:rgb(50, 53, 55);
     color: white;

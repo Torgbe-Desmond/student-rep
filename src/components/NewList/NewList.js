@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import "./NewList.css";
 import ReusableTable from "../Table/Table";
 import { getBreadCrumb } from "../../Features/PathSlice";
+import List from "../List/List";
+import Status from "../StatusLogger/StatusLogger";
 
 const getFilteredData = (folderData, selectedFolders) => ({
   files: folderData?.filter(
@@ -26,6 +28,9 @@ const getFilteredData = (folderData, selectedFolders) => ({
 });
 
 function NewList({
+  setOpen,
+  setDetails,
+  tableLayout,
   initialFolderData,
   selectedFoldersState,
   setSelectedFilesForOptions,
@@ -37,6 +42,8 @@ function NewList({
   const [selectedFolders, setSelectedFolders] = useState([]);
   const { reference_Id } = useParams();
   const { status, error } = useSelector((state) => state.work);
+  const [files, setFiles] = useState();
+  const [folders, setFolders] = useState();
   const stackState = useSelector((state) => state.stack.stackState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -103,6 +110,8 @@ function NewList({
     const { files, folders } = getFilteredData(folderData, selectedFolders);
     setSelectedFoldersForOptions(folders);
     setSelectedFilesForOptions(files);
+    setFiles(files);
+    setFolders(folders);
 
     return () => {
       setSelectedFoldersForOptions([]);
@@ -194,24 +203,64 @@ function NewList({
   return (
     <div className={`newlist-container glass ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="files">
-        <ReusableTable
-          selectedFolders={selectedFolders}
-          setSelectedFolders={setSelectedFolders}
-          handleSelectAll={handleSelectAll}
-          isLoading={status}
-          error={error}
-          renderIcon={renderIcon}
-          isDarkMode={isDarkMode}
-          folderData={folderData}
-          toggleFolderSelection={toggleFolderSelection}
-          renderStatus={renderStatus}
-          handleCopyToClipboard={handleCopyToClipboard}
-          getCellStyles={getCellStyles}
-          handleNavigate={handleNavigate}
-          handleFileSize={handleFileSize}
-        />
+        {/* {tableLayout === "row" ? (
+          <ReusableTable
+            setOpen={setOpen}
+            setDetails={setDetails}
+            selectedFolders={selectedFolders}
+            setSelectedFolders={setSelectedFolders}
+            handleSelectAll={handleSelectAll}
+            isLoading={status}
+            error={error}
+            renderIcon={renderIcon}
+            isDarkMode={isDarkMode}
+            folderData={folderData}
+            toggleFolderSelection={toggleFolderSelection}
+            renderStatus={renderStatus}
+            handleCopyToClipboard={handleCopyToClipboard}
+            getCellStyles={getCellStyles}
+            handleNavigate={handleNavigate}
+            handleFileSize={handleFileSize}
+          />
+        ) : (
+          <List
+            setDetails={setDetails}
+            selectedFolders={selectedFolders}
+            setSelectedFolders={setSelectedFolders}
+            handleSelectAll={handleSelectAll}
+            isLoading={status}
+            error={error}
+            renderIcon={renderIcon}
+            isDarkMode={isDarkMode}
+            folderData={folderData}
+            toggleFolderSelection={toggleFolderSelection}
+            renderStatus={renderStatus}
+            handleCopyToClipboard={handleCopyToClipboard}
+            getCellStyles={getCellStyles}
+            handleNavigate={handleNavigate}
+            handleFileSize={handleFileSize}
+          />
+        )} */}
+         <ReusableTable
+            setOpen={setOpen}
+            setDetails={setDetails}
+            selectedFolders={selectedFolders}
+            setSelectedFolders={setSelectedFolders}
+            handleSelectAll={handleSelectAll}
+            isLoading={status}
+            error={error}
+            renderIcon={renderIcon}
+            isDarkMode={isDarkMode}
+            folderData={folderData}
+            toggleFolderSelection={toggleFolderSelection}
+            renderStatus={renderStatus}
+            handleCopyToClipboard={handleCopyToClipboard}
+            getCellStyles={getCellStyles}
+            handleNavigate={handleNavigate}
+            handleFileSize={handleFileSize}
+          />
       </div>
-
+      
       {status === "failed" && (
         <div className="reload-btn-container">
           <Button onClick={handleReload} sx={{ m: 2 }} variant="outlined">

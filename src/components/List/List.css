@@ -1,0 +1,39 @@
+.list-container-v {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+
+.list-item-v {
+    display: flex;
+    padding: 0.5rem;
+    border: 0.5px solid #ccc;
+    border-radius: 4px;
+    background: #FFF;
+}
+
+.f-name {
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.hold-f-s {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 100%;
+}
+
+@media screen and (min-width:600px) {
+    .f-name {
+        cursor: pointer;
+        text-overflow: ellipsis;
+        width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}

@@ -93,51 +93,7 @@ const TabComponent = () => {
 
   return (
     <Box sx={{ width: "100%", position: "sticky" }}>
-      <div className="local-search">
-        <TextField
-          sx={{
-            color: isDarkMode ? "#FFF" : "",
-            "& .MuiInputBase-input": {
-              color: isDarkMode ? "#FFF" : "",
-            },
-            "& .MuiInputBase-input::placeholder": {
-              color: isDarkMode ? "#FFF" : "",
-            },
-          }}
-          className="public-input"
-          placeholder="Search files by name"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          InputProps={{
-            endAdornment: searchTerm && (
-              <InputAdornment position="end">
-                <IconButton onClick={handleClear}>
-                  <ClearIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        {/* {toggelSearch ? (
-          
-        ) : (
-          // <Tabs value={value} onChange={handleChange} centered>
-          //   <Tab label="Local" />
-          //   <Tab label="Public" />
-          // </Tabs>
-        )} */}
-        {/* <Tabs value={value} onChange={handleChange} centered> */}
-        {/* <Tab label="Local" /> */}
-        {/* <Tab label="Public" /> */}
-        {/* </Tabs> */}
-      </div>
-
       <Box>
-        {/* {value === 0 && (
-          
-        )} */}
-        {/* {value === 1 && <Public />} */}
         <ProtectRoutes
           token={token}
           selectedItems={selectedItems}
