@@ -130,13 +130,6 @@ export default function BasicSpeedDial({
       },
       label: "Display",
     },
-    {
-      iconType: <LogoutIcon />,
-      color: "secondary",
-      disabled: null,
-      action: () => handleAction("Logout"),
-      label: "Logout",
-    },
   ];
 
   const handleSpeedDialColor = (isDarkMode) => {

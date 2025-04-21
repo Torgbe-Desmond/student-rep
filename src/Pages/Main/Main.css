@@ -1,11 +1,10 @@
 .app-container {
   display: grid;
   gap: 1rem;
-  padding: 1rem 0.5rem;
+  /* padding: 1rem 0.5rem; */
   width: 100%;
   box-sizing: border-box;
   border-radius: 4px;
-
 }
 
 .MuiInputBase-root {

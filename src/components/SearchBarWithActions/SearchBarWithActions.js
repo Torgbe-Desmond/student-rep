@@ -143,13 +143,6 @@ function SearchBarWithActions({
       action: () => handleAction("UploadFileDetails"),
       label: "Upload File",
     },
-    {
-      iconType: <LogoutIcon />,
-      color: "secondary",
-      disabled: null,
-      action: () => handleAction("Logout"),
-      label: "Logout",
-    },
   ];
 
   useEffect(() => {

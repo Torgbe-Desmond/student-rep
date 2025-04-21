@@ -159,9 +159,9 @@ const ReusableTable = ({
                       </div>
                     </TableCell>
                 
-                    {/* <TableCell>
+                    <TableCell>
                       <MoreVertIcon onClick={() => handleSetDetails(folder)} />
-                    </TableCell> */}
+                    </TableCell>
                   </TableRow>
                 ))
               : isLoading === "succeeded" &&

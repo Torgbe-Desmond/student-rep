@@ -20,7 +20,13 @@ const CustomDrawer = ({
       onOpen={onOpen || (() => {})}
     >
       <Box
-        sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 400 }}
+        sx={{
+          minWidth: {
+            sm: anchor === "top" || anchor === "bottom" ? "auto" : "100%",
+            md: anchor === "top" || anchor === "bottom" ? "auto" : 400,
+            lg: anchor === "top" || anchor === "bottom" ? "auto" : 400,
+          },
+        }}
         role="presentation"
         onKeyDown={onClose}
       >

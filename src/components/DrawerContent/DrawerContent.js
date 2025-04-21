@@ -39,32 +39,56 @@ const DrawerContent = ({ details, SwitchLabel }) => {
         </Box>
       )}
 
-      <Box
-        sx={{
-          display: "grid",
-          width: "100%",
-          gap: 1,
-          fontSize: "18px",
-        }}
-      >
-        <Typography variant="h6">{details?.name}</Typography>
-        <Typography variant="body2" color="text.secondary">
-          Last Modified: {new Date(details?.lastUpdated).toLocaleString()}
-        </Typography>
-      </Box>
+      {details.mimetype === "Folder" && (
+        <Box
+          sx={{
+            display: "grid",
+            width: "100%",
+            gap: 1,
+            fontSize: "18px",
+          }}
+        >
+          <Typography variant="h6">{details?.name}</Typography>
+          {details?.mimetype === "Folder" && (
+            <>
+              <Box sx={{ width: "100%" }}>{SwitchLabel && <SwitchLabel />}</Box>
+            </>
+          )}
+          <Typography variant="body3" color="text.secondary">
+            Last Modified: {new Date(details?.lastUpdated).toLocaleString()}
+          </Typography>
+          <Typography variant="body3" color="text.secondary">
+            Mimetype: {details?.mimetype}
+          </Typography>
+          <Typography variant="body3" color="text.secondary">
+            Folders: {details?.subDirectories?.length} Folders
+          </Typography>
+          <Typography variant="body3" color="text.secondary">
+            Files: {details?.files?.length} Files
+          </Typography>
+        </Box>
+      )}
 
-      {details?.mimetype === "Folder" && (
-        <>
-          <Box sx={{ width: "100%" }}>{SwitchLabel && <SwitchLabel />}</Box>
-
-          <SubscribedPeople
-            people={[
-              { name: "Alice Johnson", email: "alice@example.com" },
-              { name: "Bob Smith", email: "bob.smith@example.com" },
-              { name: "Charlie Lee", email: "charlie.lee@example.com" },
-            ]}
-          />
-        </>
+      {details?.mimetype !== "Folder" && (
+        <Box
+          sx={{
+            display: "grid",
+            width: "100%",
+            gap: 1,
+            fontSize: "18px",
+          }}
+        >
+          <Typography variant="h6">{details?.name}</Typography>
+          <Typography variant="body3" color="text.secondary">
+            Last Modified: {new Date(details?.lastUpdated).toLocaleString()}
+          </Typography>
+          <Typography variant="body3" color="text.secondary">
+            Mimetype: {details?.mimetype}
+          </Typography>
+          <Typography variant="body3" color="text.secondary">
+            Size: {details?.size}
+          </Typography>
+        </Box>
       )}
     </Box>
   );

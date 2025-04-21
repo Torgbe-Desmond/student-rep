@@ -30,6 +30,7 @@ import SwitchLabel from "../../components/Switch/Switch";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import HandleList from "../../components/HandleList/HandleList";
 import Status from "../../components/StatusLogger/StatusLogger";
+import PrimarySearchAppBar from "../../components/PrimarySearchAppBar/PrimarySearchAppBar";
 function Main() {
   const dispatch = useDispatch();
   const { folders } = useSelector((state) => state.work);
@@ -89,52 +90,16 @@ function Main() {
     setSeparateFolders(folders?.length > 0 ? folders : []);
   }, [filteredData]);
 
+  const toggleSidebar = () => {};
+
   return (
     <div className={`app-container ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="local-search">
-        <TextField
-          sx={{
-            color: isDarkMode ? "#FFF" : "",
-            "& .MuiInputBase-input": {
-              color: isDarkMode ? "#FFF" : "",
-            },
-            "& .MuiInputBase-input::placeholder": {
-              color: isDarkMode ? "#FFF" : "",
-            },
-          }}
-          className="public-input"
-          placeholder="Search files by name"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          InputProps={{
-            endAdornment: searchTerm && (
-              <InputAdornment position="end">
-                <IconButton onClick={handleClear}>
-                  <ClearIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-            startAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={handleClear}>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
+        <PrimarySearchAppBar
+          toggleSidebar={toggleSidebar}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
         />
-        {/* {tableLayout === "column" ? (
-          <TableRowsIcon
-            sx={{ cursor: "pointer", fontSize: "24px" }}
-            onClick={() => setTableLayout("row")}
-          />
-        ) : (
-          <ViewModuleIcon
-            sx={{ cursor: "pointer", fontSize: "24px" }}
-            onClick={() => setTableLayout("column")}
-          />
-        )} */}
       </div>
 
       <Breadcrumb

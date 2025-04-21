@@ -203,7 +203,7 @@ function NewList({
   return (
     <div className={`newlist-container glass ${isDarkMode ? "dark-mode" : ""}`}>
       <div className="files">
-        {/* {tableLayout === "row" ? (
+        {tableLayout === "row" ? (
           <ReusableTable
             setOpen={setOpen}
             setDetails={setDetails}
@@ -240,25 +240,7 @@ function NewList({
             handleNavigate={handleNavigate}
             handleFileSize={handleFileSize}
           />
-        )} */}
-         <ReusableTable
-            setOpen={setOpen}
-            setDetails={setDetails}
-            selectedFolders={selectedFolders}
-            setSelectedFolders={setSelectedFolders}
-            handleSelectAll={handleSelectAll}
-            isLoading={status}
-            error={error}
-            renderIcon={renderIcon}
-            isDarkMode={isDarkMode}
-            folderData={folderData}
-            toggleFolderSelection={toggleFolderSelection}
-            renderStatus={renderStatus}
-            handleCopyToClipboard={handleCopyToClipboard}
-            getCellStyles={getCellStyles}
-            handleNavigate={handleNavigate}
-            handleFileSize={handleFileSize}
-          />
+        )}
       </div>
       
       {status === "failed" && (
