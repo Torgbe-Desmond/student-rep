@@ -159,10 +159,10 @@ function App() {
                   element={<Main />}
                 />
               </Route> */}
-               {/* <Route
+               <Route
                   path="/global"
                   element={<Global />}
-                /> */}
+                />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route
                 path="/:reference_Id/update-password"

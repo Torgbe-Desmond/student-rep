@@ -1,5 +1,5 @@
 .global-container {
     display: grid;
     margin: auto;
-    grid-template-columns: 15% 70% 15%;
+    /* grid-template-columns: 15% 70% 15%; */
 }

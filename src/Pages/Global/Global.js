@@ -21,19 +21,19 @@ function Global() {
 
   return (
     <div className="global-container">
-      <LeftSidebar
+      {/* <LeftSidebar
         open={isSidebarOpen}
         onClose={toggleSidebar(false)}
         primaryItems={["Dashboard", "Messages", "Profile", "Settings"]}
         secondaryItems={["Help", "Logout"]}
-      />
+      /> */}
       <GlobalMain toggleSidebar={toggleSidebar} />
-      <RightSidebar
+      {/* <RightSidebar
         open={isSidebarOpen}
         onClose={toggleSidebar(false)}
         primaryItems={["Dashboard", "Messages", "Profile", "Settings"]}
         secondaryItems={["Help", "Logout"]}
-      />
+      /> */}
     </div>
   );
 }
